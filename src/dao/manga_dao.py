@@ -67,6 +67,10 @@ class MangaDao(metaclass=Singleton):
                 id_manga=row["id_manga"],
                 titre=row["titre"],
                 id_jikan=row["id_jikan"],
+                auteur=row["auteur"],
+                genre=row["genre"],
+                statut=row["statut"],
+                nombre_chapitre=row["nombre_chapitre"],
             )
             for row in res
         ]
