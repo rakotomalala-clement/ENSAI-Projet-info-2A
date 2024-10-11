@@ -1,5 +1,5 @@
 class Avis:
-    """ Modélisation de l'objet Avis
+    """Modélisation de l'objet Avis
 
     La classe Avis caractérise les avis que les utilisateur actif pourrons
     écrire afin de commenter et noter un manga ou une collection.
@@ -20,3 +20,7 @@ class Avis:
     def __init__(self, avis: str, note: int):
         self.avis = avis
         self.note = note
+
+    def __str__(self):
+        """Permet d'afficher les informations d'un avis'"""
+        return f"Note : {self.note}, Avis : {self.avis}"
