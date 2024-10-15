@@ -17,9 +17,10 @@ class Avis:
 
     """
 
-    def __init__(self, avis: str, note: int):
+    def __init__(self, id_avis: int, avis: str, note: int):
         self.avis = avis
         self.note = note
+        self.id_avis = id_avis
 
     def __str__(self):
         """Permet d'afficher les informations d'un avis'"""
