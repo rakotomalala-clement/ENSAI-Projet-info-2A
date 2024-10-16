@@ -136,8 +136,8 @@ class DaoAvis(metaclass=Singleton):
             un avis
 
         id_collection: int
-        identifiant de la collection sur lequel l'utilisateur souhaite
-        laisser un avis
+            identifiant de la collection sur lequel l'utilisateur souhaite
+            laisser un avis
 
         Returns:
         --------
@@ -176,3 +176,111 @@ class DaoAvis(metaclass=Singleton):
             created = True
 
         return created
+
+    @log
+    def chercher_avis(self, id_utilisateur, id_manga):
+        """Chercher les avis qu'un utilisateur a laisser sur un manga
+
+        Parameters:
+        -----------
+        id_utilisateur: int
+            identifiant de l'utilisateur dont ont souhaite chercher les avis
+            sur un manga
+
+        id_manga: int
+            identifiant du manga pour lequel on souhaite récolter les avis laisser
+            par un utilisateur
+
+        Return:
+        -------
+
+
+        """
+
+        res = None
+
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT id_avis, avis.avis, note FROM avis "
+                        "JOIN utilisateur USING(id_utilisateur) "
+                        "WHERE id_jikan_manga = %(id_manga)s "
+                        "AND id_utilisateur = %(id_utilisateur)s;",
+                        {
+                            "id_manga": id_manga,
+                            "id_utilisateur": id_utilisateur,
+                        },
+                    )
+                    res = cursor.fetchall()
+
+        except Exception as e:
+            logging.info(e)
+            raise
+
+        Liste_avis = []
+        if res:
+            for row in res:
+                Liste_avis.append(
+                    Avis(
+                        id_avis=row["id_avis"],
+                        avis=row["avis"],
+                        note=row["note"],
+                    )
+                )
+
+        return Liste_avis
+
+    @log
+    def supprimer_avis(self, id_avis):
+        return None
+
+    @log
+    def modifier_avis(self, avis: Avis):
+        return None
+
+    @log
+    def chercher_avis_sur_manga(self, id_manga):
+        """Chercher l'ensemble des avis des utilisateurs laisser sur un manga
+
+        Parameters:
+        -----------
+
+        id_manga: int
+            identifiant du manga pour lequel on souhaite récolter les avis
+
+        Return:
+        -------
+
+        """
+
+        res = None
+
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT id_avis, avis.avis, note FROM avis "
+                        "WHERE id_jikan_manga = %(id_manga)s;",
+                        {
+                            "id_manga": id_manga,
+                        },
+                    )
+                    res = cursor.fetchall()
+
+        except Exception as e:
+            logging.info(e)
+            raise
+
+        Liste_avis = []
+        if res:
+            for row in res:
+                Liste_avis.append(
+                    Avis(
+                        id_avis=row["id_avis"],
+                        avis=row["avis"],
+                        note=row["note"],
+                    )
+                )
+
+        return Liste_avis
