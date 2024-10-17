@@ -7,22 +7,37 @@ class MangaService:
     """Classe contenant les méthodes de service de la classe Manga"""
 
     @log
-    def ajouter_manga(self, titre: str, id_jikan: int) -> Manga:
+    def ajouter_manga(self, titre, auteurs, genres, status, nombre_chapitres) -> Manga:
         """Ajout d'un manga à partir de ses attributs.
 
         Parameters
         ----------
         titre : str
             Titre du manga à ajouter.
-        id_jikan : int
-            ID associé au manga.
+        auteurs : str
+            Auteurs du manga.
+        genres : str
+            Genres du manga.
+        status : str
+            Statut du manga (publishing ou finished).
+        chapitres : int
+            Nombre de chapitres du manga.
 
         Returns
         -------
         Manga
             Le manga ajouté, ou None si l'ajout a échoué.
         """
-        manga = Manga(titre=titre, id_jikan=id_jikan)
+        # Création de l'objet Manga avec tous les attributs fournis
+        manga = Manga(
+            titre=titre,
+            auteurs=auteurs,
+            genres=genres,
+            status=status,
+            nombre_chapitres=nombre_chapitres,
+        )
+
+        # Utiliser le DAO pour ajouter le manga
         if MangaDao().ajouter_manga(manga):
             return manga
         return None
@@ -36,6 +51,7 @@ class MangaService:
         list[Manga]
             La liste des mangas.
         """
+
         return MangaDao().lister_manga()
 
     @log

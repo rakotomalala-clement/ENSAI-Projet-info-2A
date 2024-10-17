@@ -1,6 +1,7 @@
 import logging
 
 from utils.singleton import Singleton
+
 from utils.log_decorator import log
 from dao.db_connection import DBConnection
 from business_object.manga import Manga
@@ -65,11 +66,11 @@ class MangaDao(metaclass=Singleton):
         return [
             Manga(
                 id_manga=row["id_manga"],
+                #  id_jikan=row["id_jikan"],
                 titre=row["titre"],
-                id_jikan=row["id_jikan"],
-                auteur=row["auteur"],
-                genre=row["genre"],
-                statut=row["statut"],
+                auteurs=row["auteurs"],
+                genres=row["genres"],
+                status=row["status_manga"],
                 nombre_chapitre=row["nombre_chapitre"],
             )
             for row in res
@@ -115,13 +116,22 @@ class MangaDao(metaclass=Singleton):
         bool
             True si le manga a bien été ajouté.
         """
+
         try:
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "INSERT INTO manga (titre, id_jikan) VALUES (%(titre)s, %(id_jikan)s);",
-                        {"titre": manga.titre, "id_jikan": manga.id_jikan},
+                        "INSERT INTO manga ( titre, auteurs, genres, status_manga, chapitres) "
+                        "VALUES (%(titre)s, %(auteurs)s, %(genres)s, %(status_manga)s, %(chapitres)s);",
+                        {
+                            "titre": manga.titre,
+                            "auteurs": manga.auteurs,
+                            "genres": manga.genres,
+                            "status_manga": manga.status,
+                            "chapitres": manga.nombre_chapitres,
+                        },
                     )
+
                     return cursor.rowcount > 0
         except Exception as e:
             logging.error(e)

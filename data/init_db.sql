@@ -14,8 +14,8 @@ CREATE TABLE manga(
     titre       VARCHAR(100) UNIQUE NOT NULL,
     auteurs TEXT, 
     genres TEXT,
-    statut BOOLEAN,
-    nombre_chapitres INTEGER
+    status_manga VARCHAR(50),
+    chapitres INTEGER
     
 );
 

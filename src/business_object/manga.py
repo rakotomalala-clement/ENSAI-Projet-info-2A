@@ -12,15 +12,14 @@ class Manga:
         identifiant jikan du manga
     """
 
-    def __init__(self, titre, auteur, genre, statut, nombre_chapitre, id_manga=None, id_jikan=None):
+    def __init__(self, titre, auteurs, genres, status, nombre_chapitres, id_manga=None):
         """Constructeur"""
         self.id_manga = id_manga
         self.titre = titre
-        self.id_jikan = id_jikan
-        self.auteur = auteur
-        self.genre = genre
-        self.statut = statut
-        self.nombre_chapitre = nombre_chapitre
+        self.auteurs = auteurs
+        self.genres = genres
+        self.status = status
+        self.nombre_chapitres = nombre_chapitres
 
     def __str__(self):
         """Permet d'afficher les informations du manga"""
