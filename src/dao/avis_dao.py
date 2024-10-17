@@ -233,11 +233,74 @@ class DaoAvis(metaclass=Singleton):
 
     @log
     def supprimer_avis(self, id_avis):
-        return None
+        """Supprime un avis de la base de données
+
+        Parameters:
+        -----------
+
+        id_avis: int
+            identifiant de l'avis que l'on souhaite supprimer de la base de
+            données
+
+        Returns:
+        --------
+
+        """
+
+        res = None
+
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor as cursor:
+                    cursor.execute(
+                        "DELETE FROM avis" " WHERE id_avis= %(id_avis)s;",
+                        {"id_avis": id_avis},
+                    )
+                    res = cursor.rowcount
+
+        except Exception as e:
+            logging.info(e)
+            raise
+
+        return res > 0
 
     @log
     def modifier_avis(self, avis: Avis):
-        return None
+        """Modifie un avis dans la base de données
+
+        Parameters:
+        -----------
+
+        avis: Avis
+            avis modifié que  l'on souhaite modifier dans la base de données
+
+        Return:
+        -------
+
+        """
+
+        res = None
+
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor as cursor:
+                    cursor.execute(
+                        "UPDATE avis "
+                        "SET avis = %(avis)s, note = %(note)s"
+                        " WHERE id_avis = %(id_avis)s;",
+                        {
+                            "avis": avis.avis,
+                            "note": avis.note,
+                            "id_avis": avis.id_avis,
+                        },
+                    )
+                    res = cursor.rowcount
+
+        except Exception as e:
+            logging.info(e)
+            raise
+
+        return res == 1
 
     @log
     def chercher_avis_sur_manga(self, id_manga):
