@@ -17,7 +17,7 @@ class Avis:
 
     """
 
-    def __init__(self, id_avis: int, avis: str, note: int):
+    def __init__(self, note: int, avis: str, id_avis: int = None):
         self.avis = avis
         self.note = note
         self.id_avis = id_avis
