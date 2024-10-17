@@ -40,8 +40,9 @@ class AccueilVue(VueAbstraite):
                 return "3"
 
             case "Rechercher manga":
+                from recherche_manga_vue import RechercheMangaVue
 
-                return "4"
+                return RechercheMangaVue().choisir_menu()
 
             case "Rechercher collection":
 
@@ -49,4 +50,4 @@ class AccueilVue(VueAbstraite):
 
 
 if __name__ == "__main__":
-    print(AccueilVue().choisir_menu())
+    AccueilVue().choisir_menu()
