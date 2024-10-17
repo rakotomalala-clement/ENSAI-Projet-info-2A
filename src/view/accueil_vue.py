@@ -44,9 +44,10 @@ class AccueilVue(VueAbstraite):
 
                 return RechercheMangaVue().choisir_menu()
 
-            case "Rechercher collection":
+            case "Rechercher utilisateur":
+                from recherche_utilisateur_vue import RechercheUtilisateurVue
 
-                return "5"
+                return RechercheUtilisateurVue().choisir_menu()
 
 
 if __name__ == "__main__":
