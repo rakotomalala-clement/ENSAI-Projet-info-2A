@@ -1,7 +1,5 @@
 import logging
-
 from utils.singleton import Singleton
-
 from utils.log_decorator import log
 from dao.db_connection import DBConnection
 from business_object.manga import Manga
@@ -12,18 +10,7 @@ class MangaDao(metaclass=Singleton):
 
     @log
     def trouver_par_titre(self, titre: str) -> Manga:
-        """Trouver un manga grâce à son titre.
-
-        Parameters
-        ----------
-        titre : str
-            Titre du manga que l'on souhaite trouver.
-
-        Returns
-        -------
-        Manga
-            Renvoie le manga que l'on cherche par son titre.
-        """
+        """Trouver un manga grâce à son titre."""
         try:
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
@@ -33,7 +20,7 @@ class MangaDao(metaclass=Singleton):
                     )
                     res = cursor.fetchone()
         except Exception as e:
-            logging.error(e)  # Utilisation de error pour des exceptions
+            logging.error(e)
             raise
 
         if res:
@@ -50,13 +37,7 @@ class MangaDao(metaclass=Singleton):
 
     @log
     def lister_manga(self) -> list[Manga]:
-        """Lister tous les mangas.
-
-        Returns
-        -------
-        list[Manga]
-            Renvoie la liste de tous les mangas dans la base de données.
-        """
+        """Lister tous les mangas."""
         try:
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
@@ -69,7 +50,6 @@ class MangaDao(metaclass=Singleton):
         return [
             Manga(
                 id_manga=row["id_manga"],
-                #  id_jikan=row["id_jikan"],
                 titre=row["titre"],
                 auteurs=row["auteurs"],
                 genres=row["genres"],
@@ -81,18 +61,7 @@ class MangaDao(metaclass=Singleton):
 
     @log
     def supprimer_manga(self, manga: Manga) -> bool:
-        """Suppression d'un manga dans la base de données.
-
-        Parameters
-        ----------
-        manga : Manga
-            Manga à supprimer de la base de données.
-
-        Returns
-        -------
-        bool
-            True si le manga a bien été supprimé.
-        """
+        """Suppression d'un manga dans la base de données."""
         try:
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
@@ -107,34 +76,22 @@ class MangaDao(metaclass=Singleton):
 
     @log
     def ajouter_manga(self, manga: Manga) -> bool:
-        """Ajout d'un manga dans la base de données.
-
-        Parameters
-        ----------
-        manga : Manga
-            Manga à ajouter dans la base de données.
-
-        Returns
-        -------
-        bool
-            True si le manga a bien été ajouté.
-        """
-
+        """Ajout d'un manga dans la base de données."""
         try:
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "INSERT INTO manga ( titre, auteurs, genres, status_manga, chapitres) "
-                        "VALUES (%(titre)s, %(auteurs)s, %(genres)s, %(status_manga)s, %(chapitres)s);",
+                        "INSERT INTO manga (titre, auteurs, genres, status_manga, nombre_chapitre) "
+                        "VALUES (%(titre)s, %(auteurs)s, %(genres)s, %(status_manga)s,\
+                            %(nombre_chapitres)s);",
                         {
                             "titre": manga.titre,
                             "auteurs": manga.auteurs,
                             "genres": manga.genres,
                             "status_manga": manga.status,
-                            "chapitres": manga.nombre_chapitres,
+                            "nombre_chapitres": manga.nombre_chapitres,
                         },
                     )
-
                     return cursor.rowcount > 0
         except Exception as e:
             logging.error(e)

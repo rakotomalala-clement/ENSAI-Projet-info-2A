@@ -1,5 +1,6 @@
 from InquirerPy import inquirer
 from view.vue_abstraite import VueAbstraite
+from view.affichage_manga_vue import AffichageMangaVue
 
 # from service.manga_service import MangaService
 
@@ -24,4 +25,8 @@ class RechercheMangaVue(VueAbstraite):
 
         print(titre)
 
-        return titre
+        return AffichageMangaVue(titre).choisir_menu()
+
+
+if __name__ == "__main__":
+    RechercheMangaVue().choisir_menu()

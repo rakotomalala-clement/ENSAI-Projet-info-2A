@@ -27,6 +27,7 @@ class MangaService:
         -------
         Manga
             Le manga ajouté, ou None si l'ajout a échoué.
+
         """
         # Création de l'objet Manga avec tous les attributs fournis
         manga = Manga(
