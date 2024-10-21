@@ -30,7 +30,7 @@ class MangaDao(metaclass=Singleton):
                 auteurs=res["auteurs"],
                 genres=res["genres"],
                 status=res["status_manga"],
-                nombre_chapitre=res["chapitres"],
+                nombre_chapitres=res["chapitres"],
             )
 
         return None
@@ -54,7 +54,7 @@ class MangaDao(metaclass=Singleton):
                 auteurs=row["auteurs"],
                 genres=row["genres"],
                 status=row["status_manga"],
-                nombre_chapitre=row["chapitres"],
+                nombre_chapitres=row["chapitres"],
             )
             for row in res
         ]
@@ -83,13 +83,13 @@ class MangaDao(metaclass=Singleton):
                     cursor.execute(
                         "INSERT INTO manga (titre, auteurs, genres, status_manga, nombre_chapitre) "
                         "VALUES (%(titre)s, %(auteurs)s, %(genres)s, %(status_manga)s,\
-                            %(nombre_chapitre)s);",
+                            %(nombre_chapitres)s);",
                         {
                             "titre": manga.titre,
                             "auteurs": manga.auteurs,
                             "genres": manga.genres,
                             "status_manga": manga.status,
-                            "nombre_chapitre": manga.nombre_chapitres,
+                            "nombre_chapitres": manga.nombre_chapitres,
                         },
                     )
                     return cursor.rowcount > 0
