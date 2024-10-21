@@ -40,7 +40,10 @@ class MangaDao(metaclass=Singleton):
             return Manga(
                 id_manga=res["id_manga"],
                 titre=res["titre"],
-                id_jikan=res["id_jikan"],
+                auteurs=res["auteurs"],
+                genres=res["genres"],
+                status=res["status_manga"],
+                nombre_chapitres=res["chapitres"],
             )
 
         return None
@@ -71,7 +74,7 @@ class MangaDao(metaclass=Singleton):
                 auteurs=row["auteurs"],
                 genres=row["genres"],
                 status=row["status_manga"],
-                nombre_chapitre=row["nombre_chapitre"],
+                nombre_chapitres=row["chapitres"],
             )
             for row in res
         ]
