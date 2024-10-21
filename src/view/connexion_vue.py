@@ -1,5 +1,6 @@
 from InquirerPy import inquirer
 from view.vue_abstraite import VueAbstraite
+from view.accueil_connecte_vue import AccueilConnecteVue
 
 
 class ConnexionVue(VueAbstraite):
@@ -25,4 +26,4 @@ class ConnexionVue(VueAbstraite):
 
         print("Vous êtes connectés")
 
-        return 0
+        return AccueilConnecteVue().choisir_menu()
