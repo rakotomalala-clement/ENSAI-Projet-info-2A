@@ -32,12 +32,14 @@ class AccueilVue(VueAbstraite):
                 pass
 
             case "Se connecter":
+                from connexion import ConnexionVue
 
-                return "2"
+                return ConnexionVue().choisir_menu()
 
             case "Créer un compte":
+                from inscription import InscriptionVue
 
-                return "3"
+                return InscriptionVue().choisir_menu()
 
             case "Rechercher manga":
                 from recherche_manga_vue import RechercheMangaVue
