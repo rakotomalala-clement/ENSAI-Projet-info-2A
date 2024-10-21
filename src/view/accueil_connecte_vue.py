@@ -2,11 +2,11 @@ from InquirerPy import inquirer
 from view.vue_abstraite import VueAbstraite
 
 
-class AccueilVue(VueAbstraite):
+class AccueilConnecteVue(VueAbstraite):
     """Vue d'accueil de l'application"""
 
     def choisir_menu(self):
-        """Choix du menu suivant
+        """Choix du menu suivant sachant que l'on est connecté
 
         Return
         ------
@@ -19,10 +19,9 @@ class AccueilVue(VueAbstraite):
         choix = inquirer.select(
             message="Faites votre choix : ",
             choices=[
-                "Se connecter",
-                "Créer un compte",
                 "Rechercher manga",
                 "Rechercher utilisateur",
+                "Gérer ses collections",
                 "Quitter",
             ],
         ).execute()
@@ -30,16 +29,6 @@ class AccueilVue(VueAbstraite):
         match choix:
             case "Quitter":
                 pass
-
-            case "Se connecter":
-                from connexion_vue import ConnexionVue
-
-                return ConnexionVue().choisir_menu()
-
-            case "Créer un compte":
-                from inscription_vue import InscriptionVue
-
-                return InscriptionVue().choisir_menu()
 
             case "Rechercher manga":
                 from recherche_manga_vue import RechercheMangaVue
@@ -51,6 +40,7 @@ class AccueilVue(VueAbstraite):
 
                 return RechercheUtilisateurVue().choisir_menu()
 
+            case "Gérer ses collections":
+                from gestion_collection_vue import GestionCollectionVue
 
-if __name__ == "__main__":
-    AccueilVue().choisir_menu()
+                return GestionCollectionVue().choisir_menu()
