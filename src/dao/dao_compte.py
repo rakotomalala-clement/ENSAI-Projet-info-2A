@@ -9,26 +9,13 @@ from dao.db_connection import DBConnection
 from business_object import Utilisateur
 from dao.db_connection import DBConnection
 
+
 class DaoCompte(metaclass=Singleton):
-
-    def creer_table_utilisateur(self):
-
-        create_table_query = """
-        CREATE TABLE IF NOT EXISTS utilisateurs (
-            id SERIAL PRIMARY KEY,
-            nom_utilisateur VARCHAR(100) NOT NULL UNIQUE,
-            mot_de_passe VARCHAR(100) NOT NULL
-        );
-        """
-        with DBConnection().connection as connection:
-            with connection.cursor() as cursor:
-                cursor.execute(create_table_query)
-                connection.commit()
 
     def creer_utilisateur(self, nom_utilisateur: str, mot_de_passe: str):
 
         insert_query = """
-        INSERT INTO utilisateurs (nom_utilisateur, mot_de_passe)
+        INSERT INTO utilisateur (nom_utilisateur, mot_de_passe)
         VALUES (%s, %s) RETURNING id;
         """
         with DBConnection().connection as connection:
