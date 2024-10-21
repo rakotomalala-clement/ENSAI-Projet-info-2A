@@ -26,7 +26,7 @@ class AffichageMangaVue(VueAbstraite):
 
         manga = MangaService().trouver_par_titre(self.titre)
 
-        auteur1 = manga.auteurs[0]
+        auteur1 = manga.auteurs
         status = manga.status
 
         print(auteur1)
