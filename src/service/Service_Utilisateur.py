@@ -1,6 +1,7 @@
 from dao.dao_compte import DaoCompte
-from Utilisateur import Utilisateur
+from business_object.utilisateur import Utilisateur
 from utils.securite import hash_password
+from utils.log_decorator import log
 
 
 class ServiceUtilisateur:
@@ -33,3 +34,24 @@ class ServiceUtilisateur:
             print(f"Les informations de {utilisateur.nom_utilisateur} ont été mises à jour.")
         else:
             print("Utilisateur non trouvé.")
+
+    @log
+    def modifier(self, utilisateur) -> Utilisateur:
+        """Modification d'un utilisateur"""
+
+        utilisateur.mot_de_passe = hash_password(
+            utilisateur.mot_de_passe, utilisateur.nom_utilisateur
+        )
+        return utilisateur if DaoCompte().modifier(utilisateur) else None
+
+    @log
+    def lister_tous(self, inclure_mdp=False) -> list[Utilisateur]:
+        """Lister tous les utlisateurs
+        Si inclure_mdp=True, les mots de passe seront inclus
+        Par défaut, tous les mdp des joueurs sont à None
+        """
+        utilisateurs = DaoCompte().lister_tous()
+        if not inclure_mdp:
+            for u in utilisateurs:
+                u.mot_de_passe = None
+        return utilisateurs
