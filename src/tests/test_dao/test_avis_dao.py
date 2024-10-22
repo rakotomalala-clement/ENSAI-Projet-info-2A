@@ -9,22 +9,28 @@ from business_object.avis import Avis
 from dao.avis_dao import DaoAvis
 
 
-@pytest.fixture(scope="session", autouse=True)
-def setup_test_environment():
-    """Initialisation des données de test"""
-    with patch.dict(os.environ, {"SCHEMA": "projet_test_dao"}):
-        ResetDatabase().lancer(test_dao=True)
-        yield
-
-
-def test_creer_ok():
+def test_creer_avis_ok():
     """Création de Joueur réussie"""
 
     # GIVEN
-    avis = Avis(1, 1, "cool", 5)
+    avis = Avis(1, "cool", 5)
 
     # WHEN
-    creation_ok = DaoAvis().creer_avis(avis)
+    creation_ok = DaoAvis().creer_avis(1, 1, avis)
+
+    # THEN
+    assert creation_ok
+    assert avis.id_avis == 1
+
+
+def test_creer_avis_col_coherente_ok():
+    """Création de Joueur réussie"""
+
+    # GIVEN
+    avis = Avis(1, "cool", 5)
+
+    # WHEN
+    creation_ok = DaoAvis().creer_avis_collection_coherente(1, 1, avis)
 
     # THEN
     assert creation_ok
