@@ -1,6 +1,6 @@
 from InquirerPy import inquirer
 from view.vue_abstraite import VueAbstraite
-from view.affichage_manga_vue import AffichageMangaVue
+from view.passif.affichage_manga_vue import AffichageMangaVue
 
 # from service.manga_service import MangaService
 
