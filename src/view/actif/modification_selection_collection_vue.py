@@ -21,6 +21,9 @@ class ModificationSelectionCollectionVue(VueAbstraite):
         # on va utiliser Session
         # faire une liste
 
+        # from view.passif.connexion.session import Session
+        # Session().nom_utilisateur
+
         choix = inquirer.select(
             message="Voulez-vous créer ou modifier une de vos collections?",
             choices=["a"],
