@@ -1,12 +1,12 @@
 # dao_compte.py
 import logging
-from Utilisateur import Utilisateur
+from business_object.utilisateur import Utilisateur
 from utils.singleton import Singleton
 from utils.log_decorator import log
 
 from dao.db_connection import DBConnection
 
-from business_object import Utilisateur
+
 from dao.db_connection import DBConnection
 
 
