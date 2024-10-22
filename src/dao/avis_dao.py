@@ -42,14 +42,14 @@ class DaoAvis(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "INSERT INTO "
-                        "avis(id_utilisateur, id_jikan_manga, avis, note) "
+                        "avis(id_utilisateur, id_manga, avis, note) "
                         "VALUES "
-                        "(%(id_utilisateur)s,%(id_jikan_manga)s,%(avis)s, "
+                        "(%(id_utilisateur)s,%(id_manga)s,%(avis)s, "
                         "%(note)s) "
-                        "RETURNING id_jikan_manga; ",
+                        "RETURNING id_manga; ",
                         {
                             "id_utilisateur": id_utilisateur,
-                            "id_jikan_manga": id_manga,
+                            "id_manga": id_manga,
                             "avis": avis_manga.avis,
                             "note": avis_manga.note,
                         },
