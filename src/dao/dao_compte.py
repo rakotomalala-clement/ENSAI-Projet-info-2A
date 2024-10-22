@@ -9,7 +9,6 @@ from dao.db_connection import DBConnection
 import os
 
 
-
 class DaoCompte(metaclass=Singleton):
 
     def creer_utilisateur(self, utilisateur: Utilisateur) -> bool:
@@ -75,8 +74,8 @@ class DaoCompte(metaclass=Singleton):
         return None
 
     def mettre_a_jour_utilisateur(
-       self, id_utilisateur: int, nom_utilisateur: str, mdp: str) -> bool:
-
+        self, id_utilisateur: int, nom_utilisateur: str, mdp: str
+    ) -> bool:
 
         update_query = """
         UPDATE utilisateur
@@ -99,16 +98,7 @@ class DaoCompte(metaclass=Singleton):
             logging.error(e)
             raise
 
-
     @log
-
-        with DBConnection().connection as connection:
-            with connection.cursor() as cursor:
-                cursor.execute(update_query, (nouveau_nom, nouveau_mot_de_passe, id_utilisateur))
-                connection.commit()
-
-                return self.trouver_utilisateur_par_id(id_utilisateur)
-
     def supprimer_utilisateur(self, id_utilisateur: int):
         delete_query = """
         DELETE FROM utilisateurs WHERE id = %s;
