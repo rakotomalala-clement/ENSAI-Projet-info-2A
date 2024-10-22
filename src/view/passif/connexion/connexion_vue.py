@@ -24,6 +24,12 @@ class ConnexionVue(VueAbstraite):
         print(nom_utilisateur)
         print(mdp)
 
+        from view.passif.connexion.session import Session
+
+        Session().connexion(nom_utilisateur)
+
+        print(Session().nom_utilisateur)
+
         print("Vous êtes connectés")
 
         return AccueilConnecteVue().choisir_menu()
