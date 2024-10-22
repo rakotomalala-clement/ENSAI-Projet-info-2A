@@ -1,8 +1,8 @@
 import logging
-from utils.singleton import Singleton
 from utils.log_decorator import log
 from dao.db_connection import DBConnection
 from business_object.manga import Manga
+from utils.singleton import Singleton
 
 
 class MangaDao(metaclass=Singleton):

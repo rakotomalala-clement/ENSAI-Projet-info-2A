@@ -31,16 +31,16 @@ class AccueilConnecteVue(VueAbstraite):
                 pass
 
             case "Rechercher manga":
-                from recherche_manga_vue import RechercheMangaVue
+                from view.passif.recherche_manga_vue import RechercheMangaVue
 
                 return RechercheMangaVue().choisir_menu()
 
             case "Rechercher utilisateur":
-                from recherche_utilisateur_vue import RechercheUtilisateurVue
+                from view.passif.recherche_utilisateur_vue import RechercheUtilisateurVue
 
                 return RechercheUtilisateurVue().choisir_menu()
 
             case "Gérer ses collections":
-                from gestion_collection_vue import GestionCollectionVue
+                from view.actif.gestion_collection_vue import GestionCollectionVue
 
                 return GestionCollectionVue().choisir_menu()
