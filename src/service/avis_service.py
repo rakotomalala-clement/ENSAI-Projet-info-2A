@@ -14,7 +14,9 @@ class ServiceAvis:
         """Création d'un avis à partir de ses attributs"""
 
         nouveau_avis = Avis(avis, note)
-        return nouveau_avis if DaoAvis.creer_avis(id_utilisateur, id_manga, nouveau_avis) else None
+        return (
+            nouveau_avis if DaoAvis().creer_avis(id_utilisateur, id_manga, nouveau_avis) else None
+        )
 
     @log
     def ajouter_avis_collection(self, id_utilisateur, id_collection, type_collection, avis, note):
@@ -25,7 +27,7 @@ class ServiceAvis:
         if "c" in type_collection:
             return (
                 nouveau_avis_collection
-                if DaoAvis.creer_avis_collection_coherente(
+                if DaoAvis().creer_avis_collection_coherente(
                     id_utilisateur, id_collection, nouveau_avis_collection
                 )
                 else None
@@ -33,7 +35,7 @@ class ServiceAvis:
         elif "p" in type_collection:
             return (
                 nouveau_avis_collection
-                if DaoAvis.creer_avis_collection_physique(
+                if DaoAvis().creer_avis_collection_physique(
                     id_utilisateur, id_collection, nouveau_avis_collection
                 )
                 else None
@@ -69,12 +71,12 @@ class ServiceAvis:
     def modifier(self, avis) -> Avis:
         """Modification d'un avis"""
 
-        return avis if DaoAvis.modifier_avis(avis) else None
+        return avis if DaoAvis().modifier_avis(avis) else None
 
     @log
     def supprimer(self, id_avis) -> bool:
         """Supprimer un avis"""
-        return DaoAvis.supprimer_avis(id_avis)
+        return DaoAvis().supprimer_avis(id_avis)
 
     @log
     def afficher_autre_avis(self, id_manga):
@@ -101,3 +103,11 @@ class ServiceAvis:
         str_avis += "\n"
 
         return str_avis
+
+
+resultat = ServiceAvis().ajouter_avis(id_utilisateur=1, id_manga=1, avis="cool", note=5)
+
+if resultat:
+    print("Avis ajouté avec succès :", resultat)
+else:
+    print("Échec de l'ajout de l'avis.")
