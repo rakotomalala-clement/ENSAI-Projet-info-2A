@@ -1,7 +1,7 @@
-from collection import Collection
+from collection_asbtraite import AbstractCollection
 
 
-class CollectionCohérente(Collection):
+class CollectionCohérente(AbstractCollection):
 
     def __init__(self, titre: str, description: str, id_collection: int = None):
         super().__init__(

@@ -6,8 +6,7 @@ from utils.log_decorator import log
 from dao.db_connection import DBConnection
 
 
-from business_object.collection_physique import CollectionPhysique
-from business_object.collection_cohérente import CollectionCoherente
+from business_object.collection.collection_physique import CollectionPhysique
 
 
 class DaoCollection(metaclass=Singleton):
