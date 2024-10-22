@@ -41,6 +41,8 @@ class AccueilConnecteVue(VueAbstraite):
                 return RechercheUtilisateurVue().choisir_menu()
 
             case "Gérer ses collections":
-                from view.actif.gestion_collection_vue import GestionCollectionVue
+                from view.actif.gestion_collection.gestion_collection_vue import (
+                    GestionCollectionVue,
+                )
 
                 return GestionCollectionVue().choisir_menu()
