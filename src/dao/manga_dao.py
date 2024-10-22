@@ -81,15 +81,15 @@ class MangaDao(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "INSERT INTO manga (titre, auteurs, genres, status_manga, nombre_chapitres)"
+                        "INSERT INTO manga (titre, auteurs, genres, status_manga, chapitres)"
                         "VALUES (%(titre)s, %(auteurs)s, %(genres)s, %(status_manga)s,\
-                            %(nombre_chapitres)s);",
+                            %(chapitres)s);",
                         {
                             "titre": manga.titre,
                             "auteurs": manga.auteurs,
                             "genres": manga.genres,
                             "status_manga": manga.status,
-                            "nombre_chapitres": manga.nombre_chapitres,
+                            "chapitres": manga.nombre_chapitres,
                         },
                     )
                     return cursor.rowcount > 0
