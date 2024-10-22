@@ -1,11 +1,9 @@
-DROP SCHEMA IF EXISTS projet_info_2A CASCADE;
-CREATE SCHEMA projet_info_2A;
 
 DROP TABLE IF EXISTS utilisateur CASCADE;
 CREATE TABLE utilisateur(
     id_utilisateur    SERIAL PRIMARY KEY,
     nom_utilisateur       VARCHAR(50) UNIQUE NOT NULL,
-    mdp          VARCHAR(50) NOT NULL
+    mdp          VARCHAR(255) NOT NULL
 );
 
 DROP TABLE IF EXISTS manga CASCADE;
@@ -79,7 +77,8 @@ CREATE TABLE avis_collection_coherente_db(
 DROP TABLE IF EXISTS avis_collection_physique_db CASCADE;
 CREATE TABLE avis_collection_physique_db(
     id_avis_collection_physique SERIAL PRIMARY KEY,
-    id_utilisateur INTEGER NOT NULL  , --L'utilisateur qui donne avis sur la collection
+    id_utilisateur INTEGER NOT NULL  , 
+    id_collection INTEGER NOT NULL,--L'utilisateur qui donne avis sur la collection
     avis       TEXT UNIQUE,
     note          INTEGER CHECK (note BETWEEN 1 AND 5),
     UNIQUE (id_utilisateur, id_collection),

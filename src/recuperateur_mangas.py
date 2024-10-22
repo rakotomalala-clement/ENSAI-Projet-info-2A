@@ -1,6 +1,8 @@
 import requests
 import time
 from service.manga_service import MangaService
+import os
+import dotenv
 
 
 class RecuperateurManga:
@@ -8,6 +10,8 @@ class RecuperateurManga:
         self.base_url = base_url
 
     def recuperer_data_manga(self, start_id=1, end_id=5):
+
+        dotenv.load_dotenv()
 
         for id_manga in range(start_id, end_id + 1):
             # Construction de l'URL pour chaque manga (via son id)
@@ -61,4 +65,5 @@ class RecuperateurManga:
 
 
 if __name__ == "__main__":
+
     RecuperateurManga("https://api.jikan.moe/v4/manga").recuperer_data_manga()
