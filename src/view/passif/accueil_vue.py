@@ -32,12 +32,12 @@ class AccueilVue(VueAbstraite):
                 pass
 
             case "Se connecter":
-                from connexion_vue import ConnexionVue
+                from connexion.connexion_vue import ConnexionVue
 
                 return ConnexionVue().choisir_menu()
 
             case "Créer un compte":
-                from inscription_vue import InscriptionVue
+                from connexion.inscription_vue import InscriptionVue
 
                 return InscriptionVue().choisir_menu()
 

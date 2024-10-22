@@ -11,15 +11,24 @@ class GestionCollectionVue(VueAbstraite):
         Return
         ------
         view
-            Retourne un menu permettant à l'utilisateur de se connecter
+            Retourne un menu permettant à l'utilisateur de gérer ses collections
         """
 
         print("\n" + "-" * 50 + "\nGestionnaire de collection\n" + "-" * 50 + "\n")
 
-        nom_collection = inquirer.text(
-            message="Veuillez saisir le nom de la collection à accéder"
+        choix = inquirer.select(
+            message="Voulez-vous créer ou modifier une de vos collections?",
+            choices=[
+                "Créer collection",
+                "Modifier collection",
+            ],
         ).execute()
 
-        print(nom_collection)
+        match choix:
+            case "Créer collection":
+                print("coucou")
+
+            case "Modifier collection":
+                print("oucouc")
 
         return 0

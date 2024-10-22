@@ -1,7 +1,6 @@
 import os
-import dotenv
 import psycopg2
-
+import dotenv
 from psycopg2.extras import RealDictCursor
 from utils.singleton import Singleton
 
