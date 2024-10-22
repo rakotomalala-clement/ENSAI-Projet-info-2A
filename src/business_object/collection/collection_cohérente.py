@@ -7,6 +7,6 @@ class CollectionCohérente(Collection):
         super().__init__(
             id_collection=id_collection,
             titre=titre,
-            description=description,
             type_collection="Cohérente",
         )
+        self.description = description
