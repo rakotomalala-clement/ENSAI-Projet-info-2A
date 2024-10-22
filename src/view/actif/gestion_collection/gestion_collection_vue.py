@@ -23,7 +23,8 @@ class GestionCollectionVue(VueAbstraite):
 
         match choix:
             case "Créer une collection":
-                print("coucou")
+                from view.actif.gestion_collection.creer_collection_vue import CreerCollectionVue
+                return CreerCollectionVue().choisir_menu()
 
             case "Modifier une collection":
                 # récupérer les noms des collections dont l'utilisateur est

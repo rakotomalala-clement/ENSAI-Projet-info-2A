@@ -11,6 +11,8 @@ class Session(metaclass=Singleton):
     def __init__(self):
         """Création de la session"""
         self.nom_utilisateur = None
+        self.connecte = False
 
     def connexion(self, nom_utilisateur):
         self.nom_utilisateur = nom_utilisateur
+        self.connecte = True
