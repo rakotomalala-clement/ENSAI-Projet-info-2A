@@ -66,8 +66,8 @@ class MangaDao(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "DELETE FROM manga WHERE id_manga=%(id_manga)s;",
-                        {"id_manga": manga.id_manga},
+                        "DELETE FROM manga WHERE titre=%(titre)s;",
+                        {"titre": manga.titre},
                     )
                     return cursor.rowcount > 0
         except Exception as e:
@@ -81,9 +81,9 @@ class MangaDao(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "INSERT INTO manga (titre, auteurs, genres, status_manga, chapitres)"
+                        "INSERT INTO manga (titre, auteurs, genres, status_manga, nombre_chapitres)"
                         "VALUES (%(titre)s, %(auteurs)s, %(genres)s, %(status_manga)s,\
-                            %(chapitres)s);",
+                            %(nombre_chapitres)s);",
                         {
                             "titre": manga.titre,
                             "auteurs": manga.auteurs,
