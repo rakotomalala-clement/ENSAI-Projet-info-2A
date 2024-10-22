@@ -1,11 +1,7 @@
 import logging
-
 from utils.singleton import Singleton
 from utils.log_decorator import log
-
 from dao.db_connection import DBConnection
-
-
 from business_object.avis import Avis
 
 
@@ -16,54 +12,49 @@ class DaoAvis(metaclass=Singleton):
     """
 
     @log
-    def creer_avis(self, id_utilisateur, id_manga, avis_manga: Avis):
-        """Création d'un avis sur un manga dans la base de donnée
+    def creer_avis(self, id_utilisateur: int, id_manga: int, avis: Avis) -> bool:
+        """Création d'un avis sur un manga dans la base de donnée.
 
         Parameters:
         -----------
-
         id_utilisateur: int
-            identifiant de l'utilisateur pour lequel on souhaite créer
-            un avis
+            Identifiant de l'utilisateur qui souhaite créer un avis.
 
         id_manga: int
-        identifiant du manga sur lequel l'utilisateur souhaite laisser un
-        avis
+            Identifiant du manga sur lequel l'utilisateur souhaite laisser un avis.
+
+        avis: Avis
+            Objet contenant le texte de l'avis et la note.
 
         Returns:
         --------
-
+        bool
+            True si l'avis a été créé avec succès, False sinon.
         """
-
-        res = None
 
         try:
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "INSERT INTO "
-                        "avis(id_utilisateur, id_manga, avis, note) "
-                        "VALUES "
-                        "(%(id_utilisateur)s,%(id_manga)s,%(avis)s, "
-                        "%(note)s) "
-                        "RETURNING id_avis; ",
-                        {
-                            "id_utilisateur": id_utilisateur,
-                            "id_manga": id_manga,
-                            "avis": avis_manga.avis,
-                            "note": avis_manga.note,
-                        },
+                        """
+                        INSERT INTO avis (id_utilisateur, id_manga, avis, note)
+                        VALUES (%s, %s, %s, %s)
+                        RETURNING id_avis;
+                        """,
+                        (id_utilisateur, id_manga, avis.avis, avis.note),
                     )
-                    res = cursor.fetchone()
+                    # Récupérer l'ID de l'avis inséré
+                    id_avis = cursor.fetchone()
+
+                    # Si un ID a été retourné, l'avis a été créé avec succès
+                    if id_avis:
+                        avis.id_avis = id_avis["id_avis"]
+                        return True
+
         except Exception as e:
-            logging.info(e)
+            logging.error(f"Erreur lors de la création de l'avis: {e}")
 
-        created = False
-        if res:
-            avis_manga.id_avis = res["id_avis"]
-            created = True
-
-        return created
+        return False
 
     @log
     def creer_avis_collection_coherente(
