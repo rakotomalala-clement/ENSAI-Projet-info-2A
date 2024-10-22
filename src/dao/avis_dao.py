@@ -46,7 +46,7 @@ class DaoAvis(metaclass=Singleton):
                         "VALUES "
                         "(%(id_utilisateur)s,%(id_manga)s,%(avis)s, "
                         "%(note)s) "
-                        "RETURNING id_manga; ",
+                        "RETURNING id_avis; ",
                         {
                             "id_utilisateur": id_utilisateur,
                             "id_manga": id_manga,
@@ -203,9 +203,9 @@ class DaoAvis(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "SELECT id_avis, avis.avis, note FROM avis "
+                        "SELECT id_avis, avis, note FROM avis "
                         "JOIN utilisateur USING(id_utilisateur) "
-                        "WHERE id_jikan_manga = %(id_manga)s "
+                        "WHERE id_manga = %(id_manga)s "
                         "AND id_utilisateur = %(id_utilisateur)s;",
                         {
                             "id_manga": id_manga,
@@ -324,7 +324,7 @@ class DaoAvis(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT id_avis, avis.avis, note FROM avis "
-                        "WHERE id_jikan_manga = %(id_manga)s;",
+                        "WHERE id_manga = %(id_manga)s;",
                         {
                             "id_manga": id_manga,
                         },
@@ -347,3 +347,7 @@ class DaoAvis(metaclass=Singleton):
                 )
 
         return Liste_avis
+
+
+if __name__ == "__main__":
+    DaoAvis().creer_avis(1, 3, Avis(5, "coollll"))

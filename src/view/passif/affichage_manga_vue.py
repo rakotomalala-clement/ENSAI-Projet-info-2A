@@ -29,7 +29,7 @@ class AffichageMangaVue(VueAbstraite):
         auteurs = manga.auteurs
         status = manga.status
 
-        print(auteurs)
-        print(status)
+        print("auteur(s): ", auteurs)
+        print("Etat de la diffusion du manga: ", status)
 
         return self.titre

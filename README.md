@@ -1,1 +1,9 @@
-# ENSAI-Projet-info-2A
+# ENSAI-Projet-info-2A groupe 21
+
+Ce projet correspond au développement d'une application dédiée à la gestion et au partage de collections de mangas. Son objectif principal est d'offrir aux utilisateurs la possibilité de créer des collections personnalisées, d'échanger des avis sur leurs mangas favoris et de consulter ceux partagés par d'autres membres de la communauté. L'application propose plusieurs fonctionnalités essentielles, telles que la gestion des utilisateurs (inscription, connexion, déconnexion, suppression de compte), ainsi que la recherche de mangas via l'API Jikan, qui est une API pour MyAnimeList.net. Elle récupère les informations du site afin de combler les lacunes fonctionnelles de l'API officielle de MyAnimeList.net, et permet d'obtenir des informations détaillées sur chaque titre.
+
+En complément, l'application permet de créer, mettre à jour et supprimer des collections thématiques (listes de mangas favoris, séries recommandées) et des collections physiques (mangas possédés, derniers tomes acquis, statut des séries). Les utilisateurs peuvent également rédiger, modifier et supprimer des avis sur les mangas, tout en ayant accès aux critiques partagées par la communauté.
+
+L'architecture de l'application repose sur une approche de programmation orientée objet (POO), assurant une organisation modulaire et évolutive. Chaque fonctionnalité est modélisée par des classes distinctes, ce qui facilite l'intégration de nouvelles options à l'avenir.
+
+En outre, l'application doit respecter les contraintes techniques de l'API, notamment les limites de requêtes par seconde, en optimisant la gestion des appels externes. Les aspects liés à la gestion des données, à la performance, ainsi qu'à l'organisation du code seront détaillés dans des rapports futurs, accompagnés de diagrammes explicatifs.

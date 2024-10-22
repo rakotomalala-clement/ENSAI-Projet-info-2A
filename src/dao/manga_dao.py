@@ -21,7 +21,7 @@ class MangaDao(metaclass=Singleton):
                     res = cursor.fetchone()
         except Exception as e:
             logging.error(e)
-            raise
+            raise e
 
         if res:
             return Manga(
@@ -36,6 +36,26 @@ class MangaDao(metaclass=Singleton):
         return None
 
     @log
+    def trouver_id_par_titre(self, titre: str) -> int:
+        """Trouver l'identifiant d'un manga grâce à son titre."""
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT id_manga FROM manga WHERE titre = %(titre)s;",
+                        {"titre": titre},
+                    )
+                    res = cursor.fetchone()
+        except Exception as e:
+            logging.error(e)
+            raise e
+
+        if res:
+            return res["id_manga"]
+
+        return None
+
+    @log
     def lister_manga(self) -> list[Manga]:
         """Lister tous les mangas."""
         try:
@@ -45,7 +65,7 @@ class MangaDao(metaclass=Singleton):
                     res = cursor.fetchall()
         except Exception as e:
             logging.error(e)
-            raise
+            raise e
 
         return [
             Manga(
@@ -66,13 +86,13 @@ class MangaDao(metaclass=Singleton):
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "DELETE FROM manga WHERE id_manga=%(id_manga)s;",
-                        {"id_manga": manga.id_manga},
+                        "DELETE FROM manga WHERE titre=%(titre)s;",
+                        {"titre": manga.titre},
                     )
                     return cursor.rowcount > 0
         except Exception as e:
             logging.error(e)
-            raise
+            raise e
 
     @log
     def ajouter_manga(self, manga: Manga) -> bool:
@@ -82,17 +102,17 @@ class MangaDao(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "INSERT INTO manga (titre, auteurs, genres, status_manga, chapitres) "
-                        "VALUES (%(titre)s, %(auteurs)s, %(genres)s, %(status_manga)s,\
-                            %(nombre_chapitres)s);",
+                        "VALUES (%(titre)s, %(auteurs)s, %(genres)s, %(status_manga)s, "
+                        "%(chapitres)s);",
                         {
                             "titre": manga.titre,
                             "auteurs": manga.auteurs,
                             "genres": manga.genres,
                             "status_manga": manga.status,
-                            "nombre_chapitres": manga.nombre_chapitres,
+                            "chapitres": manga.nombre_chapitres,
                         },
                     )
                     return cursor.rowcount > 0
         except Exception as e:
-            logging.error(e)
-            raise
+            logging.exception("An error occurred while adding a manga:")
+            raise e

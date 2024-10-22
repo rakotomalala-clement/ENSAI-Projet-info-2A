@@ -5,7 +5,7 @@ from dao.db_connection import DBConnection
 
 class TestDaoCompte(unittest.TestCase):
 
-    def test_creer_utilisateur():
+    def test_creer_utilisateur(self):
         # Test the creation of a user
         utilisateur = DaoCompte().creer_utilisateur("test_user", "password123")
         assertIsNotNone(utilisateur)
@@ -39,9 +39,9 @@ class TestDaoCompte(unittest.TestCase):
         self.assertTrue(result)
         self.assertIsNone(DaoCompte().trouver_utilisateur_par_id(utilisateur.id))
 
-    def tearDown(self):
+    """def tearDown(self):
         # Close connections or clean up database if necessary
-        DaoCompte().fermer_connexion()
+        DaoCompte().fermer_connexion()"""
 
 
 if __name__ == "__main__":

@@ -10,21 +10,21 @@ DROP TABLE IF EXISTS manga CASCADE;
 CREATE TABLE manga(
     id_manga    SERIAL PRIMARY KEY,
     titre       VARCHAR(100) UNIQUE NOT NULL,
-    auteurs TEXT, 
+    auteurs TEXT,
     genres TEXT,
     status_manga VARCHAR(50),
     chapitres INTEGER
-    
+
 );
 
 DROP TABLE IF EXISTS avis CASCADE;
 CREATE TABLE avis(
-    id_avis SERIAL PRIMARY KEY, 
+    id_avis SERIAL PRIMARY KEY,
     id_utilisateur INTEGER NOT NULL,
     id_manga INTEGER NOT NULL,
     avis          TEXT,
     note          INTEGER,
-    UNIQUE(id_utilisateur, id_manga), 
+    UNIQUE(id_utilisateur, id_manga),
     FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur) ON DELETE CASCADE,
     FOREIGN KEY (id_manga) REFERENCES manga(id_manga) ON DELETE CASCADE
 );
@@ -85,4 +85,3 @@ CREATE TABLE avis_collection_physique_db(
     FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur) ON DELETE CASCADE,
     FOREIGN KEY (id_collection) REFERENCES collection_physique(id_collection) ON DELETE CASCADE
 );
-
