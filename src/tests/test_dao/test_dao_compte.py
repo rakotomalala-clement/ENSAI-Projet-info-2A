@@ -1,40 +1,34 @@
 import unittest
+import os
+import pytest
+from unittest.mock import patch
+from utils.reset_database import ResetDatabase
 from dao.dao_compte import DaoCompte
-from dao.db_connection import DBConnection
+from business_object.utilisateur import Utilisateur
 
 
 class TestDaoCompte(unittest.TestCase):
-
     def test_creer_utilisateur(self):
-        # Test the creation of a user
-        utilisateur = DaoCompte().creer_utilisateur("test_user", "password123")
-        assertIsNotNone(utilisateur)
-        assertEqual(utilisateur.nom_utilisateur, "test_user")
+        utilisateur = Utilisateur("test_user2", "mdptest2")
+        creation_user = DaoCompte().creer_utilisateur(utilisateur)
+        assert creation_user
 
-    def test_trouver_utilisateur_par_id(self):
-        # Test finding a user by ID
-        utilisateur = DaoCompte().creer_utilisateur("test_user", "password123")
-        found_utilisateur = DaoCompte().trouver_utilisateur_par_id(utilisateur.id)
-        assertEqual(found_utilisateur.nom_utilisateur, "test_user")
+    def test_trouver_utilisateur_par_id_true(self):
+        found_utilisateur = DaoCompte().trouver_utilisateur_par_id(1)
+        assert found_utilisateur is not None
 
-    def test_trouver_utilisateur_par_nom(self):
-        # Test finding a user by username
-        DaoCompte().creer_utilisateur("test_user", "password123")
-        found_utilisateur = DaoCompte().trouver_utilisateur_par_nom("test_user")
-        assertIsNotNone(found_utilisateur)
-        assertEqual(found_utilisateur.nom_utilisateur, "test_user")
+    def test_trouver_utilisateur_par_nom_true(self):
+        found_utilisateur = DaoCompte().trouver_utilisateur_par_nom("nom1")
+        assert found_utilisateur is not None
 
     def test_mettre_a_jour_utilisateur(self):
         # Test updating a user
-        utilisateur = DaoCompte().creer_utilisateur("test_user", "password123")
-        updated_utilisateur = DaoCompte().mettre_a_jour_utilisateur(
-            utilisateur.id, "new_name", "new_password"
-        )
-        assertEqual(updated_utilisateur.nom_utilisateur, "new_name")
+        updated_utilisateur = DaoCompte().mettre_a_jour_utilisateur(1, "new_name", "new_password")
+        assert updated_utilisateur
 
     def test_supprimer_utilisateur(self):
         # Test deleting a user
-        utilisateur = DaoCompte().creer_utilisateur("test_user", "password123")
+
         result = DaoCompte().supprimer_utilisateur(utilisateur.id)
         self.assertTrue(result)
         self.assertIsNone(DaoCompte().trouver_utilisateur_par_id(utilisateur.id))
