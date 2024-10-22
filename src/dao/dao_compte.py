@@ -1,64 +1,106 @@
 # dao_compte.py
-import logging
 from business_object.utilisateur import Utilisateur
 from utils.singleton import Singleton
+from dao.db_connection import DBConnection
 from utils.log_decorator import log
+import logging
 
 from dao.db_connection import DBConnection
 import os
 
 
+
 class DaoCompte(metaclass=Singleton):
 
-    def creer_utilisateur(self, nom_utilisateur: str, mot_de_passe: str):
+    def creer_utilisateur(self, utilisateur: Utilisateur) -> bool:
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "INSERT INTO utilisateur (nom_utilisateur, mdp)"
+                        " VALUES (%(nom_utilisateur)s, %(mdp)s);",
+                        {"nom_utilisateur": utilisateur.nom_utilisateur, "mdp": utilisateur.mdp},
+                    )
 
-        insert_query = """
-        INSERT INTO utilisateur (nom_utilisateur, mot_de_passe)
-        VALUES (%s, %s) RETURNING id;
-        """
-        with DBConnection().connection as connection:
-            with connection.cursor() as cursor:
-                cursor.execute(insert_query, (nom_utilisateur, mot_de_passe))
-                nouvel_id = cursor.fetchone()[0]
-                connection.commit()
+                    # nouvel_id = cursor.fetchone()[0]
+                    # connection.commit()
+                    return cursor.rowcount > 0
+        except Exception as e:
+            logging.error(e)
+            raise
 
-        return Utilisateur(nouvel_id, nom_utilisateur, mot_de_passe)
-
-    def trouver_utilisateur_par_id(self, id_utilisateur: int):
-
-        select_query = """
-        SELECT id, nom_utilisateur, mot_de_passe FROM utilisateurs WHERE id = %s;
-        """
-        with DBConnection().connection as connection:
-            with connection.cursor() as cursor:
-                cursor.execute(select_query, (id_utilisateur,))
-                utilisateur = cursor.fetchone()
-                if utilisateur:
-                    return Utilisateur(utilisateur[0], utilisateur[1], utilisateur[2])
-                return None
-
-    def trouver_utilisateur_par_nom(self, nom_utilisateur: str):
+    def trouver_utilisateur_par_id(self, id_utilisateur: int) -> Utilisateur:
 
         select_query = """
-        SELECT id, nom_utilisateur, mot_de_passe FROM utilisateurs WHERE nom_utilisateur = %s;
+        SELECT id_utilisateur, nom_utilisateur, mdp FROM utilisateur WHERE id_utilisateur = %(id_utilisateur)s;
         """
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(select_query, {"id_utilisateur": id_utilisateur})
+                    res = cursor.fetchone()
+        except Exception as e:
+            logging.error(e)
+            raise
 
-        with DBConnection().connection as connection:
-            with connection.cursor() as cursor:
-                cursor.execute(select_query, (nom_utilisateur,))
-                utilisateur = cursor.fetchone()
-                if utilisateur:
-                    return Utilisateur(utilisateur[0], utilisateur[1], utilisateur[2])
-                return None
+        if res:
+            return Utilisateur(
+                id_utilisateur=res["id_utilisateur"],
+                nom_utilisateur=res["nom_utilisateur"],
+                mdp=res["mdp"],
+            )
+        return None
+
+    @log
+    def trouver_utilisateur_par_nom(self, nom_utilisateur: str) -> Utilisateur:
+
+        select_query = """
+        SELECT id_utilisateur, nom_utilisateur, mdp FROM utilisateur WHERE nom_utilisateur = %(nom_utilisateur)s;
+        """
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(select_query, {"nom_utilisateur": nom_utilisateur})
+                    res = cursor.fetchone()
+        except Exception as e:
+            logging.error(e)
+            raise
+
+        if res:
+            return Utilisateur(
+                id_utilisateur=res["id_utilisateur"],
+                nom_utilisateur=res["nom_utilisateur"],
+                mdp=res["mdp"],
+            )
+        return None
 
     def mettre_a_jour_utilisateur(
-        self, id_utilisateur: int, nouveau_nom: str, nouveau_mot_de_passe: str
-    ):
+       self, id_utilisateur: int, nom_utilisateur: str, mdp: str) -> bool:
+
+
         update_query = """
-        UPDATE utilisateurs
-        SET nom_utilisateur = %s, mot_de_passe = %s
-        WHERE id = %s;
+        UPDATE utilisateur
+        SET nom_utilisateur = %(nom_utilisateur)s, mdp = %(mdp)s
+        WHERE id_utilisateur = %(id_utilisateur)s;
         """
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        update_query,
+                        {
+                            "nom_utilisateur": nom_utilisateur,
+                            "mdp": mdp,
+                            "id_utilisateur": id_utilisateur,
+                        },
+                    )
+                    return cursor.rowcount > 0
+        except Exception as e:
+            logging.error(e)
+            raise
+
+
+    @log
 
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
@@ -78,6 +120,7 @@ class DaoCompte(metaclass=Singleton):
                 connection.commit()
         return True
 
+    @log
     def fermer_connexion(self):
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
