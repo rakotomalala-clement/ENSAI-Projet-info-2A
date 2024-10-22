@@ -21,11 +21,12 @@ CREATE TABLE manga(
 
 DROP TABLE IF EXISTS avis CASCADE;
 CREATE TABLE avis(
+    id_avis SERIAL PRIMARY KEY, 
     id_utilisateur INTEGER NOT NULL,
     id_manga INTEGER NOT NULL,
     avis          TEXT,
     note          INTEGER,
-    PRIMARY KEY (id_utilisateur, id_manga),
+    UNIQUE(id_utilisateur, id_manga), 
     FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur) ON DELETE CASCADE,
     FOREIGN KEY (id_manga) REFERENCES manga(id_manga) ON DELETE CASCADE
 );
@@ -41,46 +42,48 @@ CREATE TABLE collection_coherente(
 
 DROP TABLE IF EXISTS collection_coherente_mangas CASCADE;
 CREATE TABLE collection_coherente_mangas (
+    id_collection_coherente_manga SERIAL PRIMARY KEY,
     id_collection INTEGER NOT NULL,
     id_manga INTEGER NOT NULL,
-    PRIMARY KEY (id_collection, id_manga),
+    UNIQUE (id_collection, id_manga),
     FOREIGN KEY (id_collection) REFERENCES collection_coherente(id_collection),
     FOREIGN KEY (id_manga) REFERENCES manga(id_manga)
 );
 
 DROP TABLE IF EXISTS collection_physique CASCADE;
 CREATE TABLE collection_physique(
+    id_collection SERIAL PRIMARY KEY,
     id_utilisateur INTEGER NOT NULL,
     id_manga INTEGER NOT NULL,
     titre_collection VARCHAR(50) UNIQUE NOT NULL,
     numero_dernier_tome  INTEGER,
     numeros_tomes_manquants TEXT,
     status_collection VARCHAR(10),
-    PRIMARY KEY (id_utilisateur, id_manga),
+    UNIQUE (id_utilisateur, id_manga),
     FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur) ON DELETE CASCADE,
     FOREIGN KEY (id_manga) REFERENCES manga(id_manga) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS avis_collection_coherente_db CASCADE;
 CREATE TABLE avis_collection_coherente_db(
+    id_avis_collection_coherente SERIAL PRIMARY KEY,
     id_utilisateur INTEGER NOT NULL  ,
     id_collection_coherente INTEGER NOT NULL,
     avis       TEXT UNIQUE,
     note          INTEGER CHECK (note BETWEEN 1 AND 5),
-    PRIMARY KEY (id_utilisateur, id_collection_coherente),
+    UNIQUE (id_utilisateur, id_collection_coherente),
     FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur) ON DELETE CASCADE,
     FOREIGN KEY (id_collection_coherente) REFERENCES collection_coherente(id_collection) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS avis_collection_physique_db CASCADE;
 CREATE TABLE avis_collection_physique_db(
-    id_utilisateur_avis INTEGER NOT NULL  , --L'utilisateur qui donne avis sur la collection
-    id_utilisateur_collection INTEGER NOT NULL,  -- L'utilisateur qui a créé la collection
-    id_manga INTEGER NOT NULL,
+    id_avis_collection_physique SERIAL PRIMARY KEY,
+    id_utilisateur INTEGER NOT NULL  , --L'utilisateur qui donne avis sur la collection
     avis       TEXT UNIQUE,
     note          INTEGER CHECK (note BETWEEN 1 AND 5),
-    PRIMARY KEY (id_utilisateur_avis, id_utilisateur_collection, id_manga),
-    FOREIGN KEY (id_utilisateur_avis) REFERENCES utilisateur(id_utilisateur) ON DELETE CASCADE,
-    FOREIGN KEY (id_utilisateur_collection, id_manga) REFERENCES collection_physique(id_utilisateur, id_manga) ON DELETE CASCADE
+    UNIQUE (id_utilisateur, id_collection),
+    FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur) ON DELETE CASCADE,
+    FOREIGN KEY (id_collection) REFERENCES collection_physique(id_collection) ON DELETE CASCADE
 );
 

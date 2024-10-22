@@ -8,8 +8,14 @@ class Manga:
         identifiant du manga
     titre : str
         titre du manga
-    id_jikan : int
-        identifiant jikan du manga
+    auteurs : list[str]
+        auteurs du manga
+    genres : str
+        genre du manga
+    nombre_chapitres : int
+        nombre_chapitres du manga
+    status : str
+        status du manga
     """
 
     def __init__(self, titre, auteurs, genres, status, nombre_chapitres, id_manga=None):

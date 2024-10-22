@@ -1,8 +1,8 @@
 import logging
-from utils.singleton import Singleton
 from utils.log_decorator import log
 from dao.db_connection import DBConnection
 from business_object.manga import Manga
+from utils.singleton import Singleton
 
 
 class MangaDao(metaclass=Singleton):
@@ -27,11 +27,10 @@ class MangaDao(metaclass=Singleton):
             return Manga(
                 id_manga=res["id_manga"],
                 titre=res["titre"],
-                id_jikan=res["id_jikan"],
                 auteurs=res["auteurs"],
                 genres=res["genres"],
                 status=res["status_manga"],
-                nombre_chapitre=res["nombre_chapitre"],
+                nombre_chapitres=res["chapitres"],
             )
 
         return None
@@ -55,7 +54,7 @@ class MangaDao(metaclass=Singleton):
                 auteurs=row["auteurs"],
                 genres=row["genres"],
                 status=row["status_manga"],
-                nombre_chapitre=row["nombre_chapitre"],
+                nombre_chapitres=row["chapitres"],
             )
             for row in res
         ]
@@ -84,13 +83,13 @@ class MangaDao(metaclass=Singleton):
                     cursor.execute(
                         "INSERT INTO manga (titre, auteurs, genres, status_manga, nombre_chapitre) "
                         "VALUES (%(titre)s, %(auteurs)s, %(genres)s, %(status_manga)s,\
-                            %(nombre_chapitre)s);",
+                            %(nombre_chapitres)s);",
                         {
                             "titre": manga.titre,
                             "auteurs": manga.auteurs,
                             "genres": manga.genres,
                             "status_manga": manga.status,
-                            "nombre_chapitre": manga.nombre_chapitres,
+                            "nombre_chapitres": manga.nombre_chapitres,
                         },
                     )
                     return cursor.rowcount > 0
