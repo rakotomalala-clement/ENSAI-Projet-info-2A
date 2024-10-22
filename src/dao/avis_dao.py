@@ -338,7 +338,3 @@ class DaoAvis(metaclass=Singleton):
                 )
 
         return Liste_avis
-
-
-if __name__ == "__main__":
-    DaoAvis().creer_avis(1, 3, Avis(5, "coollll"))

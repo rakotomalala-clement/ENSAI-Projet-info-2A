@@ -12,7 +12,7 @@ from dao.avis_dao import DaoAvis
 @pytest.fixture(scope="session", autouse=True)
 def setup_test_environment():
     """Initialisation des données de test"""
-    with patch.dict(os.environ, {"SCHEMA": "projet_info_2a"}):
+    with patch.dict(os.environ, {"SCHEMA": "projet_info_dao"}):
         ResetDatabase().lancer()
         yield
 
@@ -81,4 +81,5 @@ def test_chercher_avis():
 """
 
 if __name__ == "__main__":
-    pytest.main([__file__])
+
+    DaoAvis().creer_avis(1, 1, Avis(5, "coollll"))
