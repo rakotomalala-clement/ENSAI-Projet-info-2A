@@ -5,9 +5,7 @@ from utils.singleton import Singleton
 from utils.log_decorator import log
 
 from dao.db_connection import DBConnection
-
-
-from dao.db_connection import DBConnection
+import os
 
 
 class DaoCompte(metaclass=Singleton):
@@ -53,7 +51,9 @@ class DaoCompte(metaclass=Singleton):
                     return Utilisateur(utilisateur[0], utilisateur[1], utilisateur[2])
                 return None
 
-    def mettre_a_jour_utilisateur(self, id_utilisateur: int, nouveau_nom: str, nouveau_mdp: str):
+    def mettre_a_jour_utilisateur(
+        self, id_utilisateur: int, nouveau_nom: str, nouveau_mot_de_passe: str
+    ):
         update_query = """
         UPDATE utilisateurs
         SET nom_utilisateur = %s, mot_de_passe = %s
@@ -62,7 +62,7 @@ class DaoCompte(metaclass=Singleton):
 
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
-                cursor.execute(update_query, (nouveau_nom, nouveau_mdp, id_utilisateur))
+                cursor.execute(update_query, (nouveau_nom, nouveau_mot_de_passe, id_utilisateur))
                 connection.commit()
 
                 return self.trouver_utilisateur_par_id(id_utilisateur)
@@ -83,3 +83,65 @@ class DaoCompte(metaclass=Singleton):
             with connection.cursor() as cursor:
                 cursor.close()
                 connection.close()
+
+    def lister_tous(self) -> list[Utilisateur]:
+
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT *                              "
+                        "  FROM utilisateur;                        "
+                    )
+                    res = cursor.fetchall()
+        except Exception as e:
+            logging.info(e)
+            raise
+
+        liste_utilisateurs = []
+
+        if res:
+            for row in res:
+                utilisateur = Utilisateur(
+                    id_utilisateur=row["id_utilisateur"],
+                    nom_utilisateur=row["nom_utilisateur"],
+                    mot_de_passe=row["mdp"],
+                )
+
+                liste_utilisateurs.append(utilisateur)
+
+        return liste_utilisateurs
+
+    @log
+    def modifier(self, utilisateur) -> bool:
+        print(
+            os.environ.get("POSTGRES_SCHEMA")
+        )  # Useful for debugging, consider removing in production
+
+        try:
+            with DBConnection().connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "UPDATE utilisateur                                      "
+                        "   SET nom_utilisateur = %(nom_utilisateur)s,           "
+                        "       mdp            = %(mot_de_passe)s               "
+                        " WHERE id_utilisateur   = %(id_utilisateur)s;            ",
+                        {
+                            "nom_utilisateur": utilisateur.nom_utilisateur,
+                            "mot_de_passe": utilisateur.mot_de_passe,
+                            "id_utilisateur": utilisateur.id_utilisateur,
+                        },
+                    )
+
+                    # Check how many rows were affected
+                    if cursor.rowcount == 0:
+                        logging.warning(f"No user found with id {utilisateur.id_utilisateur}.")
+                        return False
+                    else:
+                        print(f"User {utilisateur.id_utilisateur} updated successfully.")
+                        return True
+
+        except Exception as e:
+            logging.error(f"Error updating user: {e}")
+            print(e)
+            return False  # Return False in case of an error

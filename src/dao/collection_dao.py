@@ -30,9 +30,13 @@ class DaoCollection(metaclass=Singleton):
                         cursor.execute(
                             "INSERT INTO collection_physique(id_utilisateur, id_manga, titre_collection, numero_dernier_tome, numeros_tomes_manquants,status_collection) VALUES        "
                             "(%(id_utilisateur)s, %(id_manga)s, %(titre_collection)s, %(numero_dernier_tome)s, %(numeros_tomes_manquants)s, )             "
-                            "  RETURNING id_joueur;                                                ",
+                            "  RETURNING id_colelction;                                                ",
                             {
-                                
+                                "id_utilisateur": id_utilisateur,
+                                "id_manga": id_manga,
+                                "titre_collection": collection.titre,
+                                "numero_dernier_tome": collection.numero_dernier_tome,
+                                "numeros_tomes_manquants": collection.numeros_tomes_manquants,
                             },
                         )
                         res = cursor.fetchone()
@@ -41,7 +45,7 @@ class DaoCollection(metaclass=Singleton):
 
             created = False
             if res:
-                joueur.id_joueur = res["id_joueur"]
+                collection.id_joueur = res["id_collection"]
                 created = True
 
             return created
