@@ -18,17 +18,41 @@ class GestionCollectionVue(VueAbstraite):
 
         choix = inquirer.select(
             message="Voulez-vous créer ou modifier une de vos collections?",
-            choices=[
-                "Créer collection",
-                "Modifier collection",
-            ],
+            choices=["Créer une collection", "Modifier une collection", "Supprimer une collection"],
         ).execute()
 
         match choix:
-            case "Créer collection":
+            case "Créer une collection":
                 print("coucou")
 
-            case "Modifier collection":
-                print("oucouc")
+            case "Modifier une collection":
+                # récupérer les noms des collections dont l'utilisateur est
+                # Session().nom_utilisateur
+                # sous forme de liste qui va etre le choices
+
+                choix_collection = inquirer.select(
+                    message="Quelle collection souhaitez-vous modifier?", choices=["a", "b"]
+                ).execute()
+
+                print(choix_collection)
+
+                from view.actif.gestion_collection.collection_utilisateur_vue import (
+                    CollectionUtilisateurVue,
+                )
+
+                return CollectionUtilisateurVue(choix_collection).choisir_menu()
+
+            case "Supprimer une collection":
+                choix_collection = inquirer.select(
+                    message="Quelle collection souhaitez-vous modifier?", choices=["a", "b"]
+                ).execute()
+
+                print(choix_collection)
+
+                from view.actif.gestion_collection.collection_utilisateur_vue import (
+                    CollectionUtilisateurVue,
+                )
+
+                print(choix_collection)
 
         return 0

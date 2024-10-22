@@ -72,6 +72,22 @@ class MangaService:
         return MangaDao().trouver_par_titre(titre)
 
     @log
+    def trouver_id_par_titre(self, titre: str) -> int:
+        """Trouver l'id d'un manga à partir de son titre.
+
+        Parameters
+        ----------
+        titre : str
+            Titre du manga à rechercher.
+
+        Returns
+        -------
+        id_manga : int
+            L'id du manga trouvé, ou None si aucun manga ne correspond au titre.
+        """
+        return MangaDao().trouver_id_par_titre(titre)
+
+    @log
     def supprimer_manga(self, manga: Manga) -> bool:
         """Supprimer un manga.
 
