@@ -46,7 +46,7 @@ class DaoAvis(metaclass=Singleton):
                         "VALUES "
                         "(%(id_utilisateur)s,%(id_manga)s,%(avis)s, "
                         "%(note)s) "
-                        "RETURNING id_manga; ",
+                        "RETURNING id_avis; ",
                         {
                             "id_utilisateur": id_utilisateur,
                             "id_manga": id_manga,
