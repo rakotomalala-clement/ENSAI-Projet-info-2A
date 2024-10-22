@@ -1,7 +1,7 @@
-from collection import Collection
+from business_object.collection.collection_abstraite import AbstractCollection
 
 
-class CollectionPhysique(Collection):
+class CollectionPhysique(AbstractCollection):
 
     def __init__(
         self, id_collection, titre, dernier_tome_acquis, numeros_tomes_manquants, status_collection

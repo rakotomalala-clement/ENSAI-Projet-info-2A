@@ -2,7 +2,7 @@ import os
 import pytest
 from unittest.mock import patch
 from utils.reset_database import ResetDatabase
-from dao.collection_dao import CollectionDao
+from dao.collection_dao import DaoCollection
 from business_object.collection.collection_physique import CollectionPhysique
 
 
@@ -27,7 +27,7 @@ def test_creer_ok():
     )
 
     # WHEN
-    creation_ok = CollectionDao().creer(1, 1, collection)
+    creation_ok = DaoCollection().creer(1, 1, collection)
 
     # THEN
     assert creation_ok
