@@ -1,6 +1,8 @@
 from InquirerPy import inquirer
 from view.vue_abstraite import VueAbstraite
 from view.actif.accueil_connecte_vue import AccueilConnecteVue
+from view.passif.accueil_vue import AccueilVue
+from service.Service_Utilisateur import ServiceUtilisateur
 
 
 class ConnexionVue(VueAbstraite):
@@ -21,15 +23,13 @@ class ConnexionVue(VueAbstraite):
 
         mdp = inquirer.text(message="Veuillez saisir votre mot de passe").execute()
 
-        print(nom_utilisateur)
-        print(mdp)
+        utilisateur = ServiceUtilisateur().connecter_utilisateur(nom_utilisateur, mdp)
 
-        from view.passif.connexion.session import Session
+        if utilisateur:
+            from view.passif.connexion.session import Session
 
-        Session().connexion(nom_utilisateur)
+            Session().connexion(nom_utilisateur)
 
-        print(Session().nom_utilisateur)
-
-        print("Vous êtes connectés")
-
-        return AccueilConnecteVue().choisir_menu()
+            return AccueilConnecteVue().choisir_menu()
+        else:
+            return AccueilVue().choisir_menu()

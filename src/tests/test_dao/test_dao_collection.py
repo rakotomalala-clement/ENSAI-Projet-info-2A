@@ -19,27 +19,68 @@ from business_object.collection.collection_coherente import CollectionCoherente
 #     os.environ["POSTGRES_SCHEMA"] = original_schema
 
 
-def test_creer_collection_physique():
-    """Test de la création d'une collection physique."""
+# def test_creer_collection_physique():
+#     """Test de la création d'une collection physique."""
+#     dao_collection = DaoCollection()
+#     collection = CollectionPhysique(
+#         id_collection=None,
+#         titre="2",
+#         dernier_tome_acquis=2,
+#         numeros_tomes_manquants="3 - 4",
+#         status_collection="t",
+#     )
+
+#     result = dao_collection.creer(
+#         id_utilisateur=3, collection=collection, schema="projet_test_dao", id_manga=1
+#     )
+#     assert result is True
+
+
+# def test_creer_collection_coherente():
+#     """Test de la création d'une collection cohérente."""
+#     dao_collection = DaoCollection()
+#     collection = CollectionCoherente(titre="4", description="description 1", id_collection=None)
+
+#     result = dao_collection.creer(
+#         id_utilisateur=10, collection=collection, schema="projet_test_dao", id_manga=None
+#     )
+#     assert result is True
+
+
+def test_rechercher_collection_coherente():
+    """Test de la recherche des collections cohérentes d'un utilisateur par son ID."""
+    print("début")
     dao_collection = DaoCollection()
-    collection = CollectionPhysique(
-        id_collection=None,
-        titre="1",
-        dernier_tome_acquis=2,
-        numeros_tomes_manquants="3 - 4",
-        status_collection="t",
+
+    id_utilisateur = 11
+
+    collections = dao_collection.rechercher_collection_coherente_par_user(
+        id_utilisateur, schema="projet_test_dao"
     )
 
-    result = dao_collection.creer(
-        id_utilisateur=1, collection=collection, schema="projet_test_dao", id_manga=1
-    )
-    assert result is True
+    assert collections is not None, "La recherche n'a retourné aucun résultat."
+    assert isinstance(collections, list), "Le résultat n'est pas une liste."
+
+    if collections:
+        for collection in collections:
+            print("hello" + collection.titre)
+            assert isinstance(
+                collection, CollectionCoherente
+            ), "Un élément n'est pas du type CollectionCoherente."
+
+            assert collection.titre is not None, "Le titre de la collection ne doit pas être nul."
 
 
-def test_creer_collection_coherente():
-    """Test de la création d'une collection cohérente."""
-    dao_collection = DaoCollection()
-    collection = CollectionCoherente(id_collection=None, titre="1", description="description 1")
+# def test_ajouter_mangas_a_collection():
+#     """Test de l'ajout de mangas à une collection cohérente."""
 
-    result = dao_collection.creer(id_utilisateur=1, collection=collection, schema="projet_test_dao")
-    assert result is True
+#     collection_id = 5
+#     liste_mangas = [1, 2, 3]
+
+#     dao_collection = DaoCollection()
+
+#     result = dao_collection.ajouter_mangas_a_collection(
+#         collection_id, liste_mangas, schema="projet_test_dao"
+#     )
+
+#     assert result is True

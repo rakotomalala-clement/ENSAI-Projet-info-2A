@@ -9,10 +9,10 @@ class MangaDao(metaclass=Singleton):
     """Classe contenant les méthodes pour accéder aux Manga de la base de données"""
 
     @log
-    def trouver_par_titre(self, titre: str) -> Manga:
+    def trouver_par_titre(self, schema, titre: str) -> Manga:
         """Trouver un manga grâce à son titre."""
         try:
-            with DBConnection().connection as connection:
+            with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT * FROM manga WHERE titre = %(titre)s;",
@@ -36,10 +36,10 @@ class MangaDao(metaclass=Singleton):
         return None
 
     @log
-    def trouver_id_par_titre(self, titre: str) -> int:
+    def trouver_id_par_titre(self, schema, titre: str) -> int:
         """Trouver l'identifiant d'un manga grâce à son titre."""
         try:
-            with DBConnection().connection as connection:
+            with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT id_manga FROM manga WHERE titre = %(titre)s;",
@@ -56,10 +56,10 @@ class MangaDao(metaclass=Singleton):
         return None
 
     @log
-    def lister_manga(self) -> list[Manga]:
+    def lister_manga(self, schema) -> list[Manga]:
         """Lister tous les mangas."""
         try:
-            with DBConnection().connection as connection:
+            with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute("SELECT * FROM manga;")
                     res = cursor.fetchall()
@@ -80,10 +80,10 @@ class MangaDao(metaclass=Singleton):
         ]
 
     @log
-    def supprimer_manga(self, manga: Manga) -> bool:
+    def supprimer_manga(self, schema, manga: Manga) -> bool:
         """Suppression d'un manga dans la base de données."""
         try:
-            with DBConnection().connection as connection:
+            with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "DELETE FROM manga WHERE titre=%(titre)s;",
@@ -95,10 +95,10 @@ class MangaDao(metaclass=Singleton):
             raise e
 
     @log
-    def ajouter_manga(self, manga: Manga) -> bool:
+    def ajouter_manga(self, schema, manga: Manga) -> bool:
         """Ajout d'un manga dans la base de données, en évitant les doublons."""
         try:
-            with DBConnection().connection as connection:
+            with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
                     # Vérifie d'abord si le manga existe déjà
                     cursor.execute(
@@ -114,7 +114,8 @@ class MangaDao(metaclass=Singleton):
                         cursor.execute(
                             """
                             INSERT INTO manga (titre, auteurs, genres, status_manga, chapitres)
-                            VALUES (%(titre)s, %(auteurs)s, %(genres)s, %(status_manga)s, %(chapitres)s);
+                            VALUES (%(titre)s, %(auteurs)s, %(genres)s, %(status_manga)s,\
+                                %(chapitres)s);
                             """,
                             {
                                 "titre": manga.titre,
