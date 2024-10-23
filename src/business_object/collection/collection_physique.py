@@ -4,7 +4,12 @@ from business_object.collection.collection_abstraite import AbstractCollection
 class CollectionPhysique(AbstractCollection):
 
     def __init__(
-        self, id_collection, titre, dernier_tome_acquis, numeros_tomes_manquants, status_collection
+        self,
+        titre,
+        dernier_tome_acquis,
+        numeros_tomes_manquants,
+        status_collection,
+        id_collection=None,
     ):
         super().__init__(
             id_collection=id_collection,
