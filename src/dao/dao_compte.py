@@ -69,6 +69,7 @@ class DaoCompte(metaclass=Singleton):
             return Utilisateur(
                 nom_utilisateur=res["nom_utilisateur"],
                 mdp=res["mdp"],
+                id_utilisateur=res["id_utilisateur"],
             )
         return None
 

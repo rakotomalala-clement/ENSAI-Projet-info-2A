@@ -2,8 +2,13 @@ import pytest
 from business_object.avis import Avis
 from dao.avis_dao import DaoAvis
 
-
-avis_manga = Avis(note=5, avis="Superbe manga !")
+DaoAvis().supprimer_avis(
+    schema="projet_test_dao",
+    id_avis=DaoAvis().trouver_id_avis_par_id_manga_utilisateur(
+        schema="projet_test_dao", id_manga=1, id_utilisateur=12
+    ),
+)
+DaoAvis().supprimer_avis_col_coherente(id_avis_collection_coherente=5, schema="projet_test_dao")
 
 
 def test_creer_avis_ok():
@@ -53,8 +58,9 @@ def test_creer_avis_col_physique_ok():
     # THEN
     assert creation_ok
 
+
 def test_chercher_avis():
-    Recherche des avis laisser par un utilisateur sur un manga
+    """Recherche des avis laisser par un utilisateur sur un manga"""
 
     # GIVEN
 
@@ -66,14 +72,21 @@ def test_chercher_avis():
     for a in listeavis:
         assert isinstance(a, Avis)
 
+
 def test_modifier_avis_ok():
     avis = Avis(note=5, avis="cool")
-    avis_originelle = DaoAvis().creer_avis("projet_test_dao", id_utilisateur=1, id_manga=1, avis_manga=avis)
-    
-    modification = DaoAvis().modifier_avis("projet_test_dao", avis=Avis(id_avis=avis_originelle.id_avis, avis="Superbe manga !", note=4))
-    
+    avis_originelle = DaoAvis().creer_avis(
+        "projet_test_dao", id_utilisateur=1, id_manga=1, avis_manga=avis
+    )
+
+    modification = DaoAvis().modifier_avis(
+        "projet_test_dao",
+        avis=Avis(id_avis=avis_originelle.id_avis, avis="Superbe manga !", note=4),
+    )
+
     assert avis_originelle.avis != modification.avis
     assert avis_originelle.note != modification.note
+
 
 if __name__ == "__main__":
     pytest.main([__file__])

@@ -30,8 +30,8 @@ class CollectionUtilisateurVue(VueAbstraite):
         # if self.type
         manga_collection = []
         manga_collection.append("Ajouter manga")
-        manga_collection.append("Retour au menu")
         manga_collection.append("Modifier informations collections")
+        manga_collection.append("Retour au menu")
 
         choix = inquirer.select(
             message="Sélectionner un manga pour modifier les informations dessus"

@@ -13,16 +13,18 @@ class ServiceAvis:
     def ajouter_avis(self, id_utilisateur, id_manga, avis, note):
         """Création d'un avis à partir de ses attributs"""
 
-        nouveau_avis = Avis(avis, note)
+        nouveau_avis = Avis(note, avis)
         return (
-            nouveau_avis if DaoAvis().creer_avis(id_utilisateur, id_manga, nouveau_avis) else None
+            nouveau_avis
+            if DaoAvis().creer_avis(id_utilisateur, id_manga, nouveau_avis, "projet_info_2a")
+            else None
         )
 
     @log
     def ajouter_avis_collection(self, id_utilisateur, id_collection, type_collection, avis, note):
         """Création d'un avis sur une collection à partir de ses attributs"""
 
-        nouveau_avis_collection = Avis(avis, note)
+        nouveau_avis_collection = Avis(note, avis)
 
         if "c" in type_collection:
             return (
@@ -54,7 +56,7 @@ class ServiceAvis:
         avis_as_list = [a.as_list() for a in avis_user_sur_manga]
 
         str_avis = "-" * 100
-        str_avis += "\nListe des joueurs \n"
+        str_avis += "\nListe des avis \n"
         str_avis += "-" * 100
         str_avis += "\n"
         str_avis += tabulate(
@@ -86,7 +88,7 @@ class ServiceAvis:
 
         entetes = ["note", "avis"]  # ajouter nom du mangas correspondant ?
 
-        avis_user_sur_manga = DaoAvis().chercher_avis_sur_manga(id_manga)
+        avis_user_sur_manga = DaoAvis().chercher_avis_sur_manga("projet_test_dao", id_manga)
 
         avis_as_list = [a.as_list() for a in avis_user_sur_manga]
 
