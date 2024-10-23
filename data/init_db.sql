@@ -67,7 +67,7 @@ CREATE TABLE avis_collection_coherente_db(
     id_avis_collection_coherente SERIAL PRIMARY KEY,
     id_utilisateur INTEGER NOT NULL  ,
     id_collection_coherente INTEGER NOT NULL,
-    avis       TEXT UNIQUE,
+    avis       TEXT ,
     note          INTEGER CHECK (note BETWEEN 1 AND 5),
     UNIQUE (id_utilisateur, id_collection_coherente),
     FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur) ON DELETE CASCADE,
@@ -79,7 +79,7 @@ CREATE TABLE avis_collection_physique_db(
     id_avis_collection_physique SERIAL PRIMARY KEY,
     id_utilisateur INTEGER NOT NULL  , 
     id_collection INTEGER NOT NULL,--L'utilisateur qui donne avis sur la collection
-    avis       TEXT UNIQUE,
+    avis       TEXT ,
     note          INTEGER CHECK (note BETWEEN 1 AND 5),
     UNIQUE (id_utilisateur, id_collection),
     FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur) ON DELETE CASCADE,
