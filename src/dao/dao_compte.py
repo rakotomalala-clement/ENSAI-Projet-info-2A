@@ -134,45 +134,10 @@ class DaoCompte(metaclass=Singleton):
         if res:
             for row in res:
                 utilisateur = Utilisateur(
-                    id_utilisateur=row["id_utilisateur"],
                     nom_utilisateur=row["nom_utilisateur"],
-                    mot_de_passe=row["mdp"],
+                    mdp=row["mdp"],
                 )
 
                 liste_utilisateurs.append(utilisateur)
 
         return liste_utilisateurs
-
-    @log
-    def modifier(self, utilisateur) -> bool:
-        print(
-            os.environ.get("POSTGRES_SCHEMA")
-        )  # Useful for debugging, consider removing in production
-
-        try:
-            with DBConnection().connection as connection:
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        "UPDATE utilisateur                                      "
-                        "   SET nom_utilisateur = %(nom_utilisateur)s,           "
-                        "       mdp            = %(mot_de_passe)s               "
-                        " WHERE id_utilisateur   = %(id_utilisateur)s;            ",
-                        {
-                            "nom_utilisateur": utilisateur.nom_utilisateur,
-                            "mot_de_passe": utilisateur.mot_de_passe,
-                            "id_utilisateur": utilisateur.id_utilisateur,
-                        },
-                    )
-
-                    # Check how many rows were affected
-                    if cursor.rowcount == 0:
-                        logging.warning(f"No user found with id {utilisateur.id_utilisateur}.")
-                        return False
-                    else:
-                        print(f"User {utilisateur.id_utilisateur} updated successfully.")
-                        return True
-
-        except Exception as e:
-            logging.error(f"Error updating user: {e}")
-            print(e)
-            return False  # Return False in case of an error
