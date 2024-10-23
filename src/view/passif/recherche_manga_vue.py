@@ -21,7 +21,7 @@ class RechercheMangaVue(VueAbstraite):
         print("Voici une liste de mangas que vous pouvez rechercher")
 
         liste_mangas = MangaService().lister_mangas()
-        for indice_manga in range(3):
+        for indice_manga in range(8):
             print(liste_mangas[indice_manga].titre)
 
         titre = inquirer.text(

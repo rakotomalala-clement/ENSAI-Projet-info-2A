@@ -3,6 +3,7 @@ from view.vue_abstraite import VueAbstraite
 from view.passif.accueil_vue import AccueilVue
 from view.actif.accueil_connecte_vue import AccueilConnecteVue
 from view.passif.connexion.session import Session
+from view.passif.affichage_manga_vue import AffichageMangaVue
 from service.avis_service import ServiceAvis
 from service.Service_Utilisateur import ServiceUtilisateur
 from service.manga_service import MangaService
@@ -42,12 +43,33 @@ class AvisMangaVue(VueAbstraite):
                     .id_utilisateur
                 )
                 id_manga = MangaService().trouver_id_par_titre(self.titre_manga)
-                ServiceAvis().ajouter_avis(id_utilisateur, id_manga, "super", 3)
 
-                return 0
+                note = inquirer.text(
+                    message="Veuillez rentrer une note entre 1 et 5",
+                    validate=lambda val: val.isdigit() and 1 <= int(val) <= 5,
+                    invalid_message="Ce n'est pas un nombre entier valide entre 1 et 5",
+                ).execute()
+
+                avis = inquirer.text(message="Veuillez entrer votre avis sur ce manga")
+
+                ServiceAvis().ajouter_avis(id_utilisateur, id_manga, avis, int(note))
+
+                return AffichageMangaVue(self.titre_manga).choisir_menu()
+
             case "Modifier un avis":
                 # on devra ensuite afficher les avis et sélectionner lequel on souhaite changer
-                return 0
+                nouvelle_note = inquirer.text(
+                    message="Veuillez rentrer une note entre 1 et 5",
+                    validate=lambda val: val.isdigit() and 1 <= int(val) <= 5,
+                    invalid_message="Ce n'est pas un nombre entier valide entre 1 et 5",
+                ).execute()
+
+                nouvel_avis = inquirer.text(message="Veuillez entrer votre avis sur ce manga")
+
+                ServiceAvis().modifier(nouvel_avis, int(nouvelle_note))
+
+                return AffichageMangaVue(self.titre_manga).choisir_menu()
+
             case "Supprimer un avis":
                 return 0
             case "Retour au menu principal":
