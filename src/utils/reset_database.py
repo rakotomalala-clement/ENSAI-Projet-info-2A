@@ -82,6 +82,6 @@ class ResetDatabase(metaclass=Singleton):
 
 if __name__ == "__main__":
     # Run with the test schema
-    print(ResetDatabase().lancer(True))
+    # print(ResetDatabase().lancer(True))
 
-   # ResetDatabase().lancer()
+    ResetDatabase().lancer()

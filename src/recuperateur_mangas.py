@@ -13,7 +13,7 @@ class RecuperateurManga:
 
         dotenv.load_dotenv()
 
-        page = 924
+        page = 61
         while True:
             # Construction de l'URL pour chaque page de résultats
             url = f"{self.base_url}?page={page}"
