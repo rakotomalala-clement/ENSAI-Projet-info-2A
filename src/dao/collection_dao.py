@@ -113,6 +113,45 @@ class DaoCollection(metaclass=Singleton):
             raise e
 
     @log
+    def rechercher_collection_physique_par_user_manga(
+        self, id_utilisateur: int, id_manga: int, schema
+    ) -> List[CollectionPhysique]:
+        """Recherche une collection cohérente par ID user dans la base de données."""
+        try:
+            with DBConnection(schema).connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        """
+                        SELECT id_collection, id_utilisateur, id_manga, titre_collection, numero_dernier_tome, numeros_tomes_manquants, status_collection
+                        FROM collection_physique
+                        WHERE id_utilisateur = %s AND id_manga = %s;
+                        """,
+                        (id_utilisateur, id_manga),
+                    )
+
+                    results = cursor.fetchall()
+
+                collections = []
+
+                for result in results:
+
+                    collection = CollectionPhysique(
+                        id_collection=result["id_collection"],
+                        titre=result["titre_collection"],
+                        dernier_tome_acquis=result["numero_dernier_tome"],
+                        numeros_tomes_manquants=result["numeros_tomes_manquants"],
+                        status_collection=result["status_collection"],
+                    )
+                    collections.append(collection)
+
+                return collections
+        except Exception as e:
+            logging.error(
+                f"Erreur lors de la recherche de la collection avec id user {id_utilisateur}: {e}"
+            )
+            raise e
+
+    @log
     def ajouter_mangas_a_collection(self, collection_id, liste_mangas, schema) -> bool:
         """Ajoute une liste de mangas à une collection cohérente dans la base de données."""
 
@@ -189,6 +228,46 @@ class DaoCollection(metaclass=Singleton):
             "titre_collection": collection.titre,
             "description_collection": collection.description,
             "id_collection": collection.id_collection,
+        }
+
+        try:
+            with DBConnection(schema).connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(query, params)
+                    res = cursor.fetchone()
+
+                    if res:
+
+                        return True
+                    else:
+                        logging.warning(
+                            f"Aucune collection trouvée avec l'id {collection.id_collection}."
+                        )
+                        return False
+
+        except Exception as e:
+            logging.error(f"Erreur lors de la modification de la collection cohérente : {e}")
+            return False
+
+    @log
+    def modifier_collection_physique(self, collection: CollectionPhysique, schema: str) -> bool:
+
+        query = """
+        UPDATE collection_physique
+        SET titre_collection = %(titre_collection)s, 
+            numero_dernier_tome = %(numero_dernier_tome)s,
+            numeros_tomes_manquants = %(numeros_tomes_manquants)s,
+            status_collection = %(status_collection)s
+            
+        WHERE titre_collection = %(titre_collection)s
+        RETURNING titre_collection;
+        """
+
+        params = {
+            "titre_collection": collection.titre,
+            "numero_dernier_tome": collection.dernier_tome_acquis,
+            "numeros_tomes_manquants": collection.numeros_tomes_manquants,
+            "status_collection": collection.status_collection,
         }
 
         try:
