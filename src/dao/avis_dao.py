@@ -236,7 +236,7 @@ class DaoAvis(metaclass=Singleton):
         List[Avis]
             Liste des avis trouvés.
         """
-
+        id_avis = self.trouver_id_avis_par_id_manga_utilisateur(schema, id_manga, id_utilisateur)
         res = None
 
         try:
@@ -245,9 +245,7 @@ class DaoAvis(metaclass=Singleton):
                     cursor.execute(
                         "SELECT id_avis, avis, note FROM avis " "WHERE id_avis = %(id_avis)s;",
                         {
-                            "id_avis": self.trouver_id_avis_par_id_manga_utilisateur(
-                                schema, id_manga, id_utilisateur
-                            ),
+                            "id_avis": id_avis,
                         },
                     )
                     res = cursor.fetchall()
@@ -323,6 +321,7 @@ class DaoAvis(metaclass=Singleton):
         bool
             Retourne True si la mise à jour a été effectuée avec succès, sinon False.
         """
+        id_avis = self.trouver_id_avis_par_id_manga_utilisateur(schema, id_manga, id_utilisateur)
         res = None
 
         try:
@@ -337,9 +336,7 @@ class DaoAvis(metaclass=Singleton):
                         {
                             "avis": avis.avis,
                             "note": avis.note,
-                            "id_avis": self.trouver_id_avis_par_id_manga_utilisateur(
-                                schema, id_manga, id_utilisateur
-                            ),
+                            "id_avis": id_avis,
                         },
                     )
                     res = cursor.rowcount

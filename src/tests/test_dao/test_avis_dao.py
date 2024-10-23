@@ -78,21 +78,17 @@ def test_chercher_avis():
 
 def test_modifier_avis_ok():
     """Modification d'un avis existant."""
-    # GIVEN
-    avis = Avis(note=5, avis="cool", id_avis=19)
 
     # WHEN
     modification = DaoAvis().modifier_avis(
         "projet_test_dao",
-        avis=Avis(id_avis=19, avis="Superbe manga !", note=4),
-        id_manga=1,
-        id_utilisateur=12,
+        avis=Avis(id_avis=25, avis="Superbe !", note=5),
+        id_manga=3,
+        id_utilisateur=35,
     )
 
     # THEN
-    assert avis.avis != modification.avis
-    assert avis.note != modification.note
-    assert avis.id_avis == modification.id_avis
+    assert modification is True, "La modification de l'avis devrait retourner True"
 
 
 if __name__ == "__main__":
