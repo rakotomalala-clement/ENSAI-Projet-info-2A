@@ -47,11 +47,9 @@ class AccueilVue(VueAbstraite):
                 return RechercheMangaVue().choisir_menu()
 
             case "Rechercher utilisateur":
-                utilisateur = inquirer.text(
-                    message="Donner le nom de l'utilisateur à trouver"
-                ).execute()
-                print(utilisateur)
-                return 0
+                from recherche_utilisateur_vue import RechercheUtilisateurVue
+
+                return RechercheUtilisateurVue().choisir_menu()
 
 
 if __name__ == "__main__":
