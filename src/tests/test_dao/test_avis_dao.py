@@ -8,7 +8,18 @@ DaoAvis().supprimer_avis(
         schema="projet_test_dao", id_manga=1, id_utilisateur=12
     ),
 )
-DaoAvis().supprimer_avis_col_coherente(id_avis_collection_coherente=5, schema="projet_test_dao")
+DaoAvis().supprimer_avis_col_coherente(
+    id_avis_collection_coherente=DaoAvis().trouver_id_avis_par_id_col_coherente_utilisateur(
+        "projet_test_dao", 1, 12
+    ),
+    schema="projet_test_dao",
+)
+DaoAvis().supprimer_avis_col_physique(
+    id_avis_collection_physique=DaoAvis().trouver_id_avis_par_id_manga_utilisateur_col_physique(
+        schema="projet_test_dao", id_collection=1, id_utilisateur=43
+    ),
+    schema="projet_test_dao",
+)
 
 
 def test_creer_avis_ok():
@@ -45,18 +56,35 @@ def test_creer_avis_col_coherente_ok():
 
 
 def test_creer_avis_col_physique_ok():
-    """Création d ais de collection physique réussie"""
+    """Création d avis de collection physique réussie"""
 
     # GIVEN
-    avis = Avis(note=5, avis="excelent")
+    avis = Avis(note=5, avis="excelent synopsis")
 
     # WHEN
     creation_ok = DaoAvis().creer_avis_collection_physique(
-        id_utilisateur=12, id_collection=1, avis_collection_physique=avis, schema="projet_test_dao"
+        id_utilisateur=43, id_collection=1, avis_collection_physique=avis, schema="projet_test_dao"
     )
 
     # THEN
     assert creation_ok
+
+
+def test_supprimer_ok():
+    """Suppression d'un avis réussie"""
+
+    # GIVEN
+
+    # WHEN
+    suppression_ok = DaoAvis().supprimer_avis(
+        schema="projet_test_dao",
+        id_avis=DaoAvis().trouver_id_avis_par_id_manga_utilisateur(
+            schema="projet_test_dao", id_manga=1, id_utilisateur=12
+        ),
+    )
+
+    # THEN
+    assert suppression_ok
 
 
 def test_chercher_avis():
