@@ -2,6 +2,7 @@ from InquirerPy import inquirer
 from view.vue_abstraite import VueAbstraite
 from view.passif.connexion.connexion_vue import ConnexionVue
 from service.Service_Utilisateur import ServiceUtilisateur
+from view.passif.accueil_vue import AccueilVue
 
 
 class InscriptionVue(VueAbstraite):
@@ -20,9 +21,13 @@ class InscriptionVue(VueAbstraite):
 
         nom_utilisateur = inquirer.text(message="Veuillez saisir votre nom d'utilisateur").execute()
 
+        for autre_utilisateur in ServiceUtilisateur().lister_tous():
+            if nom_utilisateur == autre_utilisateur.nom_utilisateur:
+                print("Ce nom d'utilisateur existe déjà")
+                return AccueilVue().choisir_menu()
+
         mdp = inquirer.text(message="Veuillez saisir un mot de passe").execute()
 
-        # faire une verif que le nom d'utilisateur n'existe pas déjà
         ServiceUtilisateur().sinscrire(nom_utilisateur, mdp)
 
         return ConnexionVue().choisir_menu()

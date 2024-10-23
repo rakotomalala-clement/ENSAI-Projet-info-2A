@@ -54,7 +54,7 @@ class ServiceAvis:
         avis_as_list = [a.as_list() for a in avis_user_sur_manga]
 
         str_avis = "-" * 100
-        str_avis += "\nListe des joueurs \n"
+        str_avis += "\nListe des avis \n"
         str_avis += "-" * 100
         str_avis += "\n"
         str_avis += tabulate(
