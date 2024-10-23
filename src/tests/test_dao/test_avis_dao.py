@@ -10,7 +10,7 @@ def test_trouver_id_avis_par_id_manga_utilisateur_true():
     id_avis = DaoAvis().trouver_id_avis_par_id_manga_utilisateur(
         "projet_test_dao", id_manga, id_utilisateur
     )
-    assert id_avis == 19
+    assert id_avis == 26
 
 
 def test_trouver_id_avis_par_id_manga_utilisateur_false():
@@ -38,11 +38,11 @@ def test_creer_avis_ok():
 def test_creer_avis_col_coherente_ok():
     """Création d'avis sur collection cohérente."""
     # GIVEN
-    avis = Avis(note=5, avis="cool")
+    avis = Avis(note=4, avis="coool")
     # WHEN
     creation = DaoAvis().creer_avis_collection_coherente(
         id_utilisateur=12,
-        id_collection=1,
+        id_collection_coherente=1,
         avis_collection_coherente=avis,
         schema="projet_test_dao",
     )
@@ -64,7 +64,7 @@ def test_creer_avis_col_physique_ok():
 
 def test_chercher_avis_sur_manga():
     """Recherche des avis laissés sur un manga."""
-    avis = Avis(note=5, avis="cool", id_avis=19)
+    avis = Avis(note=5, avis="cool", id_avis=26)
     avis_a_verifier = DaoAvis().chercher_avis_sur_manga("projet_test_dao", id_manga=1)
     assert avis in avis_a_verifier
 

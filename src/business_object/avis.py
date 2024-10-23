@@ -23,6 +23,15 @@ class Avis:
         self.avis = avis
         self.id_avis = id_avis
 
+    def __eq__(self, other):
+        if isinstance(other, Avis):
+            return (
+                self.id_avis == other.id_avis
+                and self.avis == other.avis
+                and self.note == other.note
+            )
+        return False
+
     def __str__(self):
         """Permet d'afficher les informations d'un avis."""
         return f"Note : {self.note}, Avis : {self.avis}"
