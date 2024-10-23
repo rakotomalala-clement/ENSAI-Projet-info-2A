@@ -26,7 +26,7 @@ class InscriptionVue(VueAbstraite):
                 print("Ce nom d'utilisateur existe déjà")
                 return AccueilVue().choisir_menu()
 
-        mdp = inquirer.text(message="Veuillez saisir un mot de passe").execute()
+        mdp = inquirer.secret(message="Veuillez saisir un mot de passe").execute()
 
         ServiceUtilisateur().sinscrire(nom_utilisateur, mdp)
 

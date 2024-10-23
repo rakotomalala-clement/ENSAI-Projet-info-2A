@@ -21,7 +21,7 @@ class ConnexionVue(VueAbstraite):
 
         nom_utilisateur = inquirer.text(message="Veuillez saisir votre nom d'utilisateur").execute()
 
-        mdp = inquirer.text(message="Veuillez saisir votre mot de passe").execute()
+        mdp = inquirer.secret(message="Veuillez saisir votre mot de passe").execute()
 
         utilisateur = ServiceUtilisateur().connecter_utilisateur(nom_utilisateur, mdp)
 
