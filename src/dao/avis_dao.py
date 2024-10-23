@@ -36,30 +36,6 @@ class DaoAvis(metaclass=Singleton):
         return None
 
     @log
-    def trouver_id_avis_par_id_manga_utilisateur(
-        self, schema: str, id_manga: int, id_utilisateur: int
-    ) -> int:
-        """Trouver l'identifiant d'un avis grâce aux id manga et utilisateur."""
-        try:
-            with DBConnection(schema).connection as connection:
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        "SELECT id_avis FROM avis WHERE id_manga = %(id_manga)s "
-                        "AND id_utilisateur = %(id_utilisateur)s;",
-                        {"id_manga": id_manga, "id_utilisateur": id_utilisateur},
-                    )
-                    res = cursor.fetchone()
-
-        except Exception as e:
-            logging.error(f"Erreur lors de la recherche de l'avis : {e}")
-            raise e
-
-        if res:
-            return res["id_avis"]
-
-        return None
-
-    @log
     def creer_avis(self, id_utilisateur: int, id_manga: int, avis: Avis, schema) -> bool:
         """Création d'un avis sur un manga dans la base de donnée.
 
@@ -237,7 +213,6 @@ class DaoAvis(metaclass=Singleton):
 
         try:
             with DBConnection(schema).connection as connection:
-            with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT id_avis, avis, note FROM avis " "WHERE id_avis = %(id_avis)s;",
@@ -367,7 +342,6 @@ class DaoAvis(metaclass=Singleton):
 
         try:
             with DBConnection(schema).connection as connection:
-            with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT id_avis, avis, note FROM avis WHERE id_manga = %(id_manga)s;",
@@ -416,7 +390,8 @@ class DaoAvis(metaclass=Singleton):
             with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "DELETE FROM avis_collection_coherente_db WHERE id_avis_collection_coherente= %(id_avis_collection_coherente)s;",
+                        "DELETE FROM avis_collection_coherente_db\
+                            WHERE id_avis_collection_coherente= %(id_avis_collection_coherente)s;",
                         {"id_avis_collection_coherente": id_avis_collection_coherente},
                     )
                     res = cursor.rowcount
