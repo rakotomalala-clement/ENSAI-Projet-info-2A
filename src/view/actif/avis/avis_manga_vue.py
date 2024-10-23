@@ -3,6 +3,7 @@ from view.vue_abstraite import VueAbstraite
 from view.passif.accueil_vue import AccueilVue
 from view.actif.accueil_connecte_vue import AccueilConnecteVue
 from view.passif.connexion.session import Session
+from service.avis_service import ServiceAvis
 
 
 class AvisMangaVue(VueAbstraite):
@@ -32,6 +33,10 @@ class AvisMangaVue(VueAbstraite):
 
         match choix:
             case "Ajouter un avis":
+                
+                id_utilisateur
+                ServiceAvis().ajouter_avis()
+
                 return 0
             case "Modifier un avis":
                 # on devra ensuite afficher les avis et sélectionner lequel on souhaite changer
