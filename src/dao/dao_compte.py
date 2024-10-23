@@ -99,10 +99,7 @@ class DaoCompte(metaclass=Singleton):
             logging.error(e)
             raise
 
-<<<<<<< HEAD
-=======
     @log
->>>>>>> f29d98e0076f9012b93ddec6e3fdd9c0c0328180
     def supprimer_utilisateur(self, id_utilisateur: int):
         delete_query = """
         DELETE FROM utilisateurs WHERE id = %s;
