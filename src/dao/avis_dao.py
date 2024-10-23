@@ -366,7 +366,6 @@ class DaoAvis(metaclass=Singleton):
 
         try:
             with DBConnection(schema).connection as connection:
-            with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT id_avis, avis, note FROM avis WHERE id_manga = %(id_manga)s;",
