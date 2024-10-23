@@ -25,11 +25,9 @@ class ServiceUtilisateur:
             return None
 
     @log
-    def modifier_informations(self, id_utilisateur: int, nouveau_nom: str, nouveau_mdp: str):
+    def modifier_informations(self, nouveau_nom: str, nouveau_mdp: str):
         nouveau_mdp = hash_password(nouveau_mdp, nouveau_nom)
-        utilisateur = DaoCompte().mettre_a_jour_utilisateur(
-            id_utilisateur, nouveau_nom, nouveau_mdp
-        )
+        utilisateur = DaoCompte().mettre_a_jour_utilisateur(nouveau_nom, nouveau_mdp)
         if utilisateur:
             print(f"Les informations de {utilisateur.nom_utilisateur} ont été mises à jour.")
         else:
@@ -53,5 +51,5 @@ class ServiceUtilisateur:
         utilisateurs = DaoCompte().lister_tous()
         if not inclure_mdp:
             for u in utilisateurs:
-                u.mot_de_passe = None
+                u.mdp = None
         return utilisateurs

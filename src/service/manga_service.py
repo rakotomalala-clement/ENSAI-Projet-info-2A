@@ -39,7 +39,7 @@ class MangaService:
         )
 
         # Utiliser le DAO pour ajouter le manga
-        if MangaDao().ajouter_manga(manga):
+        if MangaDao().ajouter_manga("projet_info_2a", manga):
             return manga
         return None
 
@@ -53,7 +53,7 @@ class MangaService:
             La liste des mangas.
         """
 
-        return MangaDao().lister_manga()
+        return MangaDao().lister_manga("projet_info_2a")
 
     @log
     def trouver_par_titre(self, titre: str) -> Manga:
@@ -69,7 +69,7 @@ class MangaService:
         Manga
             Le manga trouvé, ou None si aucun manga ne correspond au titre.
         """
-        return MangaDao().trouver_par_titre(titre)
+        return MangaDao().trouver_par_titre("projet_info_2a", titre)
 
     @log
     def trouver_id_par_titre(self, titre: str) -> int:
@@ -85,7 +85,7 @@ class MangaService:
         id_manga : int
             L'id du manga trouvé, ou None si aucun manga ne correspond au titre.
         """
-        return MangaDao().trouver_id_par_titre(titre)
+        return MangaDao().trouver_id_par_titre("projet_info_2a", titre)
 
     @log
     def supprimer_manga(self, manga: Manga) -> bool:
@@ -101,4 +101,4 @@ class MangaService:
         bool
             True si le manga a été supprimé, False sinon.
         """
-        return MangaDao().supprimer_manga(manga)
+        return MangaDao().supprimer_manga("projet_info_2a", manga)
