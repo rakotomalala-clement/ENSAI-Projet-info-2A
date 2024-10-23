@@ -1,23 +1,25 @@
-import os
+# import os
 import pytest
 
-from unittest.mock import patch
+# from unittest.mock import patch
 
-from utils.reset_database import ResetDatabase
+# from utils.reset_database import ResetDatabase
 
 from business_object.avis import Avis
 from dao.avis_dao import DaoAvis
 
 
-@pytest.fixture(scope="session", autouse=True)
-def setup_test_environment():
-    """Initialisation des données de test"""
-    with patch.dict(os.environ, {"SCHEMA": "projet_info_dao"}):
-        ResetDatabase().lancer()
-        yield
+# @pytest.fixture(scope="session", autouse=True)
+# def setup_test_environment():
+#    """Initialisation des données de test"""
+#    with patch.dict(os.environ, {"SCHEMA": "projet_info_dao"}):
+#        ResetDatabase().lancer()
+#        yield
 
 
-avis_manga = Avis(note=5, avis="Superbe manga !")
+# avis_manga = Avis(note=5, avis="Superbe manga !")
+
+DaoAvis().supprimer_avis(18, "projet_test_dao")
 
 
 def test_creer_avis_ok():
@@ -27,45 +29,48 @@ def test_creer_avis_ok():
     avis = Avis(note=5, avis="cool")
 
     # WHEN
-    creation_ok = DaoAvis().creer_avis(id_utilisateur=1, id_manga=1, avis_manga=avis)
+    creation_ok = DaoAvis().creer_avis(
+        id_utilisateur=12, id_manga=1, avis=avis, schema="projet_test_dao"
+    )
+
+    # THEN
+    assert creation_ok
+
+
+def test_creer_avis_col_coherente_ok():
+    """Création d avis sur collection cohérente"""
+
+    # GIVEN
+    avis = Avis(note=5, avis="cool")
+
+    # WHEN
+    creation_ok = DaoAvis().creer_avis_collection_coherente(
+        id_utilisateur=12,
+        id_collection_coherente=1,
+        avis_collection_coherente=avis,
+        schema="projet_test_dao",
+    )
+
+    # THEN
+    assert creation_ok
+
+
+def test_creer_avis_col_physique_ok():
+    """Création d ais de collection physique réussie"""
+
+    # GIVEN
+    avis = Avis(note=5, avis="excelent")
+
+    # WHEN
+    creation_ok = DaoAvis().creer_avis_collection_physique(
+        id_utilisateur=12, id_collection=1, avis_collection_physique=avis, schema="projet_test_dao"
+    )
 
     # THEN
     assert creation_ok
 
 
 """
-def test_creer_avis_col_coherente_ok():
-    Création de Joueur réussie
-
-    # GIVEN
-    avis = Avis(note=5, avis="cool", id_avis=1)
-
-    # WHEN
-    creation_ok = DaoAvis().creer_avis_collection_coherente(
-        id_utilisateur=1, id_collection=1, avis_collection_coherente=avis
-    )
-
-    # THEN
-    assert creation_ok
-    assert avis.id_avis
-
-
-def test_creer_avis_col_physique_ok():
-    Création de Joueur réussie
-
-    # GIVEN
-    avis = Avis(note=5, avis="cool", id_avis=1)
-
-    # WHEN
-    creation_ok = DaoAvis().creer_avis_collection_physique(
-        id_utilisateur=1, id_collection=1, avis_collection_physique=avis
-    )
-
-    # THEN
-    assert creation_ok
-    assert avis.id_avis
-
-
 def test_chercher_avis():
     Recherche des avis laisser par un utilisateur sur un manga
 
@@ -80,6 +85,7 @@ def test_chercher_avis():
         assert isinstance(a, Avis)
 """
 
+
 if __name__ == "__main__":
 
-    DaoAvis().creer_avis(1, 1, Avis(5, "coollll"))
+    pytest.main([__file__])

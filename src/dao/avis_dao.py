@@ -12,7 +12,7 @@ class DaoAvis(metaclass=Singleton):
     """
 
     @log
-    def creer_avis(self, id_utilisateur: int, id_manga: int, avis: Avis) -> bool:
+    def creer_avis(self, id_utilisateur: int, id_manga: int, avis: Avis, schema) -> bool:
         """Création d'un avis sur un manga dans la base de donnée.
 
         Parameters:
@@ -33,7 +33,7 @@ class DaoAvis(metaclass=Singleton):
         """
 
         try:
-            with DBConnection().connection as connection:
+            with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
                         """
@@ -58,7 +58,7 @@ class DaoAvis(metaclass=Singleton):
 
     @log
     def creer_avis_collection_coherente(
-        self, id_utilisateur, id_collection, avis_collection_coherente: Avis
+        self, id_utilisateur, id_collection_coherente, avis_collection_coherente: Avis, schema
     ):
         """Création d'un avis sur une collection cohérente dans la base
         de données
@@ -79,42 +79,39 @@ class DaoAvis(metaclass=Singleton):
 
         """
 
-        res = None
-
         try:
-            with DBConnection().connection as connection:
+            with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "INSERT INTO "
-                        "avis_collection_coherente("
-                        "id_utilisateur, id_collection_coherente, avis"
-                        ",note) "
-                        "VALUES "
-                        "(%(id_utilisateur)s,%(id_collection_coherente)s,"
-                        "%(avis)s, "
-                        "%(note)s) "
-                        "RETURNING id_avis; ",
+                        """INSERT INTO avis_collection_coherente_db(
+                        id_utilisateur, id_collection_coherente, avis,note)
+                        VALUES (%(id_utilisateur)s,%(id_collection_coherente)s,
+                        %(avis)s, %(note)s)
+                        RETURNING id_avis_collection_coherente;
+                        """,
                         {
                             "id_utilisateur": id_utilisateur,
-                            "id_collection_coherente": id_collection,
+                            "id_collection_coherente": id_collection_coherente,
                             "avis": avis_collection_coherente.avis,
                             "note": avis_collection_coherente.note,
                         },
                     )
-                    res = cursor.fetchone()
+                    # Récupérer l'ID de l'avis inséré
+                    id_avis = cursor.fetchone()
+
+                    # Si un ID a été retourné, l'avis a été créé avec succès
+                    if id_avis:
+                        avis_collection_coherente.id_avis = id_avis["id_avis_collection_coherente"]
+                        return True
+
         except Exception as e:
-            logging.info(e)
+            logging.error(f"Erreur lors de la création de l'avis: {e}")
 
-        created = False
-        if res:
-            avis_collection_coherente.id_avis = res["id_avis_collection_coherente"]
-            created = True
-
-        return created
+        return False
 
     @log
     def creer_avis_collection_physique(
-        self, id_utilisateur, id_collection, avis_collection_physique: Avis
+        self, id_utilisateur, id_collection, avis_collection_physique: Avis, schema
     ):
         """Création d'un avis sur une collection physique dans la base
         de données
@@ -138,18 +135,18 @@ class DaoAvis(metaclass=Singleton):
         res = None
 
         try:
-            with DBConnection().connection as connection:
+            with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "INSERT INTO "
-                        "avis_collection_physique("
+                        "avis_collection_physique_db("
                         "id_utilisateur, id_collection_physique, avis"
                         ",note) "
                         "VALUES "
                         "(%(id_utilisateur)s,%(id_collection_physique)s,"
                         "%(avis)s, "
                         "%(note)s) "
-                        "RETURNING id_avis; ",
+                        "RETURNING id_avis_collection_physique; ",
                         {
                             "id_utilisateur": id_utilisateur,
                             "id_collection_physique": id_collection,
@@ -169,7 +166,7 @@ class DaoAvis(metaclass=Singleton):
         return created
 
     @log
-    def chercher_avis(self, id_utilisateur, id_manga):
+    def chercher_avis(self, id_utilisateur, id_manga, schema):
         """Chercher les avis qu'un utilisateur a laisser sur un manga
 
         Parameters:
@@ -191,7 +188,7 @@ class DaoAvis(metaclass=Singleton):
         res = None
 
         try:
-            with DBConnection().connection as connection:
+            with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT id_avis, avis, note FROM avis "
@@ -223,7 +220,7 @@ class DaoAvis(metaclass=Singleton):
         return Liste_avis
 
     @log
-    def supprimer_avis(self, id_avis):
+    def supprimer_avis(self, id_avis, schema):
         """Supprime un avis de la base de données
 
         Parameters:
@@ -241,10 +238,10 @@ class DaoAvis(metaclass=Singleton):
         res = None
 
         try:
-            with DBConnection().connection as connection:
-                with connection.cursor as cursor:
+            with DBConnection(schema).connection as connection:
+                with connection.cursor() as cursor:
                     cursor.execute(
-                        "DELETE FROM avis" " WHERE id_avis= %(id_avis)s;",
+                        "DELETE FROM avis WHERE id_avis= %(id_avis)s;",
                         {"id_avis": id_avis},
                     )
                     res = cursor.rowcount
@@ -256,7 +253,7 @@ class DaoAvis(metaclass=Singleton):
         return res > 0
 
     @log
-    def modifier_avis(self, avis: Avis):
+    def modifier_avis(self, avis: Avis, schema):
         """Modifie un avis dans la base de données
 
         Parameters:
@@ -273,7 +270,7 @@ class DaoAvis(metaclass=Singleton):
         res = None
 
         try:
-            with DBConnection().connection as connection:
+            with DBConnection(schema).connection as connection:
                 with connection.cursor as cursor:
                     cursor.execute(
                         "UPDATE avis "
@@ -294,7 +291,7 @@ class DaoAvis(metaclass=Singleton):
         return res == 1
 
     @log
-    def chercher_avis_sur_manga(self, id_manga):
+    def chercher_avis_sur_manga(self, id_manga, schema):
         """Chercher l'ensemble des avis des utilisateurs laisser sur un manga
 
         Parameters:
@@ -311,11 +308,10 @@ class DaoAvis(metaclass=Singleton):
         res = None
 
         try:
-            with DBConnection().connection as connection:
+            with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "SELECT id_avis, avis.avis, note FROM avis "
-                        "WHERE id_manga = %(id_manga)s;",
+                        "SELECT id_avis, avis, note FROM avis " "WHERE id_manga = %(id_manga)s;",
                         {
                             "id_manga": id_manga,
                         },
@@ -338,3 +334,36 @@ class DaoAvis(metaclass=Singleton):
                 )
 
         return Liste_avis
+
+    @log
+    def supprimer_avis_col_coherente(self, id_avis_collection_coherente, schema):
+        """Supprime un avis de la base de données
+
+        Parameters:
+        -----------
+
+        id_avis: int
+            identifiant de l'avis que l'on souhaite supprimer de la base de
+            données
+
+        Returns:
+        --------
+
+        """
+
+        res = None
+
+        try:
+            with DBConnection(schema).connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "DELETE FROM avis_collection_coherente_db WHERE id_avis_collection_coherente= %(id_avis_collection_coherente)s;",
+                        {"id_avis_collection_coherente": id_avis_collection_coherente},
+                    )
+                    res = cursor.rowcount
+
+        except Exception as e:
+            logging.info(e)
+            raise
+
+        return res > 0
