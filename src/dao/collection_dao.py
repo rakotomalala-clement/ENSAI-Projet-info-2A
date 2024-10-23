@@ -75,6 +75,7 @@ class DaoCollection(metaclass=Singleton):
 
         return created
 
+    @log
     def rechercher_collection_coherente_par_user(
         self, id_utilisateur: int, schema
     ) -> List[CollectionCoherente]:
@@ -112,22 +113,33 @@ class DaoCollection(metaclass=Singleton):
             raise e
 
     @log
-    def ajouter_mangas_a_collection(collection_id: int, liste_mangas: [int], schema) -> bool:
+    def ajouter_mangas_a_collection(self, collection_id, liste_mangas, schema) -> bool:
         """Ajoute une liste de mangas à une collection cohérente dans la base de données."""
+
         try:
             with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
 
-                    query = """
-                    INSERT INTO collection_coherente_mangas (id_collection, id_manga)
-                    VALUES (%(id_collection)s, %(id_manga)s)
-                    ON CONFLICT (id_collection, id_manga) DO NOTHING;
-                    """
-
                     for manga_id in liste_mangas:
+
                         cursor.execute(
-                            query, {"id_collection": collection_id, "id_manga": manga_id}
+                            """
+                                SELECT COUNT(*) FROM collection_coherente_mangas 
+                                WHERE id_collection = %s AND id_manga = %s;
+                                """,
+                            (collection_id, manga_id),
                         )
+                        result = cursor.fetchone()
+                        count = result["count"] if result else 0
+
+                        if count == 0:
+                            cursor.execute(
+                                """
+                                    INSERT INTO collection_coherente_mangas (id_collection, id_manga)
+                                    VALUES (%s, %s);
+                                    """,
+                                (collection_id, manga_id),
+                            )
 
                     connection.commit()
                     return True
@@ -137,18 +149,24 @@ class DaoCollection(metaclass=Singleton):
 
     @log
     def supprimer(self, collection, schema):
-        if collection.type_collection == "Physique":
-            try:
-                with DBConnection(schema).connection as connection:
-                    with connection.cursor() as cursor:
-                        cursor.execute(
-                            "DELETE FROM collection_physique WHERE titre_collection=%(titre)s;",
-                            {"titre": collection.titre},
-                        )
-                        return cursor.rowcount > 0
-            except Exception as e:
-                logging.error(e)
-                raise e
+
+        table_map = {"Physique": "collection_physique", "Coherente": "collection_coherente"}
+
+        if collection.type_collection not in table_map:
+            logging.error(f"Type de collection invalide: {collection.type_collection}")
+            return False
+
+        try:
+            with DBConnection(schema).connection as connection:
+                with connection.cursor() as cursor:
+
+                    query = f"DELETE FROM {table_map[collection.type_collection]} WHERE titre_collection=%(titre)s;"
+                    cursor.execute(query, {"titre": collection.titre})
+
+                    return cursor.rowcount > 0
+        except Exception as e:
+            logging.error(f"Erreur lors de la suppression de la collection : {e}")
+            raise e
 
     @log
     def modifier_collection_coherente(self, collection: CollectionCoherente, schema: str) -> bool:
@@ -168,8 +186,8 @@ class DaoCollection(metaclass=Singleton):
         """
 
         params = {
-            "titre_collection": collection.titre_collection,
-            "description_collection": collection.description_collection,
+            "titre_collection": collection.titre,
+            "description_collection": collection.description,
             "id_collection": collection.id_collection,
         }
 
@@ -180,7 +198,7 @@ class DaoCollection(metaclass=Singleton):
                     res = cursor.fetchone()
 
                     if res:
-                        logging.info(f"Collection cohérente avec id {res[0]} mise à jour.")
+
                         return True
                     else:
                         logging.warning(
