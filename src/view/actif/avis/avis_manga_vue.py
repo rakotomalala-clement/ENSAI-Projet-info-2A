@@ -4,6 +4,8 @@ from view.passif.accueil_vue import AccueilVue
 from view.actif.accueil_connecte_vue import AccueilConnecteVue
 from view.passif.connexion.session import Session
 from service.avis_service import ServiceAvis
+from service.Service_Utilisateur import ServiceUtilisateur
+from service.manga_service import MangaService
 
 
 class AvisMangaVue(VueAbstraite):
@@ -29,13 +31,18 @@ class AvisMangaVue(VueAbstraite):
                 "Supprimer un avis",
                 "Retour au menu principal",
             ],
-        )
+        ).execute()
 
         match choix:
             case "Ajouter un avis":
-                
-                id_utilisateur
-                ServiceAvis().ajouter_avis()
+
+                id_utilisateur = (
+                    ServiceUtilisateur()
+                    .trouver_utilisateur_par_nom(Session().nom_utilisateur)
+                    .id_utilisateur
+                )
+                id_manga = MangaService().trouver_id_par_titre
+                ServiceAvis().ajouter_avis(id_utilisateur, id_manga, "super", 3)
 
                 return 0
             case "Modifier un avis":

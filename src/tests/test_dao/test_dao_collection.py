@@ -31,7 +31,7 @@ def test_creer_collection_physique():
     )
 
     result = dao_collection.creer(
-        id_utilisateur=3, collection=collection, schema="projet_test_dao", id_manga=1
+        id_utilisateur=12, collection=collection, schema="projet_test_dao", id_manga=1
     )
     assert result is True
 
@@ -51,7 +51,6 @@ def test_rechercher_collection_coherente_par_user_ok():
     """Test de la recherche des collections cohérentes d'un utilisateur par son ID."""
     dao_collection = DaoCollection()
     id_utilisateur = 12
-    print("hello")
 
     collections = dao_collection.rechercher_collection_coherente_par_user(
         id_utilisateur, schema="projet_test_dao"
@@ -69,6 +68,29 @@ def test_rechercher_collection_coherente_par_user_ok():
 
         assert collection.titre is not None, "Le titre de la collection ne doit pas être nul."
         assert collection.description is not None
+
+
+def test_rechercher_collection_physique_par_user_ok():
+    """Test de la recherche des collections cohérentes d'un utilisateur par son ID."""
+    dao_collection = DaoCollection()
+    id_utilisateur = 12
+    id_manga = 1
+
+    collections = dao_collection.rechercher_collection_physique_par_user_manga(
+        id_utilisateur, id_manga, schema="projet_test_dao"
+    )
+
+    assert collections is not None, "La recherche n'a retourné aucun résultat."
+    assert isinstance(collections, list), "Le résultat n'est pas une liste."
+    assert len(collections) > 0, "Aucune collection trouvée."
+
+    for collection in collections:
+        print(collection)
+        assert isinstance(
+            collection, CollectionPhysique
+        ), "Un élément n'est pas du type CollectionCoherente."
+
+        assert collection.titre is not None, "Le titre de la collection ne doit pas être nul."
 
 
 def test_ajouter_mangas_a_collection():
@@ -115,5 +137,22 @@ def test_modifier_collection_coherente():
     )
 
     result = dao_collection.modifier_collection_coherente(collection, schema="projet_test_dao")
+
+    assert result is True, "La modification de la collection cohérente a échoué."
+
+
+def test_modifier_collection_physique():
+    """Test de la modification d'une collection cohérente."""
+    dao_collection = DaoCollection()
+
+    collection = CollectionPhysique(
+        id_collection=13,
+        titre="2",
+        dernier_tome_acquis=5,
+        numeros_tomes_manquants="8 - 9",
+        status_collection="status",
+    )
+
+    result = dao_collection.modifier_collection_physique(collection, schema="projet_test_dao")
 
     assert result is True, "La modification de la collection cohérente a échoué."
