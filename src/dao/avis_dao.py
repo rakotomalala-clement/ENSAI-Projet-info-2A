@@ -36,30 +36,6 @@ class DaoAvis(metaclass=Singleton):
         return None
 
     @log
-    def trouver_id_avis_par_id_manga_utilisateur(
-        self, schema: str, id_manga: int, id_utilisateur: int
-    ) -> int:
-        """Trouver l'identifiant d'un avis grâce aux id manga et utilisateur."""
-        try:
-            with DBConnection(schema).connection as connection:
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        "SELECT id_avis FROM avis WHERE id_manga = %(id_manga)s "
-                        "AND id_utilisateur = %(id_utilisateur)s;",
-                        {"id_manga": id_manga, "id_utilisateur": id_utilisateur},
-                    )
-                    res = cursor.fetchone()
-
-        except Exception as e:
-            logging.error(f"Erreur lors de la recherche de l'avis : {e}")
-            raise e
-
-        if res:
-            return res["id_avis"]
-
-        return None
-
-    @log
     def creer_avis(self, id_utilisateur: int, id_manga: int, avis: Avis, schema) -> bool:
         """Création d'un avis sur un manga dans la base de donnée.
 
@@ -237,7 +213,6 @@ class DaoAvis(metaclass=Singleton):
 
         try:
             with DBConnection(schema).connection as connection:
-            with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT id_avis, avis, note FROM avis " "WHERE id_avis = %(id_avis)s;",
@@ -267,7 +242,7 @@ class DaoAvis(metaclass=Singleton):
         return Liste_avis
 
     @log
-    def supprimer_avis(self, schema, id_manga, id_utilisateur) -> bool:
+    def supprimer_avis(self, schema, id_avis) -> bool:
         """Supprime un avis de la base de données.
 
         Parameters:
@@ -291,11 +266,7 @@ class DaoAvis(metaclass=Singleton):
                 with connection.cursor() as cursor:  # Fix: Use 'with connection.cursor()'
                     cursor.execute(
                         "DELETE FROM avis WHERE id_avis= %(id_avis)s;",
-                        {
-                            "id_avis": self.trouver_id_avis_par_id_manga_utilisateur(
-                                schema, id_manga, id_utilisateur
-                            )
-                        },
+                        {"id_avis": id_avis},
                     )
                     res = cursor.rowcount
 
@@ -367,7 +338,6 @@ class DaoAvis(metaclass=Singleton):
 
         try:
             with DBConnection(schema).connection as connection:
-            with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT id_avis, avis, note FROM avis WHERE id_manga = %(id_manga)s;",
@@ -426,3 +396,10 @@ class DaoAvis(metaclass=Singleton):
             raise
 
         return res > 0
+
+
+print(
+    DaoAvis().trouver_id_avis_par_id_manga_utilisateur(
+        schema="projet_test_dao", id_manga=1, id_utilisateur=12
+    )
+)
