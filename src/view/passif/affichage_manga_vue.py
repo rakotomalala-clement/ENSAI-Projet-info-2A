@@ -1,5 +1,7 @@
-# from InquirerPy import inquirer
+from InquirerPy import inquirer
 from view.vue_abstraite import VueAbstraite
+from view.passif.connexion.session import Session
+from view.passif.accueil_vue import AccueilVue
 
 
 class AffichageMangaVue(VueAbstraite):
@@ -32,4 +34,17 @@ class AffichageMangaVue(VueAbstraite):
         print("auteur(s): ", auteurs)
         print("Etat de la diffusion du manga: ", status)
 
-        return self.titre
+        if Session().connecte:
+            possibilites = ["Gérer ses avis sur ce manga", "Revenir au menu principal", "Quitter"]
+        else:
+            possibilites = ["Revenir au menu principal", "Quitter"]
+
+        choix = inquirer.select(message="", choices=possibilites).execute()
+
+        match choix:
+            case "Gérer ses avis sur ce manga":
+                return 0
+            case "Revenir au menu principal":
+                return AccueilVue().choisir_menu()
+            case "Quitter":
+                pass

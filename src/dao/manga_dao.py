@@ -96,23 +96,37 @@ class MangaDao(metaclass=Singleton):
 
     @log
     def ajouter_manga(self, manga: Manga) -> bool:
-        """Ajout d'un manga dans la base de données."""
+        """Ajout d'un manga dans la base de données, en évitant les doublons."""
         try:
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
+                    # Vérifie d'abord si le manga existe déjà
                     cursor.execute(
-                        "INSERT INTO manga (titre, auteurs, genres, status_manga, chapitres) "
-                        "VALUES (%(titre)s, %(auteurs)s, %(genres)s, %(status_manga)s, "
-                        "%(chapitres)s);",
-                        {
-                            "titre": manga.titre,
-                            "auteurs": manga.auteurs,
-                            "genres": manga.genres,
-                            "status_manga": manga.status,
-                            "chapitres": manga.nombre_chapitres,
-                        },
+                        """
+                        SELECT 1 FROM manga WHERE titre = %(titre)s;
+                        """,
+                        {"titre": manga.titre},
                     )
-                    return cursor.rowcount > 0
+
+                    if (
+                        cursor.fetchone() is None
+                    ):  # Si aucune ligne n'est retournée, le manga n'existe pas
+                        cursor.execute(
+                            """
+                            INSERT INTO manga (titre, auteurs, genres, status_manga, chapitres)
+                            VALUES (%(titre)s, %(auteurs)s, %(genres)s, %(status_manga)s, %(chapitres)s);
+                            """,
+                            {
+                                "titre": manga.titre,
+                                "auteurs": manga.auteurs,
+                                "genres": manga.genres,
+                                "status_manga": manga.status,
+                                "chapitres": manga.nombre_chapitres,
+                            },
+                        )
+                        return cursor.rowcount > 0  # Vérifie si une ligne a été insérée
+                    else:
+                        return False  # Le manga existe déjà
         except Exception as e:
             logging.exception("An error occurred while adding a manga:")
             raise e

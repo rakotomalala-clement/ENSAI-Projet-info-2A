@@ -9,25 +9,31 @@ class RecuperateurManga:
     def __init__(self, base_url):
         self.base_url = base_url
 
-    def recuperer_data_manga(self, start_id=1, end_id=5):
+    def recuperer_data_manga(self):
 
         dotenv.load_dotenv()
 
-        for id_manga in range(start_id, end_id + 1):
-            # Construction de l'URL pour chaque manga (via son id)
-            url = f"{self.base_url}/{id_manga}"
+        page = 924
+        while True:
+            # Construction de l'URL pour chaque page de résultats
+            url = f"{self.base_url}?page={page}"
 
-            # Requete "GET"
+            # Requête "GET"
             response = requests.get(url)
 
-            # Vérification du succès de la requete
+            # Vérification du succès de la requête
             if response.status_code == 200:
 
                 data = response.json()
-                manga = data.get("data")
+                mangas = data.get("data")
 
-                # Gestion du cas où la valeur du champ est nulle
-                if manga:
+                # Si plus de mangas dans la réponse, arrêter la boucle
+                if not mangas:
+                    print("Plus de mangas à récupérer.")
+                    break
+
+                # Parcours des mangas de la page actuelle
+                for manga in mangas:
                     title = manga.get("title") or "information non renseignée"
                     authors = manga.get("authors", [])
                     author_names = " - ".join(
@@ -53,14 +59,16 @@ class RecuperateurManga:
                     status_ajout = MangaService().ajouter_manga(
                         title, author_names, genres_names, status, chapters
                     )
-                    print("Ajout du manga ", id_manga, " : ", status_ajout)
+                    print("Ajout du manga ", manga.get("mal_id"), " : ", status_ajout)
 
             else:
-                print(
-                    f"Erreur lors de la récupération du manga ID {id_manga} :", response.status_code
-                )
+                print(f"Erreur lors de la récupération de la page {page} :", response.status_code)
+                break
 
-            # Attendre 1 sec pour respecter les contraintes de l'API
+            # Passer à la page suivante
+            page += 1
+
+            # Attendre 1 seconde pour respecter les contraintes de l'API
             time.sleep(1)
 
 

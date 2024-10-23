@@ -2,7 +2,7 @@ from InquirerPy import inquirer
 from view.vue_abstraite import VueAbstraite
 
 
-class GestionCollectionVue(VueAbstraite):
+class CreerCollectionVue(VueAbstraite):
     "Vue de la page de création de collection"
 
     def choisir_menu(self):
@@ -18,14 +18,24 @@ class GestionCollectionVue(VueAbstraite):
 
         choix = inquirer.select(
             message="Voulez-vous créer une collection physique ou cohérente?",
-            choices=["Collection physique, Collection cohérente"],
+            choices=["Collection physique", "Collection cohérente"],
         ).execute()
+
+        nom_collection = inquirer.text(message="Quel est le nom de votre collection?").execute()
 
         match choix:
             case "Collection physique":
-                print("cococo")
+                print("cococo", nom_collection)
+
+                from view.actif.accueil_connecte_vue import AccueilConnecteVue
+
+                return AccueilConnecteVue().choisir_menu()
 
             case "Collection cohérente":
                 print("cecece")
+
+                from view.actif.accueil_connecte_vue import AccueilConnecteVue
+
+                return AccueilConnecteVue().choisir_menu()
 
         return 0
