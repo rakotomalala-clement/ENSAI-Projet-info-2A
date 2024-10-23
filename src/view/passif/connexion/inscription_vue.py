@@ -1,5 +1,7 @@
 from InquirerPy import inquirer
 from view.vue_abstraite import VueAbstraite
+from view.passif.connexion.connexion_vue import ConnexionVue
+from service.Service_Utilisateur import ServiceUtilisateur
 
 
 class InscriptionVue(VueAbstraite):
@@ -20,9 +22,7 @@ class InscriptionVue(VueAbstraite):
 
         mdp = inquirer.text(message="Veuillez saisir un mot de passe").execute()
 
-        print(nom_utilisateur)
-        print(mdp)
+        # faire une verif que le nom d'utilisateur n'existe pas déjà
+        ServiceUtilisateur().sinscrire(nom_utilisateur, mdp)
 
-        print("Votre compte a bien été crée")
-
-        return 0
+        return ConnexionVue().choisir_menu()

@@ -2,6 +2,7 @@ from InquirerPy import inquirer
 from view.vue_abstraite import VueAbstraite
 from view.passif.connexion.session import Session
 from view.passif.accueil_vue import AccueilVue
+from view.actif_accueil_connecte import AccueilConnecteVue
 
 
 class AffichageMangaVue(VueAbstraite):
@@ -45,6 +46,13 @@ class AffichageMangaVue(VueAbstraite):
             case "Gérer ses avis sur ce manga":
                 return 0
             case "Revenir au menu principal":
-                return AccueilVue().choisir_menu()
+                from view.passif.session import Session
+
+                # Vérifie si l'utilisateur est connecté ou non
+                if Session().connecte:
+                    return AccueilConnecteVue().choisir_menu()
+                else:
+                    return AccueilVue().choisir_menu()
+
             case "Quitter":
                 pass
