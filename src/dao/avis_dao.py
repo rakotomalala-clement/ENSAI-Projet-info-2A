@@ -60,6 +60,60 @@ class DaoAvis(metaclass=Singleton):
         return None
 
     @log
+    def trouver_id_avis_par_id_manga_utilisateur_col_physique(
+        self, schema: str, id_collection: int, id_utilisateur: int
+    ) -> int:
+        """Trouver l'identifiant d'un avis grâce aux id manga et utilisateur."""
+        try:
+            with DBConnection(schema).connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT id_avis_collection_physique FROM avis_collection_physique_db WHERE id_collection = %(id_collection)s "
+                        "AND id_utilisateur = %(id_utilisateur)s;",
+                        {
+                            "id_collection": id_collection,
+                            "id_utilisateur": id_utilisateur,
+                        },
+                    )
+                    res = cursor.fetchone()
+
+        except Exception as e:
+            logging.error(f"Erreur lors de la recherche de l'avis : {e}")
+            raise e
+
+        if res:
+            return res["id_avis_collection_physique"]
+
+        return None
+
+    @log
+    def trouver_id_avis_par_id_col_coherente_utilisateur(
+        self, schema: str, id_collection_coherente: int, id_utilisateur: int
+    ) -> int:
+        """Trouver l'identifiant d'un avis grâce aux id manga et utilisateur."""
+        try:
+            with DBConnection(schema).connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT id_avis_collection_coherente FROM avis_collection_coherente_db WHERE id_collection_coherente = %(id_collection_coherente)s "
+                        "AND id_utilisateur = %(id_utilisateur)s;",
+                        {
+                            "id_collection_coherente": id_collection_coherente,
+                            "id_utilisateur": id_utilisateur,
+                        },
+                    )
+                    res = cursor.fetchone()
+
+        except Exception as e:
+            logging.error(f"Erreur lors de la recherche de l'avis : {e}")
+            raise e
+
+        if res:
+            return res["id_avis_collection_coherente"]
+
+        return None
+
+    @log
     def creer_avis(self, id_utilisateur: int, id_manga: int, avis: Avis, schema) -> bool:
         """Création d'un avis sur un manga dans la base de donnée.
 
@@ -163,7 +217,7 @@ class DaoAvis(metaclass=Singleton):
 
     @log
     def creer_avis_collection_physique(
-        self, id_utilisateur, id_collection, avis_collection_physique: Avis, schema
+        self, id_collection, id_utilisateur, avis_collection_physique: Avis, schema
     ):
         """Création d'un avis sur une collection physique dans la base
         de données
@@ -192,16 +246,16 @@ class DaoAvis(metaclass=Singleton):
                     cursor.execute(
                         "INSERT INTO "
                         "avis_collection_physique_db("
-                        "id_utilisateur, id_collection_physique, avis"
+                        "id_utilisateur, id_collection, avis"
                         ",note) "
                         "VALUES "
-                        "(%(id_utilisateur)s,%(id_collection_physique)s,"
+                        "(%(id_utilisateur)s,%(id_collection)s,"
                         "%(avis)s, "
                         "%(note)s) "
                         "RETURNING id_avis_collection_physique; ",
                         {
                             "id_utilisateur": id_utilisateur,
-                            "id_collection_physique": id_collection,
+                            "id_collection": id_collection,
                             "avis": avis_collection_physique.avis,
                             "note": avis_collection_physique.note,
                         },
@@ -212,7 +266,7 @@ class DaoAvis(metaclass=Singleton):
 
         created = False
         if res:
-            avis_collection_physique.id_avis = res["id_avis"]
+            avis_collection_physique.id_avis = res["id_avis_collection_physique"]
             created = True
 
         return created
@@ -422,3 +476,43 @@ class DaoAvis(metaclass=Singleton):
             raise
 
         return res > 0
+
+    @log
+    def supprimer_avis_col_physique(self, id_avis_collection_physique, schema):
+        """Supprime un avis de la base de données
+
+        Parameters:
+        -----------
+
+        id_avis: int
+            identifiant de l'avis que l'on souhaite supprimer de la base de
+            données
+
+        Returns:
+        --------
+
+        """
+
+        res = None
+
+        try:
+            with DBConnection(schema).connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "DELETE FROM avis_collection_physique_db WHERE id_avis_collection_physique= %(id_avis_collection_physique)s;",
+                        {"id_avis_collection_physique": id_avis_collection_physique},
+                    )
+                    res = cursor.rowcount
+
+        except Exception as e:
+            logging.info(e)
+            raise
+
+        return res > 0
+
+
+print(
+    DaoAvis().trouver_id_avis_par_id_manga_utilisateur(
+        schema="projet_test_dao", id_manga=1, id_utilisateur=12
+    )
+)
