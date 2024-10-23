@@ -4,6 +4,7 @@ from unittest import mock
 from dao.collection_dao import DaoCollection
 from utils.reset_database import ResetDatabase
 from business_object.collection.collection_physique import CollectionPhysique
+from business_object.collection.collection_coherente import CollectionCoherente
 
 
 # @pytest.fixture(scope="session", autouse=True)
@@ -30,6 +31,15 @@ def test_creer_collection_physique():
     )
 
     result = dao_collection.creer(
-        id_utilisateur=1, id_manga=1, collection=collection, schema="projet_test_dao"
+        id_utilisateur=1, collection=collection, schema="projet_test_dao", id_manga=1
     )
-    assert result is True  # ou toute autre vérification nécessaire
+    assert result is True
+
+
+def test_creer_collection_coherente():
+    """Test de la création d'une collection cohérente."""
+    dao_collection = DaoCollection()
+    collection = CollectionCoherente(id_collection=None, titre="1", description="description 1")
+
+    result = dao_collection.creer(id_utilisateur=1, collection=collection, schema="projet_test_dao")
+    assert result is True
