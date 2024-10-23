@@ -1,5 +1,8 @@
 from InquirerPy import inquirer
 from view.vue_abstraite import VueAbstraite
+from view.passif.accueil_vue import AccueilVue
+from view.actif.accueil_connecte_vue import AccueilConnecteVue
+from view.passif.connexion.session import Session
 
 
 class AvisMangaVue(VueAbstraite):
@@ -36,4 +39,7 @@ class AvisMangaVue(VueAbstraite):
             case "Supprimer un avis":
                 return 0
             case "Retour au menu principal":
-                
+                if Session().connecte:
+                    return AccueilConnecteVue().choisir_menu()
+                else:
+                    return AccueilVue().choisir_menu()
