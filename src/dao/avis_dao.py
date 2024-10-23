@@ -322,7 +322,7 @@ class DaoAvis(metaclass=Singleton):
         return Liste_avis
 
     @log
-    def supprimer_avis(self, schema, id_manga, id_utilisateur) -> bool:
+    def supprimer_avis(self, schema, id_avis) -> bool:
         """Supprime un avis de la base de données.
 
         Parameters:
@@ -346,11 +346,7 @@ class DaoAvis(metaclass=Singleton):
                 with connection.cursor() as cursor:  # Fix: Use 'with connection.cursor()'
                     cursor.execute(
                         "DELETE FROM avis WHERE id_avis= %(id_avis)s;",
-                        {
-                            "id_avis": self.trouver_id_avis_par_id_manga_utilisateur(
-                                schema, id_manga, id_utilisateur
-                            )
-                        },
+                        {"id_avis": id_avis},
                     )
                     res = cursor.rowcount
 
