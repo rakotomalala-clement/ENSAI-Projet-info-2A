@@ -42,6 +42,7 @@ class AffichageMangaVue(VueAbstraite):
 
         print("auteur(s): ", auteurs)
         print("Etat de la diffusion du manga: ", status)
+        print("\n")
 
         # Insertion des avis
         from service.avis_service import ServiceAvis
