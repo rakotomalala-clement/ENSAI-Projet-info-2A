@@ -17,7 +17,7 @@ class ServiceUtilisateur:
     @log
     def connecter_utilisateur(self, nom_utilisateur: str, mot_de_passe: str):
         utilisateur = DaoCompte().trouver_utilisateur_par_nom(nom_utilisateur)
-        if utilisateur and utilisateur.mot_de_passe == hash_password(mot_de_passe, nom_utilisateur):
+        if utilisateur and utilisateur.mdp == hash_password(mot_de_passe, nom_utilisateur):
             print(f"Utilisateur {nom_utilisateur} connecté avec succès.")
             return utilisateur
         else:
@@ -37,9 +37,7 @@ class ServiceUtilisateur:
     def modifier(self, utilisateur) -> Utilisateur:
         """Modification d'un utilisateur"""
 
-        utilisateur.mot_de_passe = hash_password(
-            utilisateur.mot_de_passe, utilisateur.nom_utilisateur
-        )
+        utilisateur.mdp = hash_password(utilisateur.mdp, utilisateur.nom_utilisateur)
         return utilisateur if DaoCompte().modifier(utilisateur) else None
 
     @log
