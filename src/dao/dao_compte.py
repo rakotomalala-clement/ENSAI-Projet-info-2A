@@ -44,7 +44,6 @@ class DaoCompte(metaclass=Singleton):
 
         if res:
             return Utilisateur(
-                id_utilisateur=res["id_utilisateur"],
                 nom_utilisateur=res["nom_utilisateur"],
                 mdp=res["mdp"],
             )
@@ -67,7 +66,6 @@ class DaoCompte(metaclass=Singleton):
 
         if res:
             return Utilisateur(
-                id_utilisateur=res["id_utilisateur"],
                 nom_utilisateur=res["nom_utilisateur"],
                 mdp=res["mdp"],
             )
@@ -99,14 +97,14 @@ class DaoCompte(metaclass=Singleton):
             raise
 
     @log
-    def supprimer_utilisateur(self, id_utilisateur: int):
+    def supprimer_utilisateur(self, id_utilisateur: int) -> bool:
         delete_query = """
-        DELETE FROM utilisateurs WHERE id = %s;
+        DELETE FROM utilisateur WHERE id_utilisateur = %(id_utilisateur)s;
         """
 
         with DBConnection().connection as connection:
             with connection.cursor() as cursor:
-                cursor.execute(delete_query, (id_utilisateur,))
+                cursor.execute(delete_query, {"id_utilisateur": id_utilisateur})
                 connection.commit()
         return True
 
