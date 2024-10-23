@@ -48,7 +48,9 @@ class AffichageMangaVue(VueAbstraite):
         from service.avis_service import ServiceAvis
 
         id_manga = manga.id_manga
-        print(ServiceAvis().afficher_autre_avis(id_manga))
+        liste_avis = ServiceAvis().chercher_avis_sur_manga(id_manga)
+        for avis in liste_avis:
+            print("Note: ", avis.note, ", ", avis.avis)
 
         if Session().connecte:
             possibilites = ["Gérer ses avis sur ce manga", "Revenir au menu principal", "Quitter"]

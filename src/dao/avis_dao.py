@@ -82,6 +82,10 @@ class DaoAvis(metaclass=Singleton):
 
         try:
             with DBConnection(schema).connection as connection:
+                print(id_utilisateur)
+                print(id_manga)
+                print(avis.avis)
+                print(avis.note)
                 with connection.cursor() as cursor:
                     cursor.execute(
                         """

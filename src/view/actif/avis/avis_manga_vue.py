@@ -41,7 +41,7 @@ class AvisMangaVue(VueAbstraite):
                     .trouver_utilisateur_par_nom(Session().nom_utilisateur)
                     .id_utilisateur
                 )
-                id_manga = MangaService().trouver_id_par_titre
+                id_manga = MangaService().trouver_id_par_titre(self.titre_manga)
                 ServiceAvis().ajouter_avis(id_utilisateur, id_manga, "super", 3)
 
                 return 0

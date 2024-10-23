@@ -88,7 +88,7 @@ class ServiceAvis:
 
         entetes = ["note", "avis"]  # ajouter nom du mangas correspondant ?
 
-        avis_user_sur_manga = DaoAvis().chercher_avis_sur_manga("projet_test_dao", id_manga)
+        avis_user_sur_manga = DaoAvis().chercher_avis_sur_manga("projet_info_2a", id_manga)
 
         avis_as_list = [a.as_list() for a in avis_user_sur_manga]
 
@@ -105,6 +105,10 @@ class ServiceAvis:
         str_avis += "\n"
 
         return str_avis
+
+    @log
+    def chercher_avis_sur_manga(self, id_manga):
+        return DaoAvis().chercher_avis_sur_manga("projet_info_2a", id_manga)
 
 
 """
