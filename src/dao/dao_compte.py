@@ -1,4 +1,5 @@
 # dao_compte.py
+
 from business_object.utilisateur import Utilisateur
 from utils.singleton import Singleton
 from dao.db_connection import DBConnection

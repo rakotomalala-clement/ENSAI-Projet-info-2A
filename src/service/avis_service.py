@@ -105,9 +105,11 @@ class ServiceAvis:
         return str_avis
 
 
+"""
 resultat = ServiceAvis().ajouter_avis(id_utilisateur=1, id_manga=1, avis="cool", note=5)
 
 if resultat:
     print("Avis ajouté avec succès :", resultat)
 else:
     print("Échec de l'ajout de l'avis.")
+"""

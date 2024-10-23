@@ -31,22 +31,22 @@ class Avis:
 # Test de la classe Avis
 
 # Test de la création d'un avis valide
-try:
-    avis1 = Avis(note=4, avis="Un manga très intéressant et bien illustré.")
-    print(
-        avis1
-    )  # Devrait afficher : "Note : 4, Avis : Un manga très intéressant et bien illustré."
-except ValueError as e:
-    print(f"Erreur : {e}")
+# try:
+#    avis1 = Avis(note=4, avis="Un manga très intéressant et bien illustré.")
+#    print(
+#        avis1
+#    )  # Devrait afficher : "Note : 4, Avis : Un manga très intéressant et bien illustré."
+# except ValueError as e:
+#    print(f"Erreur : {e}")
 
 # Test de la création d'un avis avec une note invalide
-try:
-    avis2 = Avis(note=6, avis="Excellent manga mais note incorrecte.")
-except ValueError as e:
-    print(
-        f"Erreur : {e}"
-    )  # Devrait afficher une erreur : "La note doit être comprise entre 1 et 5."
+# try:
+#    avis2 = Avis(note=6, avis="Excellent manga mais note incorrecte.")
+# except ValueError as e:
+#    print(
+#        f"Erreur : {e}"
+#    )  # Devrait afficher une erreur : "La note doit être comprise entre 1 et 5."
 
 # Test de la création d'un avis avec un identifiant
-avis3 = Avis(note=3, avis="Sympa, mais sans plus.", id_avis=101)
-print(avis3)  # Devrait afficher : "Note : 3, Avis : Sympa, mais sans plus."
+# avis3 = Avis(note=3, avis="Sympa, mais sans plus.", id_avis=101)
+# print(avis3)  # Devrait afficher : "Note : 3, Avis : Sympa, mais sans plus."
