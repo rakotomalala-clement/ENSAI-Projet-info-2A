@@ -8,18 +8,6 @@ from utils.reset_database import ResetDatabase
 from business_object.avis import Avis
 from dao.avis_dao import DaoAvis
 
-
-@pytest.fixture(scope="session", autouse=True)
-def setup_test_environment():
-    """Initialisation des données de test"""
-    with patch.dict(os.environ, {"SCHEMA": "projet_info_2a"}):
-        ResetDatabase().lancer()
-        yield
-
-
-avis_manga = Avis(note=5, avis="Superbe manga !")
-
-
 def test_creer_avis_ok():
     """Création d'avis réussie"""
 
@@ -33,7 +21,7 @@ def test_creer_avis_ok():
     assert creation_ok
 
 
-"""
+
 def test_creer_avis_col_coherente_ok():
     Création de Joueur réussie
 
@@ -78,6 +66,20 @@ def test_chercher_avis():
     assert isinstance(listeavis, list)
     for a in listeavis:
         assert isinstance(a, Avis)
+
+def test_modifier_avis_ok():
+    avis = Avis(note=5, avis="cool")
+    avis_originelle = DaoAvis().creer_avis("projet_test_dao", id_utilisateur=1, id_manga=1, avis_manga=avis)
+    
+    modification = DaoAvis().modifier_avis("projet_test_dao", avis=Avis(id_avis=avis_originelle.id_avis, avis="Superbe manga !", note=4))
+    
+    assert avis_originelle.avis != modification.avis
+    assert avis_originelle.note != modification.note
+
+
+
+
+
 """
 
 if __name__ == "__main__":
