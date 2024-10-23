@@ -13,16 +13,18 @@ class ServiceAvis:
     def ajouter_avis(self, id_utilisateur, id_manga, avis, note):
         """Création d'un avis à partir de ses attributs"""
 
-        nouveau_avis = Avis(avis, note)
+        nouveau_avis = Avis(note, avis)
         return (
-            nouveau_avis if DaoAvis().creer_avis(id_utilisateur, id_manga, nouveau_avis) else None
+            nouveau_avis
+            if DaoAvis().creer_avis(id_utilisateur, id_manga, nouveau_avis, "projet_info_2a")
+            else None
         )
 
     @log
     def ajouter_avis_collection(self, id_utilisateur, id_collection, type_collection, avis, note):
         """Création d'un avis sur une collection à partir de ses attributs"""
 
-        nouveau_avis_collection = Avis(avis, note)
+        nouveau_avis_collection = Avis(note, avis)
 
         if "c" in type_collection:
             return (

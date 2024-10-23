@@ -1,8 +1,9 @@
 class Utilisateur:
 
-    def __init__(self, nom_utilisateur: str, mdp: str):
+    def __init__(self, nom_utilisateur: str, mdp: str, id_utilisateur=None):
         self.nom_utilisateur = nom_utilisateur
         self.mdp = mdp
+        self.id_utilisateur = id_utilisateur
 
 
 """
