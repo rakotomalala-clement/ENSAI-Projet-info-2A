@@ -2,7 +2,7 @@ from InquirerPy import inquirer
 from view.vue_abstraite import VueAbstraite
 from view.passif.connexion.session import Session
 from view.passif.accueil_vue import AccueilVue
-from view.actif_accueil_connecte import AccueilConnecteVue
+from view.actif.accueil_connecte_vue import AccueilConnecteVue
 
 
 class AffichageMangaVue(VueAbstraite):
@@ -29,11 +29,26 @@ class AffichageMangaVue(VueAbstraite):
 
         manga = MangaService().trouver_par_titre(self.titre)
 
+        # Si le nom du manga n'existe pas
+        if not manga:
+            print("Le manga recherché n'est pas dans notre base de données")
+            if Session().connecte:
+                return AccueilConnecteVue().choisir_menu()
+            else:
+                return AccueilVue().choisir_menu()
+
         auteurs = manga.auteurs
         status = manga.status
 
         print("auteur(s): ", auteurs)
         print("Etat de la diffusion du manga: ", status)
+        print("\n")
+
+        # Insertion des avis
+        from service.avis_service import ServiceAvis
+
+        id_manga = manga.id_manga
+        print(ServiceAvis().afficher_autre_avis(id_manga))
 
         if Session().connecte:
             possibilites = ["Gérer ses avis sur ce manga", "Revenir au menu principal", "Quitter"]
@@ -44,9 +59,11 @@ class AffichageMangaVue(VueAbstraite):
 
         match choix:
             case "Gérer ses avis sur ce manga":
-                return 0
+                from view.actif.avis.avis_manga_vue import AvisMangaVue
+
+                return AvisMangaVue(self.titre).choisir_menu()
+
             case "Revenir au menu principal":
-                from view.passif.session import Session
 
                 # Vérifie si l'utilisateur est connecté ou non
                 if Session().connecte:

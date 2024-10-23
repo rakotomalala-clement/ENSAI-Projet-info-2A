@@ -1,5 +1,8 @@
 from InquirerPy import inquirer
 from view.vue_abstraite import VueAbstraite
+from view.passif.connexion.session import Session
+from view.passif.accueil_vue import AccueilVue
+from view.actif.accueil_connecte_vue import AccueilConnecteVue
 
 
 class CollectionUtilisateurVue(VueAbstraite):
@@ -27,6 +30,8 @@ class CollectionUtilisateurVue(VueAbstraite):
         # if self.type
         manga_collection = []
         manga_collection.append("Ajouter manga")
+        manga_collection.append("Retour au menu")
+        manga_collection.append("Modifier informations collections")
 
         choix = inquirer.select(
             message="Sélectionner un manga pour modifier les informations dessus"
@@ -41,5 +46,14 @@ class CollectionUtilisateurVue(VueAbstraite):
                 ).execute()
 
                 print(titre)
+
+            case "Revenir au menu principal":
+                if Session().connecte:
+                    return AccueilConnecteVue().choisir_menu()
+                else:
+                    return AccueilVue().choisir_menu()
+
+            case "Modifier informations collections":
+                return 0
 
         return 0
