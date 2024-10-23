@@ -48,7 +48,7 @@ def test_creer_avis_ok():
     avis = Avis(note=4, avis="cool cool")
     # WHEN
     creation_ok = DaoAvis().creer_avis(
-        id_utilisateur=35, id_manga=3, avis=avis, schema="projet_test_dao"
+        id_utilisateur=12, id_manga=1, avis=avis, schema="projet_test_dao"
     )
     # THEN
     assert creation_ok

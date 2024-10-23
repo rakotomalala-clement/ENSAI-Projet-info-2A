@@ -505,10 +505,3 @@ class DaoAvis(metaclass=Singleton):
             raise
 
         return res > 0
-
-
-print(
-    DaoAvis().trouver_id_avis_par_id_manga_utilisateur(
-        schema="projet_test_dao", id_manga=1, id_utilisateur=12
-    )
-)
