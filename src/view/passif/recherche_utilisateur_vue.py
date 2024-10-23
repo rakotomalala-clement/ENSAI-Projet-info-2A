@@ -34,9 +34,18 @@ class RechercheUtilisateurVue(VueAbstraite):
         for utilisateur in liste_utilisateurs:
             liste_nom_utilisateurs.append(utilisateur.nom_utilisateur)
 
+        # Ajout de la possibilité de retourner au menu principal
+        liste_nom_utilisateurs.append("Retour au menu principal")
+
         nom_utilisateur_choisi = inquirer.select(
             message="Veuillez choisir l'utilisateur dont vous souhaitez consulter les collections",
             choices=liste_nom_utilisateurs,
         ).execute()
 
-        return RechercheCollectionVue(nom_utilisateur_choisi).choisir_menu()
+        if nom_utilisateur_choisi == "Retour au menu principal":
+            if Session().connecte:
+                return AccueilConnecteVue().choisir_menu()
+            else:
+                return AccueilVue().choisir_menu()
+        else:
+            return RechercheCollectionVue(nom_utilisateur_choisi).choisir_menu()

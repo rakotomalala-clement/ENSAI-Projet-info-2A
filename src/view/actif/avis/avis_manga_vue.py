@@ -18,7 +18,13 @@ class AvisMangaVue(VueAbstraite):
         print("\n" + "-" * 50 + "\nMes avis sur le manga\n" + "-" * 50 + "\n")
 
         choix = inquirer.select(
-            message="", choices=["Ajouter un avis", "Modifier un avis", "Supprimer un avis"]
+            message="",
+            choices=[
+                "Ajouter un avis",
+                "Modifier un avis",
+                "Supprimer un avis",
+                "Retour au menu principal",
+            ],
         )
 
         match choix:
@@ -29,3 +35,5 @@ class AvisMangaVue(VueAbstraite):
                 return 0
             case "Supprimer un avis":
                 return 0
+            case "Retour au menu principal":
+                
