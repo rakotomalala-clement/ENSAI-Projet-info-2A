@@ -1,20 +1,6 @@
-# import os
 import pytest
-
-# from unittest.mock import patch
-
-# from utils.reset_database import ResetDatabase
-
 from business_object.avis import Avis
 from dao.avis_dao import DaoAvis
-
-
-@pytest.fixture(scope="session", autouse=True)
-def setup_test_environment():
-    """Initialisation des données de test"""
-    with patch.dict(os.environ, {"SCHEMA": "projet_info_2a"}):
-        ResetDatabase().lancer()
-        yield
 
 
 avis_manga = Avis(note=5, avis="Superbe manga !")
@@ -35,7 +21,6 @@ def test_creer_avis_ok():
     assert creation_ok
 
 
-"""
 def test_creer_avis_col_coherente_ok():
     """Création d avis sur collection cohérente"""
 
@@ -68,8 +53,6 @@ def test_creer_avis_col_physique_ok():
     # THEN
     assert creation_ok
 
-
-"""
 def test_chercher_avis():
     Recherche des avis laisser par un utilisateur sur un manga
 
@@ -92,13 +75,5 @@ def test_modifier_avis_ok():
     assert avis_originelle.avis != modification.avis
     assert avis_originelle.note != modification.note
 
-
-
-
-
-"""
-
-
 if __name__ == "__main__":
-
     pytest.main([__file__])
