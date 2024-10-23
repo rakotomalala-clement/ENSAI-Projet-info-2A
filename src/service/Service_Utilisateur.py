@@ -9,7 +9,7 @@ class ServiceUtilisateur:
     @log
     def sinscrire(self, nom_utilisateur: str, mot_de_passe=str) -> Utilisateur:
         utilisateur = DaoCompte().creer_utilisateur(
-            nom_utilisateur, hash_password(mot_de_passe, nom_utilisateur)
+            Utilisateur(nom_utilisateur, hash_password(mot_de_passe, nom_utilisateur))
         )
         print(f"Utilisateur {nom_utilisateur} inscrit avec succès.")
         return utilisateur
