@@ -319,7 +319,6 @@ class DaoAvis(metaclass=Singleton):
         bool
             Retourne True si la mise à jour a été effectuée avec succès, sinon False.
         """
-
         res = None
 
         try:
@@ -351,46 +350,43 @@ class DaoAvis(metaclass=Singleton):
     def chercher_avis_sur_manga(self, schema, id_manga):
         """Chercher l'ensemble des avis des utilisateurs laissés sur un manga.
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
+        schema: str
+            Nom du schéma de la base de données.
         id_manga: int
-            identifiant du manga pour lequel on souhaite récolter les avis.
+            Identifiant du manga pour lequel on souhaite récolter les avis.
 
-        Return:
+        Returns
         -------
         List[Avis]
             Liste des avis trouvés.
         """
-
-        res = None
-
         try:
             with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "SELECT id_avis, avis, note FROM avis WHERE id_manga = %(id_manga)s;",
-                        {
-                            "id_manga": id_manga,
-                        },
+                        """
+                        SELECT id_avis, avis, note
+                        FROM avis
+                        WHERE id_manga = %(id_manga)s;
+                        """,
+                        {"id_manga": id_manga},
                     )
                     res = cursor.fetchall()
 
         except Exception as e:
-            logging.error(f"Erreur lors de la recherche d'avis sur le manga : {e}")
+            logging.error(f"Erreur lors de la recherche d'avis sur le manga {id_manga} : {e}")
             raise
 
-        Liste_avis = []
-        if res:
-            for row in res:
-                Liste_avis.append(
-                    Avis(
-                        id_avis=row["id_avis"],
-                        avis=row["avis"],
-                        note=row["note"],
-                    )
-                )
+        # Transforme les résultats en une liste d'objets Avis
+        liste_avis = (
+            [Avis(id_avis=row["id_avis"], avis=row["avis"], note=row["note"]) for row in res]
+            if res
+            else []
+        )
 
-        return Liste_avis
+        return liste_avis
 
     @log
     def supprimer_avis_col_coherente(self, id_avis_collection_coherente, schema):
@@ -414,7 +410,8 @@ class DaoAvis(metaclass=Singleton):
             with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "DELETE FROM avis_collection_coherente_db WHERE id_avis_collection_coherente= %(id_avis_collection_coherente)s;",
+                        "DELETE FROM avis_collection_coherente_db\
+                            WHERE id_avis_collection_coherente= %(id_avis_collection_coherente)s;",
                         {"id_avis_collection_coherente": id_avis_collection_coherente},
                     )
                     res = cursor.rowcount
