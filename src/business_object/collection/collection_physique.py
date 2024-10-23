@@ -6,11 +6,11 @@ class CollectionPhysique(AbstractCollection):
     def __init__(
         self, id_collection, titre, dernier_tome_acquis, numeros_tomes_manquants, status_collection
     ):
-        super().__init__(  # Ajout des parenthèses ici
+        super().__init__(
             id_collection=id_collection,
             titre=titre,
-            type_collection="Physique",  # Ce paramètre est correct ici
+            type_collection="Physique",
         )
         self.dernier_tome_acquis = dernier_tome_acquis
-        self.numeros_tomes_manquants = numeros_tomes_manquants  # Correction ici
+        self.numeros_tomes_manquants = numeros_tomes_manquants
         self.status_collection = status_collection

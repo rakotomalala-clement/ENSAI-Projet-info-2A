@@ -1,5 +1,8 @@
 from InquirerPy import inquirer
 from view.vue_abstraite import VueAbstraite
+from view.passif.connexion.session import Session
+from view.passif.accueil_vue import AccueilVue
+from view.actif.accueil_connecte_vue import AccueilConnecteVue
 
 
 class GestionCollectionVue(VueAbstraite):
@@ -18,12 +21,18 @@ class GestionCollectionVue(VueAbstraite):
 
         choix = inquirer.select(
             message="Voulez-vous créer ou modifier une de vos collections?",
-            choices=["Créer une collection", "Modifier une collection", "Supprimer une collection"],
+            choices=[
+                "Créer une collection",
+                "Modifier une collection",
+                "Supprimer une collection",
+                "Retour au menu principal",
+            ],
         ).execute()
 
         match choix:
             case "Créer une collection":
                 from view.actif.gestion_collection.creer_collection_vue import CreerCollectionVue
+
                 return CreerCollectionVue().choisir_menu()
 
             case "Modifier une collection":
@@ -55,5 +64,11 @@ class GestionCollectionVue(VueAbstraite):
                 )
 
                 print(choix_collection)
+
+            case "Retour au menu principal":
+                if Session().connecte:
+                    return AccueilConnecteVue().choisir_menu()
+                else:
+                    return AccueilVue().choisir_menu()
 
         return 0
