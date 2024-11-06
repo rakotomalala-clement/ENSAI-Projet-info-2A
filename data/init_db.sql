@@ -33,8 +33,9 @@ DROP TABLE IF EXISTS collection_coherente CASCADE;
 CREATE TABLE collection_coherente(
     id_collection    SERIAL PRIMARY KEY,
     id_utilisateur INTEGER NOT NULL,
-    titre_collection VARCHAR(255) UNIQUE NOT NULL,
+    titre_collection VARCHAR(255)  NOT NULL,
     description_collection Text,
+    UNIQUE(id_utilisateur,titre_collection),
     FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur) ON DELETE CASCADE
 );
 

@@ -19,16 +19,17 @@ class DaoCollection(metaclass=Singleton):
 
         if collection.type_collection == "Physique":
             collection = CollectionPhysique(
-                collection.id_collection,
                 collection.titre,
                 collection.dernier_tome_acquis,
                 collection.numeros_tomes_manquants,
                 collection.status_collection,
+                collection.id_collection,
             )
+
             query = """
                 INSERT INTO collection_physique (id_utilisateur, id_manga, titre_collection, numero_dernier_tome, numeros_tomes_manquants, status_collection)
                 VALUES (%(id_utilisateur)s, %(id_manga)s, %(titre_collection)s, %(numero_dernier_tome)s, %(numeros_tomes_manquants)s, %(status_collection)s)
-                RETURNING titre_collection;
+                RETURNING id_collection;
             """
             params = {
                 "id_utilisateur": id_utilisateur,
@@ -48,7 +49,7 @@ class DaoCollection(metaclass=Singleton):
             query = """
                 INSERT INTO collection_coherente (id_utilisateur, titre_collection, description_collection)
                 VALUES (%(id_utilisateur)s, %(titre_collection)s, %(description_collection)s)
-                RETURNING titre_collection;
+                RETURNING id_collection;
             """
             params = {
                 "id_utilisateur": id_utilisateur,
@@ -66,12 +67,12 @@ class DaoCollection(metaclass=Singleton):
                     res = cursor.fetchone()
 
                     if res:
-                        collection.titre = res["titre_collection"]
+                        # Utilisation éventuelle de l'id_collection
+                        collection.id_collection = res["id_collection"]
                         created = True
 
         except Exception as e:
-            logging.error(f"Erreur lors de la création de la collection : {e}")
-            raise e
+            logging.info(f"Erreur lors de la création de la collection : {e}")
 
         return created
 
@@ -97,7 +98,7 @@ class DaoCollection(metaclass=Singleton):
                 collections = []
 
                 for result in results:
-                    print(result["id_collection"])
+
                     collection = CollectionCoherente(
                         id_collection=result["id_collection"],
                         titre=result["titre_collection"],
@@ -127,6 +128,45 @@ class DaoCollection(metaclass=Singleton):
                         WHERE id_utilisateur = %s AND id_manga = %s;
                         """,
                         (id_utilisateur, id_manga),
+                    )
+
+                    results = cursor.fetchall()
+
+                collections = []
+
+                for result in results:
+
+                    collection = CollectionPhysique(
+                        id_collection=result["id_collection"],
+                        titre=result["titre_collection"],
+                        dernier_tome_acquis=result["numero_dernier_tome"],
+                        numeros_tomes_manquants=result["numeros_tomes_manquants"],
+                        status_collection=result["status_collection"],
+                    )
+                    collections.append(collection)
+
+                return collections
+        except Exception as e:
+            logging.error(
+                f"Erreur lors de la recherche de la collection avec id user {id_utilisateur}: {e}"
+            )
+            raise e
+
+    @log
+    def rechercher_collection_physique_par_user(
+        self, id_utilisateur: int, schema
+    ) -> List[CollectionPhysique]:
+        """Recherche une collection cohérente par ID user dans la base de données."""
+        try:
+            with DBConnection(schema).connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        """
+                        SELECT id_collection, id_utilisateur, id_manga, titre_collection, numero_dernier_tome, numeros_tomes_manquants, status_collection
+                        FROM collection_physique
+                        WHERE id_utilisateur = %s ;
+                        """,
+                        (id_utilisateur,),
                     )
 
                     results = cursor.fetchall()
@@ -183,24 +223,26 @@ class DaoCollection(metaclass=Singleton):
                     connection.commit()
                     return True
         except Exception as e:
-            logging.error(f"Erreur lors de l'ajout des mangas à la collection : {e}")
+            logging.info(f"Erreur lors de l'ajout des mangas à la collection : {e}")
             return False
 
     @log
-    def supprimer(self, collection, schema):
+    def supprimer(self, collection, id_utilisateur, schema):
 
         table_map = {"Physique": "collection_physique", "Coherente": "collection_coherente"}
 
         if collection.type_collection not in table_map:
-            logging.error(f"Type de collection invalide: {collection.type_collection}")
+            logging.info(f"Type de collection invalide: {collection.type_collection}")
             return False
 
         try:
             with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
 
-                    query = f"DELETE FROM {table_map[collection.type_collection]} WHERE titre_collection=%(titre)s;"
-                    cursor.execute(query, {"titre": collection.titre})
+                    query = f"DELETE FROM {table_map[collection.type_collection]} WHERE titre_collection=%(titre)s AND id_utilisateur=%(id_utilisateur)s;"
+                    cursor.execute(
+                        query, {"titre": collection.titre, "id_utilisateur": id_utilisateur}
+                    )
 
                     return cursor.rowcount > 0
         except Exception as e:
@@ -259,11 +301,12 @@ class DaoCollection(metaclass=Singleton):
             numeros_tomes_manquants = %(numeros_tomes_manquants)s,
             status_collection = %(status_collection)s
             
-        WHERE titre_collection = %(titre_collection)s
-        RETURNING titre_collection;
+        WHERE id_collection = %(id_collection)s
+        RETURNING id_collection;
         """
 
         params = {
+            "id_collection": collection.id_collection,
             "titre_collection": collection.titre,
             "numero_dernier_tome": collection.dernier_tome_acquis,
             "numeros_tomes_manquants": collection.numeros_tomes_manquants,
@@ -286,5 +329,5 @@ class DaoCollection(metaclass=Singleton):
                         return False
 
         except Exception as e:
-            logging.error(f"Erreur lors de la modification de la collection cohérente : {e}")
+            logging.error(f"Erreur lors de la modification de la collection physique : {e}")
             return False

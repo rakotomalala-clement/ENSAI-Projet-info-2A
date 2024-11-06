@@ -12,8 +12,8 @@ class CollectionPhysique(AbstractCollection):
         id_collection=None,
     ):
         super().__init__(
-            id_collection=id_collection,
             titre=titre,
+            id_collection=id_collection,
             type_collection="Physique",
         )
         self.dernier_tome_acquis = dernier_tome_acquis
