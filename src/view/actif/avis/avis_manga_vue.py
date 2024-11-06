@@ -46,11 +46,15 @@ class AvisMangaVue(VueAbstraite):
 
                 note = inquirer.text(
                     message="Veuillez rentrer une note entre 1 et 5",
-                    validate=lambda val: val.isdigit() and 1 <= int(val) <= 5,
-                    invalid_message="Ce n'est pas un nombre entier valide entre 1 et 5",
                 ).execute()
 
-                avis = inquirer.text(message="Veuillez entrer votre avis sur ce manga")
+                while not (int(note) in [1, 2, 3, 4, 5]):
+                    print(note, "n'est pas un entier entre 1 et 5")
+                    note = inquirer.text(
+                        message="Veuillez rentrer une note entre 1 et 5",
+                    ).execute()
+
+                avis = inquirer.text(message="Veuillez entrer votre avis sur ce manga").execute()
 
                 ServiceAvis().ajouter_avis(id_utilisateur, id_manga, avis, int(note))
 

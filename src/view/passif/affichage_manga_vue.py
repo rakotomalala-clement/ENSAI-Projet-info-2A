@@ -40,17 +40,18 @@ class AffichageMangaVue(VueAbstraite):
         auteurs = manga.auteurs
         status = manga.status
 
-        print("auteur(s): ", auteurs)
+        print("Auteur(s): ", auteurs)
         print("Etat de la diffusion du manga: ", status)
         print("\n")
 
         # Insertion des avis
-        from service.avis_service import ServiceAvis
+        # from service.avis_service import ServiceAvis
 
-        id_manga = manga.id_manga
-        liste_avis = ServiceAvis().chercher_avis_sur_manga(id_manga)
-        for avis in liste_avis:
-            print("Note: ", avis.note, ", ", avis.avis)
+        # id_manga = manga.id_manga
+        # liste_avis = ServiceAvis().chercher_avis_sur_manga(id_manga)
+        # for avis in liste_avis:
+        #    print("Note: ", avis.note, ", ", avis.avis)
+        # print(ServiceAvis().afficher_autre_avis(id_manga))
 
         if Session().connecte:
             possibilites = ["Gérer ses avis sur ce manga", "Revenir au menu principal", "Quitter"]
