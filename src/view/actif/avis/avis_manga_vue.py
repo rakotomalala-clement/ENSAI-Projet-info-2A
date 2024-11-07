@@ -33,6 +33,7 @@ class AvisMangaVue(VueAbstraite):
                 "Retour au menu principal",
             ],
         ).execute()
+    
 
         match choix:
             case "Ajouter un avis":
