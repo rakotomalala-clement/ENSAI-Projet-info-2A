@@ -179,6 +179,7 @@ from business_object.collection.collection_coherente import CollectionCoherente
 
 
 def test_recuperer_mangas_collection_coherente_ok():
+    print("hello")
     dao_collection = DaoCollection()
     print("hello")
     result = dao_collection.recuperer_mangas_collection_coherente(1, schema="projet_test_dao")
