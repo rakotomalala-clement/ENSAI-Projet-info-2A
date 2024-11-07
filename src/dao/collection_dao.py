@@ -331,3 +331,45 @@ class DaoCollection(metaclass=Singleton):
         except Exception as e:
             logging.error(f"Erreur lors de la modification de la collection physique : {e}")
             return False
+
+    @log
+    def recuperer_mangas_collection_coherente(self, id_collection, schema: str):
+        try:
+
+            with DBConnection(schema).connection as connection:
+                with connection.cursor() as cursor:
+
+                    # récupérer les IDs des mangas dans la collection
+                    cursor.execute(
+                        """
+                        SELECT id_manga FROM collection_coherente_mangas 
+                        WHERE id_collection = %s;
+                        """,
+                        (id_collection,),
+                    )
+
+                    result = cursor.fetchall()
+                    print(result)
+                    # récupérer les détails des mangas
+                    mangas = []
+                    if result:
+                        for row in result:
+
+                            id_manga = row["id_manga"]
+
+                            cursor.execute(
+                                """
+                                SELECT * FROM manga 
+                                WHERE id_manga = %s;
+                                """,
+                                (id_manga,),
+                            )
+                            manga_details = cursor.fetchone()
+                            if manga_details:
+                                mangas.append(manga_details)
+
+                    connection.commit()
+                    return mangas
+        except Exception as e:
+            logging.info(f"Erreur : {e}")
+            return []
