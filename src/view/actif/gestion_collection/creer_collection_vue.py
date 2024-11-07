@@ -1,5 +1,6 @@
 from InquirerPy import inquirer
 from view.vue_abstraite import VueAbstraite
+from view.passif.connexion.session import Session
 
 
 class CreerCollectionVue(VueAbstraite):
@@ -16,26 +17,21 @@ class CreerCollectionVue(VueAbstraite):
 
         print("\n" + "-" * 50 + "\nCréation de collection\n" + "-" * 50 + "\n")
 
-        choix = inquirer.select(
-            message="Voulez-vous créer une collection physique ou cohérente?",
-            choices=["Collection physique", "Collection cohérente"],
+        nom_collection = inquirer.text(message="Quel est le nom de votre collection?").execute()
+        description_collection = inquirer.text(
+            message="Donnez une description de la collection"
         ).execute()
 
-        nom_collection = inquirer.text(message="Quel est le nom de votre collection?").execute()
+        from service.collection_service import ServiceCollection
+        from service.Service_Utilisateur import ServiceUtilisateur
 
-        match choix:
-            case "Collection physique":
-                print("cococo", nom_collection)
+        from business_object.collection.collection_coherente import CollectionCoherente
 
-                from view.actif.accueil_connecte_vue import AccueilConnecteVue
+        collection = CollectionCoherente(nom_collection, description_collection)
 
-                return AccueilConnecteVue().choisir_menu()
-
-            case "Collection cohérente":
-                print("cecece")
-
-                from view.actif.accueil_connecte_vue import AccueilConnecteVue
-
-                return AccueilConnecteVue().choisir_menu()
+        utilisateur = ServiceUtilisateur().trouver_utilisateur_par_nom(Session().nom_utilisateur)
+        ServiceCollection().creer_collection(
+            utilisateur.id_utilisateur, collection, "projet_info_2a"
+        )
 
         return 0

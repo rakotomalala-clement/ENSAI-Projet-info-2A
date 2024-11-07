@@ -10,4 +10,3 @@ class CollectionCoherente(AbstractCollection):
             type_collection="Coherente",
         )
         self.description = description
-

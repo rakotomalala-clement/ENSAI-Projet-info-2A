@@ -1,5 +1,5 @@
 from typing import List
-from dao.dao_collection import DaoCollection
+from dao.collection_dao import DaoCollection
 from business_object.collection.collection_physique import CollectionPhysique
 from business_object.collection.collection_coherente import CollectionCoherente
 
