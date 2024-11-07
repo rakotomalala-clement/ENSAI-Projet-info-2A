@@ -9,7 +9,28 @@ class ServiceCollection:
     def __init__(self):
         self.dao_collection = DaoCollection()
 
-    def creer_collection(self, id_utilisateur: int, collection, schema: str, id_manga=None) -> bool:
+    def creer_collection(
+        self,
+        id_utilisateur: int,
+        type_collection,
+        titre,
+        description,
+        dernier_tome_acquis,
+        numeros_tomes_manquants,
+        status,
+        schema: str,
+        id_manga=None,
+    ) -> bool:
+        if type_collection == "Physique":
+            collection = CollectionPhysique(
+                titre,
+                dernier_tome_acquis,
+                numeros_tomes_manquants,
+                status,
+            )
+        
+        else:
+            collection = CollectionCoherente(titre, description)
 
         return self.dao_collection.creer(id_utilisateur, collection, schema, id_manga)
 
