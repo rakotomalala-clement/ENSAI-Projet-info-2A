@@ -10,8 +10,8 @@ from service.manga_service import MangaService
 
 
 class AvisMangaVue(VueAbstraite):
-    def __init__(self, titre_manga):
-        self.titre_manga = titre_manga
+    def __init__(self, manga):
+        self.manga = manga
 
     def choisir_menu(self):
         """Affichage des avis sur la collection ou le manga
@@ -22,7 +22,7 @@ class AvisMangaVue(VueAbstraite):
             Retourne la view de l'acceuil
         """
 
-        print("\n" + "-" * 50 + "\nMes avis sur le manga\n" + "-" * 50 + "\n")
+        print("\n" + "-" * 50 + "\nMes avis sur", self.titre_manga, "\n" + "-" * 50 + "\n")
 
         choix = inquirer.select(
             message="",
@@ -33,10 +33,17 @@ class AvisMangaVue(VueAbstraite):
                 "Retour au menu principal",
             ],
         ).execute()
-    
 
         match choix:
             case "Ajouter un avis":
+                from service.Service_Utilisateur import ServiceUtilisateur
+                id_utilisateur = (
+                ServiceUtilisateur()
+                .trouver_utilisateur_par_nom(nom_utilisateur_choisi)
+                .id_utilisateur
+            )
+
+                avis = 
 
                 id_utilisateur = (
                     ServiceUtilisateur()

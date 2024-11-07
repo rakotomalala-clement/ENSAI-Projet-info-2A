@@ -1,5 +1,3 @@
-from tabulate import tabulate
-
 from utils.log_decorator import log
 
 from business_object.avis import Avis
@@ -47,11 +45,11 @@ class ServiceAvis:
 
     @log
     def afficher_avis_user(id_utlisateur, id_manga):
-        """Afficher les avis qu'un utilisateur a laisser sur un  manga"""
+        """Afficher l'avis qu'un utilisateur a laisser sur un  manga"""
 
         avis_user_sur_manga = DaoAvis.chercher_avis(id_utlisateur, id_manga)
 
-        return avis_user_sur_manga
+        return avis_user_sur_manga[0]
 
     @log
     def modifier(self, avis_message, note) -> Avis:
@@ -69,6 +67,6 @@ class ServiceAvis:
     def afficher_autre_avis(self, id_manga):
         """Afficher les avis laisser sous  un manga"""
 
-        avis_user_sur_manga = DaoAvis().chercher_avis_sur_manga("projet_test_dao", id_manga)
+        avis_user_sur_manga = DaoAvis().chercher_avis_sur_manga("projet_info_2a", id_manga)
 
         return avis_user_sur_manga
