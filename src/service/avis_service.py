@@ -49,25 +49,9 @@ class ServiceAvis:
     def afficher_avis_user(id_utlisateur, id_manga):
         """Afficher les avis qu'un utilisateur a laisser sur un  manga"""
 
-        entetes = ["note", "avis"]  # ajouter nom du mangas correspondant ?
-
         avis_user_sur_manga = DaoAvis.chercher_avis(id_utlisateur, id_manga)
 
-        avis_as_list = [a.as_list() for a in avis_user_sur_manga]
-
-        str_avis = "-" * 100
-        str_avis += "\nListe des avis \n"
-        str_avis += "-" * 100
-        str_avis += "\n"
-        str_avis += tabulate(
-            tabular_data=avis_as_list,
-            headers=entetes,
-            tablefmt="psql",
-            floatfmt=".2f",
-        )
-        str_avis += "\n"
-
-        return str_avis
+        return avis_user_sur_manga
 
     @log
     def modifier(self, avis_message, note) -> Avis:
@@ -83,36 +67,8 @@ class ServiceAvis:
 
     @log
     def afficher_autre_avis(self, id_manga):
-        """Afficher les avis laisser sous  les mangas"""
-
-        """Afficher les avis qu'un utilisateur a laisser sur un  manga"""
-
-        entetes = ["note", "avis"]  # ajouter nom du mangas correspondant ?
+        """Afficher les avis laisser sous  un manga"""
 
         avis_user_sur_manga = DaoAvis().chercher_avis_sur_manga("projet_test_dao", id_manga)
 
-        avis_as_list = [a.as_list() for a in avis_user_sur_manga]
-
-        str_avis = "-" * 100
-        str_avis += "\nListe des joueurs \n"
-        str_avis += "-" * 100
-        str_avis += "\n"
-        str_avis += tabulate(
-            tabular_data=avis_as_list,
-            headers=entetes,
-            tablefmt="psql",
-            floatfmt=".2f",
-        )
-        str_avis += "\n"
-
-        return str_avis
-
-
-"""
-resultat = ServiceAvis().ajouter_avis(id_utilisateur=1, id_manga=1, avis="cool", note=5)
-
-if resultat:
-    print("Avis ajouté avec succès :", resultat)
-else:
-    print("Échec de l'ajout de l'avis.")
-"""
+        return avis_user_sur_manga
