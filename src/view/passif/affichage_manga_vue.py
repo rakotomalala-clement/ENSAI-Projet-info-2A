@@ -22,7 +22,7 @@ class AffichageMangaVue(VueAbstraite):
 
         print("\n" + "-" * 50 + "\nDétails du manga\n" + "-" * 50 + "\n")
 
-        print(self.titre)
+        print(self.titre, "\n")
 
         # Instanciation de notre objet Manga
         from service.manga_service import MangaService
@@ -44,27 +44,26 @@ class AffichageMangaVue(VueAbstraite):
         print("Etat de la diffusion du manga: ", status)
         print("\n")
 
-        # Insertion des avis
-        # from service.avis_service import ServiceAvis
+        """ Insertion des avis """
+        from service.avis_service import ServiceAvis
 
-        # id_manga = manga.id_manga
-        # liste_avis = ServiceAvis().chercher_avis_sur_manga(id_manga)
-        # for avis in liste_avis:
-        #    print("Note: ", avis.note, ", ", avis.avis)
-        # print(ServiceAvis().afficher_autre_avis(id_manga))
+        id_manga = manga.id_manga
+        liste_avis = ServiceAvis().afficher_autre_avis(id_manga)
+        for avis in liste_avis:
+            print("Note: ", avis.note, ", ", avis.avis)
 
         if Session().connecte:
-            possibilites = ["Gérer ses avis sur ce manga", "Revenir au menu principal", "Quitter"]
+            possibilites = ["Gérer son avis sur ce manga", "Revenir au menu principal", "Quitter"]
         else:
             possibilites = ["Revenir au menu principal", "Quitter"]
 
         choix = inquirer.select(message="", choices=possibilites).execute()
 
         match choix:
-            case "Gérer ses avis sur ce manga":
+            case "Gérer son avis sur ce manga":
                 from view.actif.avis.avis_manga_vue import AvisMangaVue
 
-                return AvisMangaVue(self.titre).choisir_menu()
+                return AvisMangaVue(manga).choisir_menu()
 
             case "Revenir au menu principal":
 
