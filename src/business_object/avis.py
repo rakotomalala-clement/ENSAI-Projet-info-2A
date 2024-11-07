@@ -17,8 +17,14 @@ class Avis:
     """
 
     def __init__(self, note: int, avis: str, id_avis: int = None):
+
+        if not isinstance(avis, str):
+            raise TypeError("avis doit être un str")
+        if not isinstance(note, int):
+            raise TypeError("note doit être un entier")
         if note < 1 or note > 5:
             raise ValueError("La note doit être comprise entre 1 et 5.")
+
         self.note = note
         self.avis = avis
         self.id_avis = id_avis

@@ -36,30 +36,6 @@ class DaoAvis(metaclass=Singleton):
         return None
 
     @log
-    def trouver_id_avis_par_id_manga_utilisateur(
-        self, schema: str, id_manga: int, id_utilisateur: int
-    ) -> int:
-        """Trouver l'identifiant d'un avis grâce aux id manga et utilisateur."""
-        try:
-            with DBConnection(schema).connection as connection:
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        "SELECT id_avis FROM avis WHERE id_manga = %(id_manga)s "
-                        "AND id_utilisateur = %(id_utilisateur)s;",
-                        {"id_manga": id_manga, "id_utilisateur": id_utilisateur},
-                    )
-                    res = cursor.fetchone()
-
-        except Exception as e:
-            logging.error(f"Erreur lors de la recherche de l'avis : {e}")
-            raise e
-
-        if res:
-            return res["id_avis"]
-
-        return None
-
-    @log
     def trouver_id_avis_par_id_manga_utilisateur_col_physique(
         self, schema: str, id_collection: int, id_utilisateur: int
     ) -> int:

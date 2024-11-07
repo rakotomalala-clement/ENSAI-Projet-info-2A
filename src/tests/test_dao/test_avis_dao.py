@@ -2,34 +2,15 @@ import pytest
 from business_object.avis import Avis
 from dao.avis_dao import DaoAvis
 
-DaoAvis().supprimer_avis(
-    schema="projet_test_dao",
-    id_avis=DaoAvis().trouver_id_avis_par_id_manga_utilisateur(
-        schema="projet_test_dao", id_manga=1, id_utilisateur=12
-    ),
-)
-DaoAvis().supprimer_avis_col_coherente(
-    id_avis_collection_coherente=DaoAvis().trouver_id_avis_par_id_col_coherente_utilisateur(
-        "projet_test_dao", 1, 12
-    ),
-    schema="projet_test_dao",
-)
-DaoAvis().supprimer_avis_col_physique(
-    id_avis_collection_physique=DaoAvis().trouver_id_avis_par_id_manga_utilisateur_col_physique(
-        schema="projet_test_dao", id_collection=1, id_utilisateur=43
-    ),
-    schema="projet_test_dao",
-)
-
 
 def test_trouver_id_avis_par_id_manga_utilisateur_true():
     """Recherche par l'id d'un manga/utilisateur l'id d'un avis existant."""
-    id_manga = 1
+    id_manga = 4
     id_utilisateur = 12
     id_avis = DaoAvis().trouver_id_avis_par_id_manga_utilisateur(
         "projet_test_dao", id_manga, id_utilisateur
     )
-    assert id_avis == 26
+    assert id_avis == 2
 
 
 def test_trouver_id_avis_par_id_manga_utilisateur_false():
@@ -40,6 +21,58 @@ def test_trouver_id_avis_par_id_manga_utilisateur_false():
         "projet_test_dao", id_manga, id_utilisateur
     )
     assert id_avis is None
+
+
+def test_trouver_id_avis_collection_coherent_par_id_collection_co_utilisateur_true():
+    """Recherche de l'id d'un avis sur  une collection coherente existant
+    par l'id de la collection et de l'utilisateur."""
+    id_collection_coherente = 2
+    id_utilisateur = 12
+    id_avis_col_co = DaoAvis().trouver_id_avis_par_id_col_coherente_utilisateur(
+        "projet_test_dao",
+        id_collection_coherente=id_collection_coherente,
+        id_utilisateur=id_utilisateur,
+    )
+    assert id_avis_col_co == 971
+
+
+def test_trouver_id_avis_collection_coherent_par_id_collection_co_utilisateur_false():
+    """Recherche de l'id d'un avis sur  une collection coherente non existant
+    par l'id de la collection et de l'utilisateur."""
+    id_collection_coherente = 1234
+    id_utilisateur = 1234
+    id_avis_col_co = DaoAvis().trouver_id_avis_par_id_col_coherente_utilisateur(
+        "projet_test_dao",
+        id_collection_coherente=id_collection_coherente,
+        id_utilisateur=id_utilisateur,
+    )
+    assert id_avis_col_co is None
+
+
+def test_trouver_id_avis_collection_physique_par_id_collection_phy_utilisateur_true():
+    """Recherche de l'id d'un avis sur  une collection physique existant
+    par l'id de la collection et de l'utilisateur."""
+    id_collection_physique = 2
+    id_utilisateur = 12
+    id_avis_col_phy = DaoAvis().trouver_id_avis_par_id_manga_utilisateur_col_physique(
+        "projet_test_dao",
+        id_collection=id_collection_physique,
+        id_utilisateur=id_utilisateur,
+    )
+    assert id_avis_col_phy == 971
+
+
+def test_trouver_id_avis_collection_physique_par_id_collection_phy_utilisateur_false():
+    """Recherche de l'id d'un avis sur  une collection physique existant
+    par l'id de la collection et de l'utilisateur."""
+    id_collection_physique = 1234
+    id_utilisateur = 1234
+    id_avis_col_phy = DaoAvis().trouver_id_avis_par_id_manga_utilisateur_col_physique(
+        "projet_test_dao",
+        id_collection=id_collection_physique,
+        id_utilisateur=id_utilisateur,
+    )
+    assert id_avis_col_phy is None
 
 
 def test_creer_avis_ok():
@@ -102,9 +135,38 @@ def test_supprimer_ok():
 
 def test_chercher_avis():
     """Recherche des avis laissés par un utilisateur sur un manga."""
-    avis = Avis(note=5, avis="cool", id_avis=19)
-    avis_a_verifier = DaoAvis().chercher_avis("projet_test_dao", id_utilisateur=12, id_manga=1)
-    assert avis == avis_a_verifier
+    avis = Avis(note=5, avis="test_", id_avis=2)
+    avis_a_verifier = DaoAvis().chercher_avis("projet_test_dao", id_utilisateur=12, id_manga=4)
+    assert [avis] == avis_a_verifier
+
+
+def test_chercher_avis_sur_manga():
+    """Recherche de l'ensemble des avis laissés  sur un manga."""
+    nb_avis_sur_manga_4 = 2
+    avis_sur_4 = DaoAvis().chercher_avis_sur_manga("projet_test_dao", id_manga=4)
+    assert nb_avis_sur_manga_4 == len(avis_sur_4)
+
+
+def test_supprimer_avis_col_coherente_ok():
+    """suppression d'un avis sur collection coherente"""
+    suppression = DaoAvis().supprimer_avis_col_coherente(
+        id_avis_collection_coherente=DaoAvis().trouver_id_avis_par_id_col_coherente_utilisateur(
+            "projet_test_dao", 1, 12
+        ),
+        schema="projet_test_dao",
+    )
+    assert suppression
+
+
+def test_supprimer_avis_col_physique_ok():
+    """suppression d'un avis sur collection coherente"""
+    suppression = DaoAvis().supprimer_avis_col_physique(
+        id_avis_collection_physique=DaoAvis().trouver_id_avis_par_id_manga_utilisateur_col_physique(
+            schema="projet_test_dao", id_collection=1, id_utilisateur=43
+        ),
+        schema="projet_test_dao",
+    )
+    assert suppression
 
 
 def test_modifier_avis_ok():
