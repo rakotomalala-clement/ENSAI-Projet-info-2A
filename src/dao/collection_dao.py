@@ -349,7 +349,7 @@ class DaoCollection(metaclass=Singleton):
                     )
 
                     result = cursor.fetchall()
-                    print(result)
+
                     # récupérer les détails des mangas
                     mangas = []
                     if result:

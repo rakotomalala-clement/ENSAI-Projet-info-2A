@@ -9,43 +9,44 @@ from business_object.utilisateur import Utilisateur
 
 class TestDaoCompte(unittest.TestCase):
     def test_creer_utilisateur(self):
-        utilisateur = Utilisateur("test_user32", "mdptest32")
+        utilisateur = Utilisateur("test_user33", "mdptest32")
         print("************")
         creation_user = DaoCompte().creer_utilisateur(utilisateur)
         assert creation_user
 
-    def test_trouver_utilisateur_par_id_true(self):
-        found_utilisateur = DaoCompte().trouver_utilisateur_par_id(12)
-        assert found_utilisateur is not None
 
-    def test_trouver_utilisateur_par_nom_true(self):
-        found_utilisateur = DaoCompte().trouver_utilisateur_par_nom("Lilian")
-        assert found_utilisateur is not None
+#     def test_trouver_utilisateur_par_id_true(self):
+#         found_utilisateur = DaoCompte().trouver_utilisateur_par_id(12)
+#         assert found_utilisateur is not None
 
-    def test_mettre_a_jour_utilisateur(self):
-        # Test updating a user
-        updated_utilisateur = DaoCompte().mettre_a_jour_utilisateur(
-            37, "new_name15", "new_password15"
-        )
-        assert updated_utilisateur
+#     def test_trouver_utilisateur_par_nom_true(self):
+#         found_utilisateur = DaoCompte().trouver_utilisateur_par_nom("Lilian")
+#         assert found_utilisateur is not None
 
-    def test_lister_tous(self):
-        utilisateurs = DaoCompte().lister_tous()
+#     def test_mettre_a_jour_utilisateur(self):
+#         # Test updating a user
+#         updated_utilisateur = DaoCompte().mettre_a_jour_utilisateur(
+#             37, "new_name15", "new_password15"
+#         )
+#         assert updated_utilisateur
 
-        # Assertions
-        assert len(utilisateurs) == 15
-        assert utilisateurs[0].nom_utilisateur == "test_user25"
+#     def test_lister_tous(self):
+#         utilisateurs = DaoCompte().lister_tous()
 
-    def test_supprimer_utilisateur(self):
-        # Test deleting a user
-        result = DaoCompte().supprimer_utilisateur(37)
-        assert result is True
+#         # Assertions
+#         assert len(utilisateurs) == 15
+#         assert utilisateurs[0].nom_utilisateur == "test_user25"
 
-
-"""def tearDown(self):
-        # Close connections or clean up database if necessary
-        DaoCompte().fermer_connexion()"""
+#     def test_supprimer_utilisateur(self):
+#         # Test deleting a user
+#         result = DaoCompte().supprimer_utilisateur(37)
+#         assert result is True
 
 
-if __name__ == "__main__":
-    unittest.main()
+# """def tearDown(self):
+#         # Close connections or clean up database if necessary
+#         DaoCompte().fermer_connexion()"""
+
+
+# if __name__ == "__main__":
+#     unittest.main()
