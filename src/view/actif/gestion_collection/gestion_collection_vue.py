@@ -23,8 +23,7 @@ class GestionCollectionVue(VueAbstraite):
             message="Voulez-vous créer ou modifier une de vos collections?",
             choices=[
                 "Créer une collection",
-                "Modifier une collection",
-                "Supprimer une collection",
+                "Modifier/Supprimer une collection",
                 "Retour au menu principal",
             ],
         ).execute()
@@ -35,35 +34,39 @@ class GestionCollectionVue(VueAbstraite):
 
                 return CreerCollectionVue().choisir_menu()
 
-            case "Modifier une collection":
+            case "Modifier/Supprimer une collection":
                 # récupérer les noms des collections dont l'utilisateur est
                 # Session().nom_utilisateur
                 # sous forme de liste qui va etre le choices
 
-                choix_collection = inquirer.select(
-                    message="Quelle collection souhaitez-vous modifier?", choices=["a", "b"]
-                ).execute()
+                from service.collection_service import ServiceCollection
+                from service.Service_Utilisateur import ServiceUtilisateur
 
-                print(choix_collection)
+                id_utilisateur = ServiceUtilisateur().trouver_utilisateur_par_nom(
+                    Session().id_utilisateur
+                )
+                liste_collections = ServiceCollection().rechercher_collection_coherente_par_user(
+                    id_utilisateur, "projet_info_2a"
+                )
+                liste_nom_collections = []
+                for collection in liste_collections:
+                    liste_nom_collections.append(collection.titre)
+
+                nom_collection_choisi = inquirer.select(
+                    message="Quelle collection souhaitez-vous modifier/supprimer?",
+                    choices=liste_collections,
+                ).execute()
 
                 from view.actif.gestion_collection.collection_utilisateur_vue import (
                     CollectionUtilisateurVue,
                 )
 
-                return CollectionUtilisateurVue(choix_collection).choisir_menu()
+                collection_choisi = ""
+                for collection in liste_collections:
+                    if collection.titre == nom_collection_choisi:
+                        collection_choisi = collection
 
-            case "Supprimer une collection":
-                choix_collection = inquirer.select(
-                    message="Quelle collection souhaitez-vous modifier?", choices=["a", "b"]
-                ).execute()
-
-                print(choix_collection)
-
-                from view.actif.gestion_collection.collection_utilisateur_vue import (
-                    CollectionUtilisateurVue,
-                )
-
-                print(choix_collection)
+                return CollectionUtilisateurVue(collection_choisi).choisir_menu()
 
             case "Retour au menu principal":
                 if Session().connecte:

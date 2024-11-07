@@ -8,13 +8,11 @@ from view.actif.accueil_connecte_vue import AccueilConnecteVue
 class CollectionUtilisateurVue(VueAbstraite):
     """Menu des modifications possibles sur une collection"""
 
-    def __init__(self, titre, type_collection=None):
-        # titre de la collection
-        self.titre = titre
-        self.type_collection = type_collection
+    def __init__(self, collection):
+        self.collection = collection
 
     def choisir_menu(self):
-        """Choix du menu suivant sachant que l'on a sélectionné une collection
+        """Modification ou suppression d'une collection
 
         Return
         ------

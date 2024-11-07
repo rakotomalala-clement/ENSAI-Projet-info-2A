@@ -26,6 +26,4 @@ class CollectionVue(VueAbstraite):
 
         print(self.collection.description)
 
-        
-
         return 0
