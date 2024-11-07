@@ -8,6 +8,7 @@ from dao.db_connection import DBConnection
 
 from business_object.collection.collection_physique import CollectionPhysique
 from business_object.collection.collection_coherente import CollectionCoherente
+from business_object.manga import Manga
 
 
 class DaoCollection(metaclass=Singleton):
@@ -335,11 +336,9 @@ class DaoCollection(metaclass=Singleton):
     @log
     def recuperer_mangas_collection_coherente(self, id_collection, schema: str):
         try:
-
             with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
-
-                    # récupérer les IDs des mangas dans la collection
+                    # Récupérer les IDs des mangas dans la collection
                     cursor.execute(
                         """
                         SELECT id_manga FROM collection_coherente_mangas 
@@ -350,13 +349,13 @@ class DaoCollection(metaclass=Singleton):
 
                     result = cursor.fetchall()
 
-                    # récupérer les détails des mangas
+                    # Initialiser la liste des mangas
                     mangas = []
                     if result:
                         for row in result:
-
                             id_manga = row["id_manga"]
 
+                            # Récupérer les détails du manga
                             cursor.execute(
                                 """
                                 SELECT * FROM manga 
@@ -365,11 +364,23 @@ class DaoCollection(metaclass=Singleton):
                                 (id_manga,),
                             )
                             manga_details = cursor.fetchone()
+
+                            # Si des détails sont trouvés, créer un objet Manga et l'ajouter à la liste
                             if manga_details:
-                                mangas.append(manga_details)
+                                manga = Manga(
+                                    id_manga=manga_details["id_manga"],
+                                    titre=manga_details["titre"],
+                                    auteurs=manga_details["auteurs"],
+                                    genres=manga_details["genres"],
+                                    status=manga_details["status_manga"],
+                                    nombre_chapitres=manga_details["chapitres"],
+                                    # Ajoutez les autres attributs nécessaires ici
+                                )
+                                mangas.append(manga)
 
                     connection.commit()
                     return mangas
+
         except Exception as e:
             logging.info(f"Erreur : {e}")
             return []
