@@ -41,11 +41,12 @@ class InscriptionVue(VueAbstraite):
             id_utilisateur=id_utilisateur,
             type_collection="Physique",
             titre="Collection physique",
-            description=f"collectio_physique de {nom_utilisateur}",
-            dernier_tome_acquis=None,
-            numeros_tomes_manquants=None,
-            status=None,
+            description=f"collection_physique de {nom_utilisateur}",
+            dernier_tome_acquis=0,
+            numeros_tomes_manquants="",
+            status="",
             schema="projet_info_2a",
+            id_manga=3,
         )
 
         return ConnexionVue().choisir_menu()
