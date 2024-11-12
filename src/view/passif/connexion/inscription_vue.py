@@ -6,7 +6,7 @@ from view.passif.accueil_vue import AccueilVue
 
 
 class InscriptionVue(VueAbstraite):
-    "Vue de la barre de recherche de mangas"
+    "Vue de l'inscription de l'utilisateur et crée sa collection physique"
 
     def choisir_menu(self):
         """Inscription
@@ -29,5 +29,23 @@ class InscriptionVue(VueAbstraite):
         mdp = inquirer.secret(message="Veuillez saisir un mot de passe").execute()
 
         ServiceUtilisateur().sinscrire(nom_utilisateur, mdp)
+
+        # On va maintenant crée la collection physique lié au nouvel inscrit
+        from service.collection_service import ServiceCollection
+
+        id_utilisateur = (
+            ServiceUtilisateur().trouver_utilisateur_par_nom(nom_utilisateur).id_utilisateur
+        )
+
+        ServiceCollection().creer_collection(
+            id_utilisateur=id_utilisateur,
+            type_collection="Physique",
+            titre="Collection physique",
+            description=f"collectio_physique de {nom_utilisateur}",
+            dernier_tome_acquis=None,
+            numeros_tomes_manquants=None,
+            status=None,
+            schema="projet_info_2a",
+        )
 
         return ConnexionVue().choisir_menu()

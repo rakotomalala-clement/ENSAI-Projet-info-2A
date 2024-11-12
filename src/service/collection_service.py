@@ -33,6 +33,7 @@ class ServiceCollection:
 
         elif type_collection == "Coherente":
             collection = CollectionCoherente(titre=titre, description=description)
+
         else:
             logging.error("Type de collection inconnu.")
             return False
