@@ -47,9 +47,16 @@ class GestionCollectionVue(VueAbstraite):
                     .trouver_utilisateur_par_nom(Session().nom_utilisateur)
                     .id_utilisateur
                 )
+
                 liste_collections = ServiceCollection().rechercher_collection_coherente_par_user(
                     id_utilisateur, "projet_info_2a"
                 )
+                collection_physique = ServiceCollection().rechercher_collection_physique_par_user(
+                    id_utilisateur, "projet_info_2a"
+                )
+                if collection_physique != []:
+                    liste_collections.append(collection_physique[0])
+
                 if liste_collections == []:
                     print("\nVous n'avez pas encore de collection.")
                     return GestionCollectionVue().choisir_menu()
@@ -78,5 +85,3 @@ class GestionCollectionVue(VueAbstraite):
                     return AccueilConnecteVue().choisir_menu()
                 else:
                     return AccueilVue().choisir_menu()
-
-        return 0

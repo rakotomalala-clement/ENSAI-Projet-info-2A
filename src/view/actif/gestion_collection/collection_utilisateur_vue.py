@@ -60,6 +60,10 @@ class CollectionUtilisateurVue(VueAbstraite):
             case "Supprimer la collection":
                 from service.Service_Utilisateur import ServiceUtilisateur
 
+                if self.collection.type_collection == "Physique":
+                    print("\n Vous ne pouvez pas supprimer votre collection physique")
+                    return CollectionUtilisateurVue().choisir_menu()
+
                 id_utilisateur = (
                     ServiceUtilisateur()
                     .trouver_utilisateur_par_nom(Session().nom_utilisateur)
