@@ -51,6 +51,7 @@ class ServiceAvis:
 
         return avis_user_sur_manga[0]
 
+
     @log
     def modifier(self, avis_message, note) -> Avis:
         """Modification d'un avis"""

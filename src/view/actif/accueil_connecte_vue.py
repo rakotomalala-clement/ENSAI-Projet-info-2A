@@ -22,6 +22,7 @@ class AccueilConnecteVue(VueAbstraite):
                 "Rechercher manga",
                 "Rechercher utilisateur",
                 "Gérer ses collections",
+                #gérer ses avis
                 "Quitter",
             ],
         ).execute()

@@ -26,6 +26,7 @@ class CollectionUtilisateurVue(VueAbstraite):
         # sous forme de liste qui va etre le choices
 
         # if self.type
+
         manga_collection = []
         manga_collection.append("Ajouter manga")
         manga_collection.append("Modifier informations collections")

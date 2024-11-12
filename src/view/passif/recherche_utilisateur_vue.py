@@ -48,6 +48,7 @@ class RechercheUtilisateurVue(VueAbstraite):
             else:
                 return AccueilVue().choisir_menu()
         else:
+
             id_utilisateur = (
                 ServiceUtilisateur()
                 .trouver_utilisateur_par_nom(nom_utilisateur_choisi)
