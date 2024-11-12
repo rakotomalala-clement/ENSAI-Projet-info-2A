@@ -63,7 +63,7 @@ class CollectionUtilisateurVue(VueAbstraite):
 
                 if self.collection.type_collection == "Physique":
                     print("\n Vous ne pouvez pas supprimer votre collection physique")
-                    return CollectionUtilisateurVue().choisir_menu()
+                    return CollectionUtilisateurVue(self.collection).choisir_menu()
 
                 id_utilisateur = (
                     ServiceUtilisateur()
