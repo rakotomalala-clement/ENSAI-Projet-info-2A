@@ -28,7 +28,7 @@ class ServiceCollection:
                 numeros_tomes_manquants,
                 status,
             )
-        
+
         else:
             collection = CollectionCoherente(titre, description)
 
