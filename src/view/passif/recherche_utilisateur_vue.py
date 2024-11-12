@@ -67,12 +67,18 @@ class RechercheUtilisateurVue(VueAbstraite):
             liste_nom_collections.append("Retour au menu principal")
 
             nom_collection_choisi = inquirer.select(
-                message="Veuillez choisir la collection à consulter",
+                message="Veuillez choisir la collection à consulter \n",
                 choices=liste_nom_collections,
             ).execute()
 
+            if nom_collection_choisi == "Retour au menu principal":
+                if Session().connecte:
+                    return AccueilConnecteVue().choisir_menu()
+                else:
+                    return AccueilVue().choisir_menu()
+
             # On a besoin de retrouver la collection dont le nom est nom_collection_choisi
-            collection_choisi = ""
+            collection_choisi = None
             for collection in liste_collections:
                 if collection.titre == nom_collection_choisi:
                     collection_choisi = collection
