@@ -24,6 +24,7 @@ class CollectionVue(VueAbstraite):
 
         print("\n" + "-" * 50 + "\nCollection:", self.collection.titre, "\n" + "-" * 50 + "\n")
 
-        print(self.collection.description)
+        if self.collection.type_collection == "Cohérente":
+            print(self.collection.description)
 
         return 0
