@@ -33,14 +33,6 @@ class ConnexionVue(VueAbstraite):
             # Créer une session pour l'utilisateur
             Session().connexion(nom_utilisateur)
 
-            # Demander à l'utilisateur s'il souhaite activer "Remember Me"
-            remember = inquirer.confirm(
-                message="Souhaitez-vous rester connecté (Remember Me) ?", default=False
-            ).execute()
-            if remember:
-                RememberMe.save_user_data(nom_utilisateur, mdp)
-                print("Informations sauvegardées pour la prochaine connexion.")
-
             return AccueilConnecteVue().choisir_menu()
         else:
             return AccueilVue().choisir_menu()

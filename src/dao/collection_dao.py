@@ -9,30 +9,26 @@ from dao.db_connection import DBConnection
 from business_object.collection.collection_physique import CollectionPhysique
 from business_object.collection.collection_coherente import CollectionCoherente
 from business_object.manga import Manga
+from business_object.collection.mangas_dans_collection import MangaDansCollection
+from dao.manga_dao import MangaDao
 
 
 class DaoCollection(metaclass=Singleton):
 
     @log
-    def creer(self, id_utilisateur, collection, schema, id_manga) -> bool:
+    def creer(self, id_utilisateur, collection, schema) -> bool:
         res = None
         created = False
 
         if collection.type_collection == "Physique":
-            print("hello")
 
             query = """
-                INSERT INTO collection_physique (id_utilisateur, id_manga, titre_collection, numero_dernier_tome, numeros_tomes_manquants, status_collection)
-                VALUES (%(id_utilisateur)s, %(id_manga)s, %(titre_collection)s, %(numero_dernier_tome)s, %(numeros_tomes_manquants)s, %(status_collection)s)
+                INSERT INTO collection_physique (id_utilisateur)
+                VALUES (%(id_utilisateur)s)
                 RETURNING id_collection;
             """
             params = {
                 "id_utilisateur": id_utilisateur,
-                "id_manga": id_manga,
-                "titre_collection": collection.titre,
-                "numero_dernier_tome": collection.dernier_tome_acquis,
-                "numeros_tomes_manquants": collection.numeros_tomes_manquants,
-                "status_collection": collection.status_collection,
             }
 
         elif collection.type_collection == "Coherente":
@@ -155,34 +151,34 @@ class DaoCollection(metaclass=Singleton):
 
     @log
     def rechercher_collection_physique(
-        self, id_utilisateur: int, id_manga: int, schema
-    ) -> List[CollectionPhysique]:
-        """Recherche une collection cohérente par ID user dans la base de données."""
+        self, id_utilisateur: int, schema
+    ) -> List[MangaDansCollection]:
         try:
             with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
                         """
-                        SELECT id_collection, id_utilisateur, id_manga, titre_collection, numero_dernier_tome, numeros_tomes_manquants, status_collection
-                        FROM collection_physique
-                        WHERE id_utilisateur = %s AND id_manga = %s;
+                        SELECT cpm.id_manga, cpm.titre_manga, cpm.numero_dernier_tome, cpm.numeros_tomes_manquants,cpm.status_manga
+                        FROM collection_physique cp
+                        JOIN collection_physique_mangas cpm ON cp.id_collection = cpm.id_collection
+                        WHERE cp.id_utilisateur = %s;
+
                         """,
-                        (id_utilisateur, id_manga),
+                        (id_utilisateur),
                     )
 
                     results = cursor.fetchall()
 
-                collections = [
-                    CollectionPhysique(
-                        id_collection=result["id_collection"],
-                        titre=result["titre_collection"],
+                collection = [
+                    MangaDansCollection(
+                        id_manga=result["id_manga"],
                         dernier_tome_acquis=result["numero_dernier_tome"],
                         numeros_tomes_manquants=result["numeros_tomes_manquants"],
-                        status_collection=result["status_collection"],
+                        status_manga=result["status_manga"],
                     )
                     for result in results
                 ]
-                return collections
+                return collection
         except Exception as e:
             logging.error(
                 f"Erreur lors de la recherche de la collection avec id user {id_utilisateur}: {e}"
@@ -190,44 +186,7 @@ class DaoCollection(metaclass=Singleton):
             raise e
 
     @log
-    def lister_collections_physiques(self, id_utilisateur: int, schema) -> List[CollectionPhysique]:
-        """Recherche une collection cohérente par ID user dans la base de données."""
-        try:
-            with DBConnection(schema).connection as connection:
-                with connection.cursor() as cursor:
-                    cursor.execute(
-                        """
-                        SELECT id_collection, id_utilisateur, id_manga, titre_collection, numero_dernier_tome, numeros_tomes_manquants, status_collection
-                        FROM collection_physique
-                        WHERE id_utilisateur = %s ;
-                        """,
-                        (id_utilisateur,),
-                    )
-
-                    results = cursor.fetchall()
-
-                collections = []
-
-                for result in results:
-
-                    collection = CollectionPhysique(
-                        id_collection=result["id_collection"],
-                        titre=result["titre_collection"],
-                        dernier_tome_acquis=result["numero_dernier_tome"],
-                        numeros_tomes_manquants=result["numeros_tomes_manquants"],
-                        status_collection=result["status_collection"],
-                    )
-                    collections.append(collection)
-
-                return collections
-        except Exception as e:
-            logging.error(
-                f"Erreur lors de la recherche de la collection avec id user {id_utilisateur}: {e}"
-            )
-            raise e
-
-    @log
-    def ajouter_mangas(self, collection_id, liste_mangas, schema) -> bool:
+    def ajouter_mangas_collection_coherente(self, collection_id, liste_mangas, schema) -> bool:
         """Ajoute une liste de mangas à une collection cohérente dans la base de données."""
 
         try:
@@ -256,6 +215,74 @@ class DaoCollection(metaclass=Singleton):
                         """
                         for manga_id in mangas_a_ajouter:
                             cursor.execute(insert_query, (collection_id, manga_id))
+
+                connection.commit()
+                return True
+
+        except Exception as e:
+            logging.error(f"Erreur lors de l'ajout des mangas à la collection : {e}")
+            return False
+
+    def obtenir_id_collection_par_utilisateur(id_utilisateur, schema):
+        try:
+            with DBConnection(schema).connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        """
+                        SELECT id_collection
+                        FROM collection_physique
+                        WHERE id_utilisateur = %s;
+                        """,
+                        (id_utilisateur,),
+                    )
+                    result = cursor.fetchone()
+                    print("******************")
+                    print(result)
+                    return result["id_collection"] if result else None
+        except Exception as e:
+            logging.error(f"Erreur lors de la récupération de l'ID de collection : {e}")
+            return None
+
+    @log
+    def ajouter_manga_collection_physique(
+        self,
+        id_utilisateur,
+        titre_manga,
+        numero_dernier_tome,
+        numeros_tomes_manquants,
+        status_manga,
+        schema,
+    ) -> bool:
+
+        try:
+            # Étape 1: Récupérer l'id_collection correspondant à l'id_utilisateur
+            id_collection = DaoCollection.obtenir_id_collection_par_utilisateur(
+                id_utilisateur, schema
+            )
+
+            if not id_collection:
+                logging.error(f"Aucune collection trouvée pour l'utilisateur {id_utilisateur}")
+                return False
+            # Etape 2 : Récuperer l'id_manga via son titre
+            id_manga = MangaDao().trouver_id_par_titre(schema, titre_manga)
+
+            # Étape 3: Ajouter le manga à la collection physique
+            with DBConnection(schema).connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        """
+                        INSERT INTO collection_physique_mangas (id_collection,id_manga, titre_manga, numero_dernier_tome, numeros_tomes_manquants, status_manga)
+                        VALUES (%s, %s, %s, %s, %s, %s) RETURNING id_collection_physique_mangas;
+                        """,
+                        (
+                            id_collection,
+                            id_manga,
+                            titre_manga,
+                            numero_dernier_tome,
+                            numeros_tomes_manquants,
+                            status_manga,
+                        ),
+                    )
 
                 connection.commit()
                 return True

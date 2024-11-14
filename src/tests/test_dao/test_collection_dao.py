@@ -19,19 +19,26 @@ from business_object.collection.collection_coherente import CollectionCoherente
 #     os.environ["POSTGRES_SCHEMA"] = original_schema
 
 
-def test_creer_collection_physique_ok():
-    """Test de la création d'une collection physique."""
-    dao_collection = DaoCollection()
-    collection = CollectionPhysique(
-        titre="collection de black clover",
-        dernier_tome_acquis=2,
-        numeros_tomes_manquants="3 - 4",
-        status_collection="Terminé",
-        id_collection=None,
-    )
+# def test_creer_collection_physique_ok():
+#     """Test de la création d'une collection physique."""
+#     dao_collection = DaoCollection()
+#     collection = CollectionPhysique()
 
-    result = dao_collection.creer(
-        id_utilisateur=12, collection=collection, schema="projet_test_dao", id_manga=4
+#     result = dao_collection.creer(
+#         id_utilisateur=12, collection=collection, schema="projet_test_dao"
+#     )
+#      assert result is True
+
+
+def test_ajouter_manga_collection_physique_ok():
+    dao_collection = DaoCollection()
+    result = dao_collection.ajouter_manga_collection_physique(
+        id_utilisateur=12,
+        titre_manga="Monster",
+        numero_dernier_tome=5,
+        numeros_tomes_manquants="1 - 2",
+        status_manga="Terminé",
+        schema="projet_test_dao",
     )
 
     assert result is True

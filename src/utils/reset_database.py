@@ -61,17 +61,17 @@ class ResetDatabase(metaclass=Singleton):
             return True
 
         else:
-
-            schema = os.environ.get("POSTGRES_SCHEMA")
-            create_schema = f"DROP SCHEMA IF EXISTS {schema} CASCADE; CREATE SCHEMA {schema};"
+            schema = "projet_test_dao"
+            # schema = os.environ.get("POSTGRES_SCHEMA")
+            # create_schema = f"DROP SCHEMA IF EXISTS {schema} CASCADE; CREATE SCHEMA {schema};"
 
             with open("data/init_db.sql", encoding="utf-8") as init_db:
                 init_db_as_string = init_db.read()
 
             try:
-                with DBConnection().connection as connection:
+                with DBConnection(schema).connection as connection:
                     with connection.cursor() as cursor:
-                        cursor.execute(create_schema)
+                        # cursor.execute(create_schema)
                         cursor.execute(init_db_as_string)
             except Exception as e:
                 logging.info(e)
@@ -84,4 +84,4 @@ if __name__ == "__main__":
     # Run with the test schema
     # print(ResetDatabase().lancer(True))
 
-    ResetDatabase().lancer()
+    ResetDatabase().lancer(False)
