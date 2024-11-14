@@ -3,7 +3,6 @@ from view.vue_abstraite import VueAbstraite
 from view.actif.accueil_connecte_vue import AccueilConnecteVue
 from view.passif.accueil_vue import AccueilVue
 from service.Service_Utilisateur import ServiceUtilisateur
-from view.passif.connexion.remember_me import RememberMe
 from view.passif.connexion.session import Session
 
 
