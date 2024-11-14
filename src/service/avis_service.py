@@ -23,7 +23,7 @@ class ServiceAvis:
         """Création d'un avis sur une collection à partir de ses attributs"""
 
         nouveau_avis_collection = Avis(note, avis)
-
+        # ************************************* le type est Coherente avec c MAJ
         if "c" in type_collection:
             return (
                 nouveau_avis_collection
@@ -50,7 +50,6 @@ class ServiceAvis:
         avis_user_sur_manga = DaoAvis().chercher_avis("projet_info_2a", id_utlisateur, id_manga)
 
         return avis_user_sur_manga[0]
-
 
     @log
     def modifier(self, avis_message, note) -> Avis:

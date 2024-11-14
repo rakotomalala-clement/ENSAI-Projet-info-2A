@@ -1,7 +1,6 @@
 import requests
 import time
 from service.manga_service import MangaService
-import os
 import dotenv
 
 
@@ -13,7 +12,7 @@ class RecuperateurManga:
 
         dotenv.load_dotenv()
 
-        page = 336
+        page = 931
         while True:
             # Construction de l'URL pour chaque page de résultats
             url = f"{self.base_url}?page={page}"
