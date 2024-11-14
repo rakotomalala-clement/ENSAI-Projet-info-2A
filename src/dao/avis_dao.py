@@ -35,7 +35,7 @@ class DaoAvis(metaclass=Singleton):
 
         return None
 
-    @log  #*****************************change the name of the function
+    @log  # *****************************change the name of the function
     def trouver_id_avis_par_id_manga_utilisateur_col_physique(
         self, schema: str, id_collection: int, id_utilisateur: int
     ) -> int:
@@ -63,7 +63,7 @@ class DaoAvis(metaclass=Singleton):
         return None
 
     @log
-    #you can merge them both in one function
+    # you can merge them both in one function
     def trouver_id_avis_par_id_col_coherente_utilisateur(
         self, schema: str, id_collection_coherente: int, id_utilisateur: int
     ) -> int:
@@ -249,7 +249,7 @@ class DaoAvis(metaclass=Singleton):
         return created
 
     @log
-    #*************************whyy twice ?? why not returning an object from the begininig
+    # *************************whyy twice ?? why not returning an object from the begininig
     def chercher_avis(self, schema, id_utilisateur, id_manga):
         """Chercher les avis qu'un utilisateur a laissés sur un manga.
 
@@ -358,6 +358,51 @@ class DaoAvis(metaclass=Singleton):
                     cursor.execute(
                         """
                         UPDATE avis
+                        SET avis = %(avis)s, note = %(note)s
+                        WHERE id_avis = %(id_avis)s;
+                        """,
+                        {
+                            "avis": avis.avis,
+                            "note": avis.note,
+                            "id_avis": id_avis,
+                        },
+                    )
+                    res = cursor.rowcount
+
+        except Exception as e:
+            logging.error(f"Erreur lors de la modification de l'avis : {e}")
+            raise
+
+        return res == 1
+
+    @log
+    def modifier_avis_collection_co(
+        self, schema, id_collection, id_utilisateur, avis: Avis
+    ) -> bool:
+        """
+        Modifie un avis dans la base de données.
+
+        Parameters
+        ----------
+        avis : Avis
+            Avis modifié que l'on souhaite mettre à jour dans la base de données.
+
+        Returns
+        -------
+        bool
+            Retourne True si la mise à jour a été effectuée avec succès, sinon False.
+        """
+        id_avis_col_co = self.trouver_id_avis_par_id_col_coherente_utilisateur(
+            schema=schema, id_collection_coherente=id_collection, id_utilisateur=id_utilisateur
+        )
+        res = None
+
+        try:
+            with DBConnection(schema).connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        """
+                        UPDATE avis_collection_coherente_sb
                         SET avis = %(avis)s, note = %(note)s
                         WHERE id_avis = %(id_avis)s;
                         """,
