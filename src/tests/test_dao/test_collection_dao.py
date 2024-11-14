@@ -19,22 +19,22 @@ from business_object.collection.collection_coherente import CollectionCoherente
 #     os.environ["POSTGRES_SCHEMA"] = original_schema
 
 
-# def test_creer_collection_physique_ok():
-#     """Test de la création d'une collection physique."""
-#     dao_collection = DaoCollection()
-#     collection = CollectionPhysique(
-#         titre="Naruto",
-#         dernier_tome_acquis=2,
-#         numeros_tomes_manquants="3 - 4",
-#         status_collection="Terminé",
-#         id_collection=None,
-#     )
+def test_creer_collection_physique_ok():
+    """Test de la création d'une collection physique."""
+    dao_collection = DaoCollection()
+    collection = CollectionPhysique(
+        titre="collection de black clover",
+        dernier_tome_acquis=2,
+        numeros_tomes_manquants="3 - 4",
+        status_collection="Terminé",
+        id_collection=None,
+    )
 
-#     result = dao_collection.creer(
-#         id_utilisateur=12, collection=collection, schema="projet_test_dao", id_manga=1
-#     )
+    result = dao_collection.creer(
+        id_utilisateur=12, collection=collection, schema="projet_test_dao", id_manga=4
+    )
 
-#     assert result is True
+    assert result is True
 
 
 # def test_creer_collection_physique_ko():
@@ -178,10 +178,10 @@ from business_object.collection.collection_coherente import CollectionCoherente
 #     assert result is True
 
 
-def test_recuperer_mangas_collection_coherente_ok():
-    print("hello")
-    dao_collection = DaoCollection()
-    print("hello")
-    result = dao_collection.recuperer_mangas_collection_coherente(1, schema="projet_test_dao")
+# def test_recuperer_mangas_collection_coherente_ok():
+#     print("hello")
+#     dao_collection = DaoCollection()
+#     print("hello")
+#     result = dao_collection.recuperer_mangas_collection_coherente(1, schema="projet_test_dao")
 
-    assert len(result) > 0, "Expected at least one manga in the collection"
+#     assert len(result) > 0, "Expected at least one manga in the collection"

@@ -19,6 +19,7 @@ class DaoCollection(metaclass=Singleton):
         created = False
 
         if collection.type_collection == "Physique":
+            print("hello")
 
             query = """
                 INSERT INTO collection_physique (id_utilisateur, id_manga, titre_collection, numero_dernier_tome, numeros_tomes_manquants, status_collection)
@@ -52,8 +53,11 @@ class DaoCollection(metaclass=Singleton):
 
         try:
             with DBConnection(schema).connection as connection:
+
                 with connection.cursor() as cursor:
+
                     cursor.execute(query, params)
+
                     res = cursor.fetchone()
 
                     if res:

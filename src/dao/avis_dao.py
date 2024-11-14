@@ -35,7 +35,7 @@ class DaoAvis(metaclass=Singleton):
 
         return None
 
-    @log  # *****************************change the name of the function
+    @log
     def trouver_id_avis_par_id_manga_utilisateur_col_physique(
         self, schema: str, id_collection: int, id_utilisateur: int
     ) -> int:
@@ -63,7 +63,6 @@ class DaoAvis(metaclass=Singleton):
         return None
 
     @log
-    # you can merge them both in one function
     def trouver_id_avis_par_id_col_coherente_utilisateur(
         self, schema: str, id_collection_coherente: int, id_utilisateur: int
     ) -> int:
@@ -249,7 +248,6 @@ class DaoAvis(metaclass=Singleton):
         return created
 
     @log
-    # *************************whyy twice ?? why not returning an object from the begininig
     def chercher_avis(self, schema, id_utilisateur, id_manga):
         """Chercher les avis qu'un utilisateur a laissés sur un manga.
 
