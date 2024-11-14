@@ -43,7 +43,7 @@ class AvisMangaVue(VueAbstraite):
 
         match choix:
             case "Ajouter mon avis":
-                avis = ServiceAvis().afficher_avis_user(id_utilisateur, self.manga.id_manga)
+                avis = ServiceAvis().afficher_avis_user(id_utilisateur, id_manga)
 
                 if avis is None:
 
