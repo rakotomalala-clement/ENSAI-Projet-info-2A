@@ -1,10 +1,5 @@
-# from InquirerPy import inquirer
+from InquirerPy import inquirer
 from view.vue_abstraite import VueAbstraite
-
-# from view.passif.accueil_vue import AccueilVue
-# from view.actif.accueil_connecte_vue import AccueilConnecteVue
-
-# from view.passif.connexion.session import Session
 
 
 class CollectionVue(VueAbstraite):
@@ -43,5 +38,21 @@ class CollectionVue(VueAbstraite):
         else:
             # On veut prendre une collection physique
             # Dans cette collection physique,
+            a = 1
 
-        return 0
+        choix = inquirer.select(
+            message="Choississez une action à réaliser",
+            choices=[
+                "Gérer ses avis sur la collection",
+                "Retourner au menu de recherche d'utilisateur",
+            ],
+        ).execute()
+
+        match choix:
+            case "Gérer ses avis sur la collection":
+                return 0
+
+            case "Retourner au menu de recherche d'utilisateur":
+                from view.passif.recherche_utilisateur_vue import RechercheUtilisateurVue
+
+                return RechercheUtilisateurVue().choisir_menu()
