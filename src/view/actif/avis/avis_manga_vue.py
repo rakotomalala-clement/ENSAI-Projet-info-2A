@@ -43,7 +43,7 @@ class AvisMangaVue(VueAbstraite):
 
         match choix:
             case "Ajouter mon avis":
-                avis = ServiceAvis().afficher_avis_user(id_utilisateur, self.manga.id_manga)
+                avis = ServiceAvis().afficher_avis_user(id_utilisateur, id_manga)
 
                 if avis is None:
 
@@ -83,12 +83,16 @@ class AvisMangaVue(VueAbstraite):
                     message="Veuillez entrer votre avis sur ce manga"
                 ).execute()
 
-                ServiceAvis().modifier(nouvel_avis, int(nouvelle_note))
+                ServiceAvis().modifier(id_manga, id_utilisateur, nouvel_avis, int(nouvelle_note))
 
-                return AffichageMangaVue(self.titre_manga).choisir_menu()
+                return AffichageMangaVue(self.manga.titre).choisir_menu()
 
             case "Supprimer mon avis":
-                avis = ServiceAvis().afficher_avis_user(id_utilisateur, self.manga.id_manga)
+                avis = ServiceAvis().afficher_avis_user(id_utilisateur, id_manga)
+                if avis is None:
+                    print("Vous n'avez pas encore d'avis sur ce manga")
+                    return AffichageMangaVue(self.manga.titre).choisir_menu()
+
                 ServiceAvis().supprimer(avis.id_avis)
                 return AffichageMangaVue(self.manga.titre).choisir_menu()
 

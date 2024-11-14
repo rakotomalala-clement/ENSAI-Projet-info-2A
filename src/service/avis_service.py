@@ -23,7 +23,6 @@ class ServiceAvis:
         """Création d'un avis sur une collection à partir de ses attributs"""
 
         nouveau_avis_collection = Avis(note, avis)
-        # ************************************* le type est Coherente avec c MAJ
         if "c" in type_collection:
             return (
                 nouveau_avis_collection
@@ -44,19 +43,16 @@ class ServiceAvis:
             raise Exception("type_collection incorrect")
 
     @log
-    def afficher_avis_user(id_utlisateur, id_manga):
+    def afficher_avis_user(self, id_utlisateur, id_manga):
         """Afficher l'avis qu'un utilisateur a laisser sur un  manga"""
 
-        avis_user_sur_manga = DaoAvis.chercher_avis(id_utlisateur, id_manga)
+        avis_user_sur_manga = DaoAvis().chercher_avis("projet_info_2a", id_utlisateur, id_manga)
 
-<<<<<<< HEAD
-=======
         if len(avis_user_sur_manga) > 0:
             return avis_user_sur_manga[0]
         else:
             return None
 
->>>>>>> 23c2bd07b45338aa17526a5ae5bb18e4d01a8d52
     @log
     def modifier(self, id_manga, id_utilisateur, avis_message, note) -> Avis:
         """Modification d'un avis"""
@@ -73,7 +69,7 @@ class ServiceAvis:
     @log
     def supprimer(self, id_avis) -> bool:
         """Supprimer un avis"""
-        return DaoAvis().supprimer_avis(id_avis)
+        return DaoAvis().supprimer_avis("projet_info_2a", id_avis)
 
     @log
     def afficher_autre_avis(self, id_manga):
@@ -82,6 +78,6 @@ class ServiceAvis:
         avis_user_sur_manga = DaoAvis().chercher_avis_sur_manga("projet_test_dao", id_manga)
 
         if len(avis_user_sur_manga) > 0:
-            return avis_user_sur_manga[0]
+            return avis_user_sur_manga
         else:
             return None

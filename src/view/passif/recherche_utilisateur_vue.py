@@ -57,14 +57,14 @@ class RechercheUtilisateurVue(VueAbstraite):
 
             from service.collection_service import ServiceCollection
 
-            liste_collections = ServiceCollection().rechercher_collection_coherente_par_user(
+            liste_collections = ServiceCollection().rechercher_collections_et_mangas_par_user(
                 id_utilisateur, "projet_info_2a"
             )
-            collection_physique = ServiceCollection().rechercher_collection_physique_par_user(
-                id_utilisateur, "projet_info_2a"
-            )
-            if collection_physique != []:
-                liste_collections.append(collection_physique[0])
+            # collection_physique = ServiceCollection().rechercher_collection_physique_par_user(
+            #     id_utilisateur, "projet_info_2a"
+            # )
+            # if collection_physique != []:
+            #     liste_collections.append(collection_physique[0])
 
             liste_nom_collections = []
             for collection in liste_collections:
