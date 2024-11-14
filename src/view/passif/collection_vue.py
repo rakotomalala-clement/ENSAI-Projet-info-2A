@@ -24,7 +24,24 @@ class CollectionVue(VueAbstraite):
 
         print("\n" + "-" * 50 + "\nCollection:", self.collection.titre, "\n" + "-" * 50 + "\n")
 
+        # liste_avis = ServiceAvis().
+        # if liste_avis is None:
+        #     print("")
+        # else:
+        #     for avis in liste_avis:
+        #         print("Note: ", avis.note, ", ", avis.avis)
+
         if self.collection.type_collection == "Cohérente":
             print(self.collection.description)
+            print("Mangas de ma collection:")
+            from collection_service import ServiceCollection
+
+            # liste_mangas = ServiceCollection().
+            # for manga in liste_mangas:
+            # print(manga.titre)
+
+        else:
+            # On veut prendre une collection physique
+            # Dans cette collection physique,
 
         return 0

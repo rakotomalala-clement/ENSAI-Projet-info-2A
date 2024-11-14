@@ -5,9 +5,9 @@ from view.vue_abstraite import VueAbstraite
 class MangaCollectionVue(VueAbstraite):
     """Menu des modifications possibles sur un manga au sein d'une collection"""
 
-    def __init__(self, type_collection, titre_manga=None):
+    def __init__(self, collection, titre_manga=None):
         # titre de la collection
-        self.type_collection = type_collection
+        self.collection = collection
         self.titre_manga = titre_manga
         # le type de la collection
 
@@ -22,7 +22,7 @@ class MangaCollectionVue(VueAbstraite):
 
         print("\n" + "-" * 50 + "\n", self.titre_manga, "\n" + "-" * 50 + "\n")
 
-        if self.type_collection == "cohérente":
+        if self.collection.type_collection == "cohérente":
             possibilites = [
                 "Changer le statut de lecture du manga",
                 "Ajouter un tome au manga",
@@ -41,6 +41,7 @@ class MangaCollectionVue(VueAbstraite):
             case "Changer le statut de lecture du manga":
                 return 0
             case "Ajouter un tome au manga":
+
                 return 0
             case "Supprimer le manga":
                 return 0

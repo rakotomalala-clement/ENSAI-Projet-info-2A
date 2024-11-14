@@ -28,16 +28,17 @@ class CollectionUtilisateurVue(VueAbstraite):
 
         # if self.type
 
-        manga_collection = []
-        manga_collection.append("Ajouter manga")
-        manga_collection.append("Modifier informations collections")
-        manga_collection.append("Supprimer la collection")
-        manga_collection.append("Retour au menu")
+        modif_collection = [
+            "Ajouter manga",
+            "Modifier les informations sur un manga",
+            "Modifier les informations sur la collection",
+            "Supprimer la collection",
+            "Retour au menu",
+        ]
 
         choix = inquirer.select(
-            message="Sélectionner un manga pour modifier les informations dessus"
-            " ou le supprimer de votre collection ou bien ajoutez-en un à votre collection",
-            choices=manga_collection,
+            message="Quelles modifications souhaitez-vous apporter sur votre colection?",
+            choices=modif_collection,
         ).execute()
 
         match choix:
@@ -45,18 +46,27 @@ class CollectionUtilisateurVue(VueAbstraite):
                 from service.manga_service import MangaService
 
                 liste_mangas = MangaService().lister_mangas()
-                for indice_manga in range(8):
-                    print(liste_mangas[indice_manga].titre)
+                liste_nom_mangas = []
+                for manga in liste_mangas:
+                    liste_nom_mangas.append(manga.titre)
 
-                titre = inquirer.text(
-                    message="Donner le nom du manga que vous souhaitez ajouter"
+                titre = inquirer.fuzzy(
+                    message="Quel manga souhaitez-vous ajouter?", choices=liste_nom_mangas
                 ).execute()
 
                 id_manga = [MangaService().trouver_id_par_titre(titre)]
 
-                ServiceCollection().ajouter_mangas_collection(
+                ServiceCollection().ajouter_mangas_a_collection(
                     self.collection.id_collection, id_manga, "projet_info_2a"
                 )
+
+            case "Modifier les informations sur un manga":
+                from view.actif.gestion_collection.manga_collection_vue import MangaCollectionVue
+
+                return MangaCollectionVue().choisir_menu()
+
+            case "Modifier les informations sur la collection":
+                return 0
 
             case "Supprimer la collection":
                 from service.Service_Utilisateur import ServiceUtilisateur
@@ -86,8 +96,5 @@ class CollectionUtilisateurVue(VueAbstraite):
                     return AccueilConnecteVue().choisir_menu()
                 else:
                     return AccueilVue().choisir_menu()
-
-            case "Modifier informations collections":
-                return 0
 
         return 0

@@ -18,14 +18,13 @@ class RechercheMangaVue(VueAbstraite):
 
         print("\n" + "-" * 50 + "\nRecherche de manga par titre\n" + "-" * 50 + "\n")
 
-        print("Voici une liste de mangas que vous pouvez rechercher")
-
         liste_mangas = MangaService().lister_mangas()
-        for indice_manga in range(8):
-            print(liste_mangas[indice_manga].titre)
+        liste_nom_mangas = []
+        for manga in liste_mangas:
+            liste_nom_mangas.append(manga.titre)
 
-        titre = inquirer.text(
-            message="Donner le nom du manga que vous souhaitez rechercher"
+        titre = inquirer.fuzzy(
+            message="Quel manga souhaitez-vous consulter?", choices=liste_nom_mangas
         ).execute()
 
         return AffichageMangaVue(titre).choisir_menu()
