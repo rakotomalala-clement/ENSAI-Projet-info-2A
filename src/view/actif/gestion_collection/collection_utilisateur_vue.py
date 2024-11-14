@@ -52,9 +52,9 @@ class CollectionUtilisateurVue(VueAbstraite):
                     message="Donner le nom du manga que vous souhaitez ajouter"
                 ).execute()
 
-                id_manga = [MangaService().trouver_id_par_titre(titre).id_manga]
+                id_manga = [MangaService().trouver_id_par_titre(titre)]
 
-                ServiceCollection().ajouter_mangas_a_collection(
+                ServiceCollection().ajouter_mangas_collection(
                     self.collection.id_collection, id_manga, "projet_info_2a"
                 )
 
