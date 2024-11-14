@@ -52,7 +52,7 @@ def test_trouver_id_avis_collection_coherent_par_id_collection_co_utilisateur_fa
 def test_trouver_id_avis_collection_physique_par_id_collection_phy_utilisateur_true():
     """Recherche de l'id d'un avis sur  une collection physique existant
     par l'id de la collection et de l'utilisateur."""
-    id_collection_physique = 2
+    id_collection_physique = 1
     id_utilisateur = 12
     id_avis_col_phy = DaoAvis().trouver_id_avis_par_id_manga_utilisateur_col_physique(
         "projet_test_dao",
@@ -102,6 +102,27 @@ def test_creer_avis_col_coherente_ok():
     assert creation
 
 
+def test_modifier_avis_col_co_ok():
+    """Modification d'un avis d'un collection coherente existant."""
+
+    # WHEN
+    modification = DaoAvis().modifier_avis_collection_co(
+        "projet_test_dao",
+        avis=Avis(
+            id_avis=DaoAvis().trouver_id_avis_par_id_col_coherente_utilisateur(
+                schema="projet_test_dao", id_collection_coherente=1, id_utilisateur=12
+            ),
+            avis="moyen",
+            note=3,
+        ),
+        id_collection=1,
+        id_utilisateur=12,
+    )
+
+    # THEN
+    assert modification is True
+
+
 def test_creer_avis_col_physique_ok():
     """Création d avis de collection physique réussie"""
 
@@ -114,6 +135,45 @@ def test_creer_avis_col_physique_ok():
     )
     # THEN
     assert creation_ok
+
+
+def test_modifier_avis_col_phy_ok():
+    """Modification d'un avis d'une collection physique existant."""
+
+    # WHEN
+    modification = DaoAvis().modifier_avis_collection_phy(
+        "projet_test_dao",
+        avis=Avis(
+            id_avis=DaoAvis().trouver_id_avis_par_id_manga_utilisateur_col_physique(
+                schema="projet_test_dao", id_collection=1, id_utilisateur=43
+            ),
+            avis="moyen",
+            note=3,
+        ),
+        id_collection=1,
+        id_utilisateur=43,
+    )
+
+
+def test_modifier_avis_ok():
+    """Modification d'un avis existant."""
+
+    # WHEN
+    modification = DaoAvis().modifier_avis(
+        "projet_test_dao",
+        avis=Avis(
+            id_avis=DaoAvis().trouver_id_avis_par_id_manga_utilisateur(
+                schema="projet_test_dao", id_manga=1, id_utilisateur=12
+            ),
+            avis="ok",
+            note=3,
+        ),
+        id_manga=1,
+        id_utilisateur=12,
+    )
+
+    # THEN
+    assert modification is True, "La modification de l'avis devrait retourner True"
 
 
 def test_supprimer_ok():
@@ -167,21 +227,6 @@ def test_supprimer_avis_col_physique_ok():
         schema="projet_test_dao",
     )
     assert suppression
-
-
-def test_modifier_avis_ok():
-    """Modification d'un avis existant."""
-
-    # WHEN
-    modification = DaoAvis().modifier_avis(
-        "projet_test_dao",
-        avis=Avis(id_avis=25, avis="Superbe !", note=5),
-        id_manga=3,
-        id_utilisateur=35,
-    )
-
-    # THEN
-    assert modification is True, "La modification de l'avis devrait retourner True"
 
 
 if __name__ == "__main__":
