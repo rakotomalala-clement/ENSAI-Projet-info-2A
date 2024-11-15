@@ -1,3 +1,8 @@
+# TODO
+## URGENT et IMPORTANT: 
+- le requirements.txt
+
+
 # ENSAI-Projet-info-2A groupe 21
 
 ## :arrow_forward: Required Software

@@ -1,5 +1,8 @@
 
 
+logs/
+.vscode/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -124,7 +127,8 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-#.env
+# Misère vous avez vraiment poussé le .env ??? :'>
+.env 
 .venv
 env/
 venv/
