@@ -1,8 +1,9 @@
 from InquirerPy import inquirer
 from view.vue_abstraite import VueAbstraite
+from service.collection_service import ServiceCollection
 
 
-class CollectionVue(VueAbstraite):
+class CollectionCoherenteVue(VueAbstraite):
     "Vue de l' affichage d'une collection"
 
     def __init__(self, collection):
@@ -28,17 +29,20 @@ class CollectionVue(VueAbstraite):
 
         if self.collection.type_collection == "Cohérente":
             print(self.collection.description)
-            print("Mangas de ma collection:")
-            from collection_service import ServiceCollection
+            print("Mangas de la collection:")
 
-            # liste_mangas = ServiceCollection().
-            # for manga in liste_mangas:
-            # print(manga.titre)
+            liste_mangas = ServiceCollection().lister_mangas_collection(
+                self.collection.id_collection, "projet_info_2a"
+            )
+            for manga in liste_mangas:
+                print(manga.titre)
 
         else:
-            # On veut prendre une collection physique
-            # Dans cette collection physique,
-            a = 1
+            print("Collection physique:")
+
+            liste_mangas_physique = ServiceCollection().lister_collections_physiques()
+            for manga in liste_mangas_physique:
+                print(manga.titre)
 
         choix = inquirer.select(
             message="Choississez une action à réaliser",

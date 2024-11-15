@@ -114,7 +114,7 @@ class ServiceCollection:
         self, id_utilisateur: int, schema: str
     ) -> List[CollectionPhysique]:
 
-        return self.dao_collection.lister_collections_physiques(id_utilisateur, schema)
+        return self.dao_collection.rechercher_collection_physique(id_utilisateur, schema)
 
     def ajouter_mangas_collection_coherente(
         self, collection_id: int, liste_mangas: List[int], schema: str

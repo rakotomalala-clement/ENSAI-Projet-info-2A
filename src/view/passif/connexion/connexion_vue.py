@@ -30,14 +30,9 @@ class ConnexionVue(VueAbstraite):
         utilisateur = ServiceUtilisateur().connecter_utilisateur(nom_utilisateur, mdp)
 
         if utilisateur:
-<<<<<<< HEAD
             # Créer une session pour l'utilisateur
             Session().connexion(nom_utilisateur)
 
-=======
-            Session().nom_utilisateur = nom_utilisateur
-            Session().connecte = True
->>>>>>> 45430640a807b5212e2b6d8acd0bc53ecfe9bb4c
             return AccueilConnecteVue().choisir_menu()
         else:
             return AccueilVue().choisir_menu()
