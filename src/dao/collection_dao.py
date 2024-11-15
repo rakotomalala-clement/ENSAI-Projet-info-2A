@@ -5,7 +5,7 @@ from utils.log_decorator import log
 
 from dao.db_connection import DBConnection
 
-
+import psycopg2.extras
 from business_object.collection.collection_physique import CollectionPhysique
 from business_object.collection.collection_coherente import CollectionCoherente
 from business_object.manga import Manga
@@ -155,7 +155,7 @@ class DaoCollection(metaclass=Singleton):
     ) -> List[MangaDansCollection]:
         try:
             with DBConnection(schema).connection as connection:
-                with connection.cursor() as cursor:
+                with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                     cursor.execute(
                         """
                         SELECT cpm.id_manga, cpm.titre_manga, cpm.numero_dernier_tome, cpm.numeros_tomes_manquants,cpm.status_manga
@@ -169,12 +169,16 @@ class DaoCollection(metaclass=Singleton):
 
                     results = cursor.fetchall()
 
+                if not results:
+                    return "Aucun manga ajouté"
+
                 collection = [
                     MangaDansCollection(
-                        id_manga=result["id_manga"],
-                        dernier_tome_acquis=result["numero_dernier_tome"],
-                        numeros_tomes_manquants=result["numeros_tomes_manquants"],
-                        status_manga=result["status_manga"],
+                        manga=result[0],
+                        collection=result[1],
+                        dernier_tome_acquis=result[1],
+                        numeros_tomes_manquants=result[2],
+                        status_manga=result[3],
                     )
                     for result in results
                 ]
@@ -354,41 +358,43 @@ class DaoCollection(metaclass=Singleton):
             return False
 
     @log
-    def modifier_collection_physique(self, collection: CollectionPhysique, schema: str) -> bool:
+    def modifier_collection_physique(
+        self, manga: MangaDansCollection, id_collection, id_manga, schema: str
+    ) -> bool:
 
+        # on modifie pas le titre du manga, sinon --> suppression du manga
         query = """
-        UPDATE collection_physique
-        SET titre_collection = %(titre_collection)s,
+
+        UPDATE collection_physique_mangas
+        SET 
             numero_dernier_tome = %(numero_dernier_tome)s,
             numeros_tomes_manquants = %(numeros_tomes_manquants)s,
-            status_collection = %(status_collection)s
-
-        WHERE id_collection = %(id_collection)s;
-        """
+            status_manga = %(status_manga)s
+        WHERE id_manga = %(id_manga)s AND id_collection = %(id_collection)s;
+    """
 
         params = {
-            "id_collection": collection.id_collection,
-            "titre_collection": collection.titre,
-            "numero_dernier_tome": collection.dernier_tome_acquis,
-            "numeros_tomes_manquants": collection.numeros_tomes_manquants,
-            "status_collection": collection.status_collection,
+            "id_manga": id_manga,
+            "numero_dernier_tome": manga.dernier_tome_acquis,
+            "numeros_tomes_manquants": manga.numeros_tomes_manquants,
+            "status_manga": manga.status_manga,
+            "id_collection": id_collection,
         }
 
         try:
             with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(query, params)
-                    res = cursor.fetchone()
 
-                    if res:
-
+                    # Vérifiez combien de lignes ont été affectées
+                    if cursor.rowcount > 0:
                         return True
                     else:
                         logging.warning(
-                            f"Aucune collection trouvée avec l'id {collection.id_collection}."
+                            f"Aucun manga trouvé avec l'id {id_manga} dans la collection {id_collection}."
                         )
                         return False
 
         except Exception as e:
-            logging.error(f"Erreur lors de la modification de la collection physique : {e}")
+            logging.error(f"Erreur lors de la mise à jour du manga : {e}")
             return False
