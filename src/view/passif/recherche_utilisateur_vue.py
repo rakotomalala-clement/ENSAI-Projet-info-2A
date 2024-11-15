@@ -61,38 +61,22 @@ class RechercheUtilisateurVue(VueAbstraite):
                 id_utilisateur, "projet_info_2a"
             )
 
-            # collection_physique = ServiceCollection().lister_collections_physiques(
+            liste_nom_collections = []
+
+            if not (liste_collections is None):
+                for collection in liste_collections:
+                    liste_nom_collections.append(collection.titre)
+
+            # Ajout de la possibilité d'accéder à la collection physique
+            # de l'utilisateur s'il en possède une
+            # collection_physique = ServiceCollection().rechercher_collection_physique(
             #     id_utilisateur, "projet_info_2a"
             # )
 
             # if collection_physique == []:
-            #     print("L'utilisateur n'a pas de collection physique, a rioiri c'est une erreur")
+            #     print("L'utilisateur n'a pas de collection physique, a prioiri c'est une erreur")
             # else:
-            #     liste_collections.append(collection_physique[0])
-
-            # liste_collections = ServiceCollection().rechercher_collections_et_mangas_par_user(
-            #     id_utilisateur, "projet_info_2a"
-            # )
-            # collection_physique = ServiceCollection().rechercher_collection_physique_par_user(
-            #     id_utilisateur, "projet_info_2a"
-            # )
-            # if collection_physique != []:
-            #     liste_collections.append(collection_physique[0])
-
-            liste_nom_collections = []
-            for collection in liste_collections:
-                liste_nom_collections.append(collection.titre)
-
-            # Ajout de la possibilité d'accéder à la collection physique
-            # de l'utilisateur s'il en possède une
-            collection_physique = ServiceCollection().lister_collections_physiques(
-                id_utilisateur, "projet_info_2a"
-            )
-
-            if collection_physique == []:
-                print("L'utilisateur n'a pas de collection physique, a rioiri c'est une erreur")
-            else:
-                liste_nom_collections.append("Collection physique")
+            #     liste_nom_collections.append("Collection physique")
 
             # Ajout de la possibilité de retourner au menu principal
             liste_nom_collections.append("Retour au menu principal")
@@ -110,11 +94,8 @@ class RechercheUtilisateurVue(VueAbstraite):
             elif nom_collection_choisi == "Collection physique":
                 print("Collection physique de", nom_utilisateur_choisi, ":")
 
-                liste_mangas = ServiceCollection().lister_mangas_collection(
-                    self.collection.id_collection, "projet_info_2a"
-                )
-                for manga in liste_mangas:
-                    print(manga.titre)
+                # for manga in collection_physique:
+                #     print(manga.titre)
 
             # On a besoin de retrouver la collection dont le nom est nom_collection_choisi
             collection_choisi = None

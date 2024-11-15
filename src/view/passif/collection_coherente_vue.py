@@ -37,13 +37,6 @@ class CollectionCoherenteVue(VueAbstraite):
             for manga in liste_mangas:
                 print(manga.titre)
 
-        else:
-            print("Collection physique:")
-
-            liste_mangas_physique = ServiceCollection().lister_collections_physiques()
-            for manga in liste_mangas_physique:
-                print(manga.titre)
-
         choix = inquirer.select(
             message="Choississez une action à réaliser",
             choices=[
