@@ -102,6 +102,15 @@ def test_creer_avis_col_coherente_ok():
     assert creation
 
 
+def test_afficher_avis_collection_coherente_ok():
+    "chercher avis sur collection cohérente ok"
+    nb_avis_col_co = 2
+    avis_col_co = DaoAvis().chercher_avis_sur_collection_coherente(
+        schema="projet_test_dao", id_collection_coherente=1
+    )
+    assert nb_avis_col_co == len(avis_col_co)
+
+
 def test_modifier_avis_col_co_ok():
     """Modification d'un avis d'un collection coherente existant."""
 
@@ -135,6 +144,15 @@ def test_creer_avis_col_physique_ok():
     )
     # THEN
     assert creation_ok
+
+
+def test_afficher_avis_collection_physique_ok():
+    "chercher avis sur collection physique ok"
+    nb_avis_col_phy = 2
+    avis_col_phy = DaoAvis().chercher_avis_sur_collection_physique(
+        schema="projet_test_dao", id_collection=1
+    )
+    assert nb_avis_col_phy == len(avis_col_phy)
 
 
 def test_modifier_avis_col_phy_ok():

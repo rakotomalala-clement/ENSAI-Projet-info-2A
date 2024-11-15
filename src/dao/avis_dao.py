@@ -506,6 +506,104 @@ class DaoAvis(metaclass=Singleton):
         return liste_avis
 
     @log
+    def chercher_avis_sur_collection_coherente(self, schema, id_collection_coherente):
+        """Chercher l'ensemble des avis des utilisateurs laissés sur une
+        collection cohérente.
+
+        Parameters
+        ----------
+        schema: str
+            Nom du schéma de la base de données.
+        id_collection: int
+            Identifiant du manga pour lequel on souhaite récolter les avis.
+
+        Returns
+        -------
+        List[Avis]
+            Liste des avis trouvés.
+        """
+        try:
+            with DBConnection(schema).connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        """
+                        SELECT id_avis_collection_coherente, avis, note
+                        FROM avis_collection_coherente_db
+                        WHERE id_collection_coherente = %(id_collection_coherente)s;
+                        """,
+                        {"id_collection_coherente": id_collection_coherente},
+                    )
+                    res = cursor.fetchall()
+
+        except Exception as e:
+            logging.error(
+                f"Erreur lors de la recherche d'avis sur la collection {id_collection_coherente} : {e}"
+            )
+            raise
+
+        # Transforme les résultats en une liste d'objets Avis
+        liste_avis = (
+            [
+                Avis(
+                    id_avis=row["id_avis_collection_coherente"], avis=row["avis"], note=row["note"]
+                )
+                for row in res
+            ]
+            if res
+            else []
+        )
+
+        return liste_avis
+
+    @log
+    def chercher_avis_sur_collection_physique(self, schema, id_collection):
+        """Chercher l'ensemble des avis des utilisateurs laissés sur une
+        collection cohérente.
+
+        Parameters
+        ----------
+        schema: str
+            Nom du schéma de la base de données.
+        id_collection: int
+            Identifiant du manga pour lequel on souhaite récolter les avis.
+
+        Returns
+        -------
+        List[Avis]
+            Liste des avis trouvés.
+        """
+        try:
+            with DBConnection(schema).connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        """
+                        SELECT id_avis_collection_physique, avis, note
+                        FROM avis_collection_physique_db
+                        WHERE id_collection = %(id_collection)s;
+                        """,
+                        {"id_collection": id_collection},
+                    )
+                    res = cursor.fetchall()
+
+        except Exception as e:
+            logging.error(
+                f"Erreur lors de la recherche d'avis sur la collection {id_collection} : {e}"
+            )
+            raise
+
+        # Transforme les résultats en une liste d'objets Avis
+        liste_avis = (
+            [
+                Avis(id_avis=row["id_avis_collection_physique"], avis=row["avis"], note=row["note"])
+                for row in res
+            ]
+            if res
+            else []
+        )
+
+        return liste_avis
+
+    @log
     def supprimer_avis_col_coherente(self, id_avis_collection_coherente, schema):
         """Supprime un avis de la base de données
 
