@@ -10,7 +10,6 @@ from business_object.utilisateur import Utilisateur
 class TestDaoCompte(unittest.TestCase):
     def test_creer_utilisateur(self):
         utilisateur = Utilisateur("test_user85", "mdptest85")
-        print("************")
         creation_user = DaoCompte().creer_utilisateur(utilisateur)
         assert creation_user
         suppression = DaoCompte().supprimer_utilisateur(utilisateur.id_utilisateur)
