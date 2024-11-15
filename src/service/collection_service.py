@@ -106,11 +106,9 @@ class ServiceCollection:
             )
             return {}
 
-    def rechercher_collection_physique(
-        self, id_utilisateur: int, id_manga: int, schema: str
-    ) -> List[CollectionPhysique]:
+    def rechercher_collection_physique(self, id_utilisateur: int, schema: str):
 
-        return self.dao_collection.rechercher_collection_physique(id_utilisateur, id_manga, schema)
+        return self.dao_collection.rechercher_collection_physique(id_utilisateur, schema)
 
     def lister_collections_physiques(
         self, id_utilisateur: int, schema: str
@@ -118,9 +116,25 @@ class ServiceCollection:
 
         return self.dao_collection.rechercher_collection_physique(id_utilisateur, schema)
 
-    def ajouter_mangas(self, collection_id: int, liste_mangas: List[int], schema: str) -> bool:
+    def ajouter_mangas_collection_coherente(
+        self, collection_id: int, liste_mangas: List[int], schema: str
+    ) -> bool:
 
-        return self.dao_collection.ajouter_mangas(collection_id, liste_mangas, schema)
+        return self.dao_collection.ajouter_mangas_collection_coherente(
+            collection_id, liste_mangas, schema
+        )
+
+    def ajouter_mangas_collection_physique(
+        self,
+        id_utilisateur,
+        titre_manga,
+        numero_dernier_tome,
+        numeros_tomes_manquants,
+        status_manga,
+    ):
+        return self.dao_collection.ajouter_mangas_collection_physique(
+            id_utilisateur, titre_manga, numero_dernier_tome, numeros_tomes_manquants, status_manga
+        )
 
     @log
     def supprimer_collection(self, id_collection, type_collection, schema: str) -> bool:

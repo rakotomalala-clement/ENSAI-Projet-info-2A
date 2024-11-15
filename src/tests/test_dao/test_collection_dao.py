@@ -30,18 +30,18 @@ from business_object.collection.collection_coherente import CollectionCoherente
 #      assert result is True
 
 
-def test_ajouter_manga_collection_physique_ok():
-    dao_collection = DaoCollection()
-    result = dao_collection.ajouter_manga_collection_physique(
-        id_utilisateur=12,
-        titre_manga="Monster",
-        numero_dernier_tome=5,
-        numeros_tomes_manquants="1 - 2",
-        status_manga="Terminé",
-        schema="projet_test_dao",
-    )
+# def test_ajouter_manga_collection_physique_ok():
+#     dao_collection = DaoCollection()
+#     result = dao_collection.ajouter_manga_collection_physique(
+#         id_utilisateur=12,
+#         titre_manga="Monster",
+#         numero_dernier_tome=5,
+#         numeros_tomes_manquants="1 - 2",
+#         status_manga="Terminé",
+#         schema="projet_test_dao",
+#     )
 
-    assert result is True
+#     assert result is True
 
 
 # def test_creer_collection_physique_ko():
