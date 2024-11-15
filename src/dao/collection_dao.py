@@ -174,11 +174,10 @@ class DaoCollection(metaclass=Singleton):
 
                 collection = [
                     MangaDansCollection(
-                        manga=result[0],
-                        collection=result[1],
-                        dernier_tome_acquis=result[1],
-                        numeros_tomes_manquants=result[2],
-                        status_manga=result[3],
+                        manga=result[1],
+                        dernier_tome_acquis=result[2],
+                        numeros_tomes_manquants=result[3],
+                        status_manga=result[4],
                     )
                     for result in results
                 ]
@@ -366,7 +365,7 @@ class DaoCollection(metaclass=Singleton):
         query = """
 
         UPDATE collection_physique_mangas
-        SET 
+        SET
             numero_dernier_tome = %(numero_dernier_tome)s,
             numeros_tomes_manquants = %(numeros_tomes_manquants)s,
             status_manga = %(status_manga)s

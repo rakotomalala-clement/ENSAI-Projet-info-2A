@@ -93,10 +93,35 @@ class RechercheUtilisateurVue(VueAbstraite):
                     return AccueilVue().choisir_menu()
 
             elif nom_collection_choisi == "Collection physique":
-                print("Collection physique de", nom_utilisateur_choisi, ":")
+                print("\nCollection physique de", nom_utilisateur_choisi, ":\n")
 
-                # for manga in collection_physique:
-                #     print(manga.titre)
+                for manga in collection_physique:
+                    print(manga.manga)  # le deuxième manga (dans manga.manga) étant le titre
+                print("\n")
+
+                if Session().connecte:
+                    choix = inquirer.select(
+                        message="Choississez une action à réaliser",
+                        choices=[
+                            "Gérer ses avis sur la collection",
+                            "Retourner au menu de recherche d'utilisateur",
+                        ],
+                    ).execute()
+                else:
+                    choix = inquirer.select(
+                        message="Choississez une action à réaliser",
+                        choices=[
+                            "Retourner au menu de recherche d'utilisateur",
+                        ],
+                    ).execute()
+
+                match choix:
+
+                    case "Gérer ses avis sur la collection":
+                        return 0
+
+                    case "Retourner au menu de recherche d'utilisateur":
+                        return RechercheUtilisateurVue().choisir_menu()
 
             else:
                 # On a besoin de retrouver la collection dont le nom est nom_collection_choisi
