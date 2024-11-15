@@ -153,6 +153,9 @@ class ServiceCollection:
 
         return self.dao_collection.supprimer(collection, schema)
 
+    def supprimer_manga_col_physique(self, id_collection, id_manga, schema) -> bool:
+        return self.dao_collection.supprimer_manga_col_physique(id_collection, id_manga, schema)
+
     def modifier_collection_coherente(
         self, id_collection: int, titre: str, description: str, schema: str
     ) -> bool:

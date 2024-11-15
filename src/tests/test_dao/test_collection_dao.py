@@ -153,7 +153,7 @@ from business_object.collection.mangas_dans_collection import MangaDansCollectio
 
 #     collection = CollectionCoherente(
 #         id_collection=1,
-#         titre="New title",
+#         titre="nouveau title",
 #         description="New description ",
 #     )
 
@@ -180,18 +180,16 @@ from business_object.collection.mangas_dans_collection import MangaDansCollectio
 #     assert result is True
 
 
-<<<<<<< HEAD
-def testRecupererMangasCollectionCoherente():
-    print("hello")
-    dao_collection = DaoCollection()
-    print("hello")
-    result = dao_collection.recuperer_mangas_collection_coherente(1, schema="projet_test_dao")
-=======
+def test_supprimer_manga_col_physique_ok():
+    result = DaoCollection().supprimer_manga_col_physique(1, 4, schema="projet_test_dao")
+    assert result is True
+
+
 # def test_recuperer_mangas_collection_coherente_ok():
 #     print("hello")
 #     dao_collection = DaoCollection()
 #     print("hello")
 #     result = dao_collection.recuperer_mangas_collection_coherente(1, schema="projet_test_dao")
->>>>>>> e49de8e68c33ce7b11f9467f1e538760ac2f2902
+
 
 #     assert len(result) > 0, "Expected at least one manga in the collection"

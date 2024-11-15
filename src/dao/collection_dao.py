@@ -2,11 +2,8 @@ import logging
 from typing import List
 from utils.singleton import Singleton
 from utils.log_decorator import log
-
 from dao.db_connection import DBConnection
-
 import psycopg2.extras
-from business_object.collection.collection_physique import CollectionPhysique
 from business_object.collection.collection_coherente import CollectionCoherente
 from business_object.manga import Manga
 from business_object.collection.mangas_dans_collection import MangaDansCollection
@@ -130,7 +127,6 @@ class DaoCollection(metaclass=Singleton):
                             )
                             manga_details = cursor.fetchone()
 
-                            # Si des détails sont trouvés, créer un objet Manga et l'ajouter à la liste
                             if manga_details:
                                 manga = Manga(
                                     id_manga=manga_details["id_manga"],
@@ -153,6 +149,7 @@ class DaoCollection(metaclass=Singleton):
     def rechercher_collection_physique(
         self, id_utilisateur: int, schema
     ) -> List[MangaDansCollection]:
+        """Retourne une liste des mangas que l'utilisateur possède physiquement"""
         try:
             with DBConnection(schema).connection as connection:
                 with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
@@ -241,8 +238,7 @@ class DaoCollection(metaclass=Singleton):
                         (id_utilisateur,),
                     )
                     result = cursor.fetchone()
-                    print("******************")
-                    print(result)
+
                     return result["id_collection"] if result else None
         except Exception as e:
             logging.error(f"Erreur lors de la récupération de l'ID de collection : {e}")
@@ -323,8 +319,23 @@ class DaoCollection(metaclass=Singleton):
             return False
 
     @log
-    def modifier_collection_coherente(self, collection: CollectionCoherente, schema: str) -> bool:
+    def supprimer_manga_col_physique(self, id_collection, id_manga, schema) -> bool:
+        try:
+            with DBConnection(schema).connection as connection:
+                with connection.cursor() as cursor:
+                    query = "DELETE FROM collection_physique_mangas WHERE id_collection = %s AND id_manga = %s"
 
+                    # Passer un tuple, pas un dictionnaire
+                    cursor.execute(query, (id_collection, id_manga))
+
+                    # Retourner True si la suppression a affecté des lignes, sinon False
+                    return cursor.rowcount > 0
+        except Exception as e:
+            logging.error(f"Erreur lors de la suppression de la collection : {e}")
+            return False
+
+    @log
+    def modifier_collection_coherente(self, collection: CollectionCoherente, schema: str) -> bool:
         query = """
         UPDATE collection_coherente
         SET titre_collection = %(titre_collection)s,
@@ -342,10 +353,9 @@ class DaoCollection(metaclass=Singleton):
             with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(query, params)
-                    res = cursor.fetchone()
 
-                    if res:
-
+                    # Vérifiez combien de lignes ont été affectées
+                    if cursor.rowcount > 0:
                         return True
                     else:
                         logging.warning(
