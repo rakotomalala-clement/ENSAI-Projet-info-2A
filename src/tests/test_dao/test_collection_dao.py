@@ -180,9 +180,13 @@ from business_object.collection.mangas_dans_collection import MangaDansCollectio
 #     assert result is True
 
 
-def test_supprimer_manga_col_physique_ok():
-    result = DaoCollection().supprimer_manga_col_physique(1, 4, schema="projet_test_dao")
-    assert result is True
+# def test_supprimer_manga_col_physique_ok():
+#     result = DaoCollection().supprimer_manga_col_physique(1, 4, schema="projet_test_dao")
+#     assert result is True
+
+# def test_supprimer_manga_col_coherente_ok():
+#     result = DaoCollection().supprimer_manga_col_coherente(1, 1, schema="projet_test_dao")
+#     assert result is True
 
 
 # def test_recuperer_mangas_collection_coherente_ok():

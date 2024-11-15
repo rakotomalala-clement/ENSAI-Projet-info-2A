@@ -325,10 +325,22 @@ class DaoCollection(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     query = "DELETE FROM collection_physique_mangas WHERE id_collection = %s AND id_manga = %s"
 
-                    # Passer un tuple, pas un dictionnaire
                     cursor.execute(query, (id_collection, id_manga))
 
-                    # Retourner True si la suppression a affecté des lignes, sinon False
+                    return cursor.rowcount > 0
+        except Exception as e:
+            logging.error(f"Erreur lors de la suppression de la collection : {e}")
+            return False
+
+    @log
+    def supprimer_manga_col_coherente(self, id_collection, id_manga, schema) -> bool:
+        try:
+            with DBConnection(schema).connection as connection:
+                with connection.cursor() as cursor:
+                    query = "DELETE FROM collection_coherente_mangas WHERE id_collection = %s AND id_manga = %s"
+
+                    cursor.execute(query, (id_collection, id_manga))
+
                     return cursor.rowcount > 0
         except Exception as e:
             logging.error(f"Erreur lors de la suppression de la collection : {e}")
