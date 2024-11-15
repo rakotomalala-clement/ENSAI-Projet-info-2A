@@ -23,7 +23,7 @@ class ServiceAvis:
         """Création d'un avis sur une collection à partir de ses attributs"""
 
         nouveau_avis_collection = Avis(note, avis)
-        if "c" in type_collection:
+        if type_collection == "Coherente":
             return (
                 nouveau_avis_collection
                 if DaoAvis().creer_avis_collection_coherente(
@@ -31,7 +31,7 @@ class ServiceAvis:
                 )
                 else None
             )
-        elif "p" in type_collection:
+        elif type_collection == "Physique":
             return (
                 nouveau_avis_collection
                 if DaoAvis().creer_avis_collection_physique(

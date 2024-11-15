@@ -1,6 +1,6 @@
 class MangaDansCollection:
     def __init__(
-        self, manga, collection, dernier_tome_acquis, numeros_tomes_manquants, status_manga
+        self, manga, dernier_tome_acquis, numeros_tomes_manquants, status_manga
     ):
         self.manga = manga
         self.dernier_tome_acquis = dernier_tome_acquis
