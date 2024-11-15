@@ -185,10 +185,18 @@ from business_object.collection.collection_coherente import CollectionCoherente
 #     assert result is True
 
 
+<<<<<<< HEAD
+def testRecupererMangasCollectionCoherente():
+    print("hello")
+    dao_collection = DaoCollection()
+    print("hello")
+    result = dao_collection.recuperer_mangas_collection_coherente(1, schema="projet_test_dao")
+=======
 # def test_recuperer_mangas_collection_coherente_ok():
 #     print("hello")
 #     dao_collection = DaoCollection()
 #     print("hello")
 #     result = dao_collection.recuperer_mangas_collection_coherente(1, schema="projet_test_dao")
+>>>>>>> e49de8e68c33ce7b11f9467f1e538760ac2f2902
 
 #     assert len(result) > 0, "Expected at least one manga in the collection"

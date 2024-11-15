@@ -37,7 +37,9 @@ class ServiceUtilisateur:
     def modifier(self, utilisateur) -> Utilisateur:
         """Modification d'un utilisateur"""
 
-        utilisateur.mdp = hash_password(utilisateur.mdp, utilisateur.nom_utilisateur)
+        utilisateur.mot_de_passe = hash_password(
+            utilisateur.mot_de_passe, utilisateur.nom_utilisateur
+        )
         return utilisateur if DaoCompte().modifier(utilisateur) else None
 
     @log
@@ -51,7 +53,3 @@ class ServiceUtilisateur:
             for u in utilisateurs:
                 u.mdp = None
         return utilisateurs
-
-    @log
-    def trouver_utilisateur_par_nom(self, nom_utilisateur) -> Utilisateur:
-        return DaoCompte().trouver_utilisateur_par_nom(nom_utilisateur)
