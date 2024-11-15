@@ -110,5 +110,3 @@ class CollectionUtilisateurVue(VueAbstraite):
                     return AccueilConnecteVue().choisir_menu()
                 else:
                     return AccueilVue().choisir_menu()
-
-        return 0

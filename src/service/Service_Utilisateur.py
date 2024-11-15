@@ -53,3 +53,7 @@ class ServiceUtilisateur:
             for u in utilisateurs:
                 u.mdp = None
         return utilisateurs
+
+    @log
+    def trouver_utilisateur_par_nom(self, nom_utilisateur) -> Utilisateur:
+        return DaoCompte().trouver_utilisateur_par_nom(nom_utilisateur)
