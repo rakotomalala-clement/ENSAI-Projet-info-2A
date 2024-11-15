@@ -9,7 +9,7 @@ from business_object.utilisateur import Utilisateur
 
 class TestDaoCompte(unittest.TestCase):
     def test_creer_utilisateur(self):
-        utilisateur = Utilisateur("test_user32", "mdptest32")
+        utilisateur = Utilisateur("test_user33", "mdptest33")
         print("************")
         creation_user = DaoCompte().creer_utilisateur(utilisateur)
         assert creation_user
@@ -25,7 +25,7 @@ class TestDaoCompte(unittest.TestCase):
     def test_mettre_a_jour_utilisateur(self):
         # Test updating a user
         updated_utilisateur = DaoCompte().mettre_a_jour_utilisateur(
-            37, "new_name15", "new_password15"
+            37, "new_name151", "new_password151"
         )
         assert updated_utilisateur
 
@@ -33,12 +33,12 @@ class TestDaoCompte(unittest.TestCase):
         utilisateurs = DaoCompte().lister_tous()
 
         # Assertions
-        assert len(utilisateurs) == 15
+        assert len(utilisateurs) == 16
         assert utilisateurs[0].nom_utilisateur == "test_user25"
 
     def test_supprimer_utilisateur(self):
         # Test deleting a user
-        result = DaoCompte().supprimer_utilisateur(37)
+        result = DaoCompte().supprimer_utilisateur(35)
         assert result is True
 
 
