@@ -28,13 +28,14 @@ class CollectionCoherenteVue(VueAbstraite):
         #         print("Note: ", avis.note, ", ", avis.avis)
 
         print(self.collection.description)
-        print("Mangas de la collection:")
+        print("\nMangas de la collection:\n")
 
         liste_mangas = ServiceCollection().lister_mangas_collection(
             self.collection.id_collection, "projet_info_2a"
         )
         for manga in liste_mangas:
             print(manga.titre)
+        print("\n")
 
         from view.passif.connexion.session import Session
 
