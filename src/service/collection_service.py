@@ -4,6 +4,8 @@ import logging
 from dao.collection_dao import DaoCollection
 from business_object.collection.collection_physique import CollectionPhysique
 from business_object.collection.collection_coherente import CollectionCoherente
+from business_object.collection.mangas_dans_collection import MangaDansCollection
+from dao.manga_dao import MangaDao
 
 
 class ServiceCollection:
@@ -124,6 +126,7 @@ class ServiceCollection:
             collection_id, liste_mangas, schema
         )
 
+    # l'ajout d'un manga qui existe déjà dans la collection génère un retour False
     def ajouter_mangas_collection_physique(
         self,
         id_utilisateur,
@@ -159,18 +162,21 @@ class ServiceCollection:
 
     def modifier_collection_physique(
         self,
-        id_collection: int,
-        titre: str,
+        id_utilisateur: int,
+        titre_manga: str,
         dernier_tome_acquis: int,
         numeros_tomes_manquants: str,
-        status_collection: str,
+        status_manga: str,
         schema: str,
     ) -> bool:
-        collection = CollectionPhysique(
-            id_collection=id_collection,
-            titre=titre,
+        id_manga = MangaDao().trouver_id_par_titre(schema, titre_manga)
+        id_collection = DaoCollection().obtenir_id_collection_par_utilisateur(id_utilisateur)
+        manga_collection = MangaDansCollection(
+            manga=titre_manga,
             dernier_tome_acquis=dernier_tome_acquis,
             numeros_tomes_manquants=numeros_tomes_manquants,
-            status_collection=status_collection,
+            status_manga=status_manga,
         )
-        return self.dao_collection.modifier_collection_physique(collection, schema)
+        return self.dao_collection.modifier_collection_physique(
+            manga_collection, id_collection, id_manga, schema
+        )
