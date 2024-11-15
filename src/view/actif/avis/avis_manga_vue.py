@@ -6,12 +6,11 @@ from view.passif.connexion.session import Session
 from view.passif.affichage_manga_vue import AffichageMangaVue
 from service.avis_service import ServiceAvis
 from service.Service_Utilisateur import ServiceUtilisateur
-from service.manga_service import MangaService
 
 
 class AvisMangaVue(VueAbstraite):
-    def __init__(self, titre_manga):
-        self.titre_manga = titre_manga
+    def __init__(self, manga):
+        self.manga = manga
 
     def choisir_menu(self):
         """Affichage des avis sur la collection ou le manga
@@ -22,61 +21,81 @@ class AvisMangaVue(VueAbstraite):
             Retourne la view de l'acceuil
         """
 
-        print("\n" + "-" * 50 + "\nMes avis sur le manga\n" + "-" * 50 + "\n")
+        print("\n" + "-" * 50 + "\nMes avis sur", self.manga.titre, "\n" + "-" * 50 + "\n")
 
         choix = inquirer.select(
             message="",
             choices=[
-                "Ajouter un avis",
-                "Modifier un avis",
-                "Supprimer un avis",
+                "Ajouter mon avis",
+                "Modifier mon avis",
+                "Supprimer mon avis",
                 "Retour au menu principal",
             ],
         ).execute()
-    
+
+        id_utilisateur = (
+            ServiceUtilisateur()
+            .trouver_utilisateur_par_nom(Session().nom_utilisateur)
+            .id_utilisateur
+        )
+
+        id_manga = self.manga.id_manga
 
         match choix:
-            case "Ajouter un avis":
+            case "Ajouter mon avis":
+                avis = ServiceAvis().afficher_avis_user(id_utilisateur, id_manga)
 
-                id_utilisateur = (
-                    ServiceUtilisateur()
-                    .trouver_utilisateur_par_nom(Session().nom_utilisateur)
-                    .id_utilisateur
-                )
-                id_manga = MangaService().trouver_id_par_titre(self.titre_manga)
+                if avis is None:
 
-                note = inquirer.text(
-                    message="Veuillez rentrer une note entre 1 et 5",
-                ).execute()
-
-                while not (int(note) in [1, 2, 3, 4, 5]):
-                    print(note, "n'est pas un entier entre 1 et 5")
                     note = inquirer.text(
                         message="Veuillez rentrer une note entre 1 et 5",
                     ).execute()
 
-                avis = inquirer.text(message="Veuillez entrer votre avis sur ce manga").execute()
+                    while not (int(note) in [1, 2, 3, 4, 5]):
+                        print(note, "n'est pas un entier entre 1 et 5")
+                        note = inquirer.text(
+                            message="Veuillez rentrer une note entre 1 et 5",
+                        ).execute()
 
-                ServiceAvis().ajouter_avis(id_utilisateur, id_manga, avis, int(note))
+                    avis = inquirer.text(
+                        message="Veuillez entrer votre avis sur ce manga"
+                    ).execute()
 
-                return AffichageMangaVue(self.titre_manga).choisir_menu()
+                    ServiceAvis().ajouter_avis(id_utilisateur, id_manga, avis, int(note))
 
-            case "Modifier un avis":
-                # on devra ensuite afficher les avis et sélectionner lequel on souhaite changer
+                    return AffichageMangaVue(self.manga.titre).choisir_menu()
+                else:
+                    print("Vous avez déjà un avis sur ce manga")
+                    return AvisMangaVue(self.manga).choisir_menu()
+
+            case "Modifier mon avis":
                 nouvelle_note = inquirer.text(
                     message="Veuillez rentrer une note entre 1 et 5",
-                    validate=lambda val: val.isdigit() and 1 <= int(val) <= 5,
-                    invalid_message="Ce n'est pas un nombre entier valide entre 1 et 5",
                 ).execute()
 
-                nouvel_avis = inquirer.text(message="Veuillez entrer votre avis sur ce manga")
+                while not (int(nouvelle_note) in [1, 2, 3, 4, 5]):
+                    print(nouvelle_note, "n'est pas un entier entre 1 et 5")
+                    nouvelle_note = inquirer.text(
+                        message="Veuillez rentrer une note entre 1 et 5",
+                    ).execute()
 
-                ServiceAvis().modifier(nouvel_avis, int(nouvelle_note))
+                nouvel_avis = inquirer.text(
+                    message="Veuillez entrer votre avis sur ce manga"
+                ).execute()
 
-                return AffichageMangaVue(self.titre_manga).choisir_menu()
+                ServiceAvis().modifier(id_manga, id_utilisateur, nouvel_avis, int(nouvelle_note))
 
-            case "Supprimer un avis":
-                return 0
+                return AffichageMangaVue(self.manga.titre).choisir_menu()
+
+            case "Supprimer mon avis":
+                avis = ServiceAvis().afficher_avis_user(id_utilisateur, id_manga)
+                if avis is None:
+                    print("Vous n'avez pas encore d'avis sur ce manga")
+                    return AffichageMangaVue(self.manga.titre).choisir_menu()
+
+                ServiceAvis().supprimer(avis.id_avis)
+                return AffichageMangaVue(self.manga.titre).choisir_menu()
+
             case "Retour au menu principal":
                 if Session().connecte:
                     return AccueilConnecteVue().choisir_menu()

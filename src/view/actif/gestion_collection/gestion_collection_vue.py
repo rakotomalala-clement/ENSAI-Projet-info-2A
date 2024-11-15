@@ -42,26 +42,38 @@ class GestionCollectionVue(VueAbstraite):
                 from service.collection_service import ServiceCollection
                 from service.Service_Utilisateur import ServiceUtilisateur
 
-                id_utilisateur = ServiceUtilisateur().trouver_utilisateur_par_nom(
-                    Session().id_utilisateur
+                id_utilisateur = (
+                    ServiceUtilisateur()
+                    .trouver_utilisateur_par_nom(Session().nom_utilisateur)
+                    .id_utilisateur
                 )
+
                 liste_collections = ServiceCollection().rechercher_collection_coherente_par_user(
                     id_utilisateur, "projet_info_2a"
                 )
+                collection_physique = ServiceCollection().rechercher_collection_physique_par_user(
+                    id_utilisateur, "projet_info_2a"
+                )
+                if collection_physique != []:
+                    liste_collections.append(collection_physique[0])
+
+                if liste_collections == []:
+                    print("\nVous n'avez pas encore de collection.")
+                    return GestionCollectionVue().choisir_menu()
                 liste_nom_collections = []
                 for collection in liste_collections:
                     liste_nom_collections.append(collection.titre)
 
                 nom_collection_choisi = inquirer.select(
                     message="Quelle collection souhaitez-vous modifier/supprimer?",
-                    choices=liste_collections,
+                    choices=liste_nom_collections,
                 ).execute()
 
                 from view.actif.gestion_collection.collection_utilisateur_vue import (
                     CollectionUtilisateurVue,
                 )
 
-                collection_choisi = ""
+                collection_choisi = None
                 for collection in liste_collections:
                     if collection.titre == nom_collection_choisi:
                         collection_choisi = collection
@@ -73,5 +85,3 @@ class GestionCollectionVue(VueAbstraite):
                     return AccueilConnecteVue().choisir_menu()
                 else:
                     return AccueilVue().choisir_menu()
-
-        return 0

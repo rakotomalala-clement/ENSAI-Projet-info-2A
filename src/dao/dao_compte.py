@@ -18,13 +18,18 @@ class DaoCompte(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "INSERT INTO utilisateur (nom_utilisateur, mdp)"
-                        " VALUES (%(nom_utilisateur)s, %(mdp)s);",
+                        " VALUES (%(nom_utilisateur)s, %(mdp)s) RETURNING id_utilisateur ;",
                         {"nom_utilisateur": utilisateur.nom_utilisateur, "mdp": utilisateur.mdp},
                     )
 
                     # nouvel_id = cursor.fetchone()[0]
                     # connection.commit()
-                    return cursor.rowcount > 0
+                    res = cursor.fetchone()
+                    if res:
+                        utilisateur.id_utilisateur = res["id_utilisateur"]
+                        return True
+                    return False
+
         except Exception as e:
             logging.error(e)
             raise

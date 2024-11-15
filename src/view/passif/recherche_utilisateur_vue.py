@@ -48,6 +48,7 @@ class RechercheUtilisateurVue(VueAbstraite):
             else:
                 return AccueilVue().choisir_menu()
         else:
+
             id_utilisateur = (
                 ServiceUtilisateur()
                 .trouver_utilisateur_par_nom(nom_utilisateur_choisi)
@@ -56,9 +57,15 @@ class RechercheUtilisateurVue(VueAbstraite):
 
             from service.collection_service import ServiceCollection
 
-            liste_collections = ServiceCollection().rechercher_collection_coherente_par_user(
+            liste_collections = ServiceCollection().rechercher_collections_et_mangas_par_user(
                 id_utilisateur, "projet_info_2a"
             )
+            # collection_physique = ServiceCollection().rechercher_collection_physique_par_user(
+            #     id_utilisateur, "projet_info_2a"
+            # )
+            # if collection_physique != []:
+            #     liste_collections.append(collection_physique[0])
+
             liste_nom_collections = []
             for collection in liste_collections:
                 liste_nom_collections.append(collection.titre)
@@ -67,12 +74,18 @@ class RechercheUtilisateurVue(VueAbstraite):
             liste_nom_collections.append("Retour au menu principal")
 
             nom_collection_choisi = inquirer.select(
-                message="Veuillez choisir la collection à consulter",
+                message="Veuillez choisir la collection à consulter \n",
                 choices=liste_nom_collections,
             ).execute()
 
+            if nom_collection_choisi == "Retour au menu principal":
+                if Session().connecte:
+                    return AccueilConnecteVue().choisir_menu()
+                else:
+                    return AccueilVue().choisir_menu()
+
             # On a besoin de retrouver la collection dont le nom est nom_collection_choisi
-            collection_choisi = ""
+            collection_choisi = None
             for collection in liste_collections:
                 if collection.titre == nom_collection_choisi:
                     collection_choisi = collection

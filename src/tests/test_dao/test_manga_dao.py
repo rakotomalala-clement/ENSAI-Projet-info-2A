@@ -21,7 +21,9 @@ def test_trouver_id_par_titre_true():
     """Recherche par son titre l'id d'un manga existant"""
     titre_manga = "titre1"
     id_manga = MangaDao().trouver_id_par_titre("projet_test_dao", titre_manga)
-    assert id_manga is not None, f"L'id du manga avec le titre '{titre_manga}' devrait exister."
+    assert (
+        id_manga == 1
+    ), f"L'id du manga avec le titre '{titre_manga}' devrait exister et être égale à 1."
 
 
 def test_trouver_id_par_titre_false():
@@ -61,11 +63,15 @@ def test_ajouter_manga_true():
 
 def test_supprimer_manga_ok():
     """Suppression de Manga réussie"""
-    manga = MangaDao().trouver_par_titre("projet_test_dao", "titre2")
-    assert manga is not None, "Le manga 'titre2' devrait exister avant la suppression."
+    manga = MangaDao().trouver_par_titre("projet_test_dao", "titre3")
+    assert manga is not None, "Le manga 'titre3' devrait exister avant la suppression."
 
     suppression = MangaDao().supprimer_manga("projet_test_dao", manga)
-    assert suppression, "La suppression du manga 'titre2' devrait réussir."
+    assert suppression, "La suppression du manga 'titre3' devrait réussir."
+
+    # Nettoyage : ajout du manga supprimé pour éviter de polluer la base de données.
+    ajout = MangaDao().ajouter_manga("projet_test_dao", manga)
+    assert ajout, "Le manga supprimé devrait être ajouté après le test."
 
 
 def test_supprimer_manga_ko():

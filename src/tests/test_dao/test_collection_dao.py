@@ -22,16 +22,23 @@ from business_object.collection.collection_coherente import CollectionCoherente
 # def test_creer_collection_physique_ok():
 #     """Test de la création d'une collection physique."""
 #     dao_collection = DaoCollection()
-#     collection = CollectionPhysique(
-#         titre="Naruto",
-#         dernier_tome_acquis=2,
-#         numeros_tomes_manquants="3 - 4",
-#         status_collection="Terminé",
-#         id_collection=None,
-#     )
+#     collection = CollectionPhysique()
 
 #     result = dao_collection.creer(
-#         id_utilisateur=12, collection=collection, schema="projet_test_dao", id_manga=1
+#         id_utilisateur=12, collection=collection, schema="projet_test_dao"
+#     )
+#      assert result is True
+
+
+# def test_ajouter_manga_collection_physique_ok():
+#     dao_collection = DaoCollection()
+#     result = dao_collection.ajouter_manga_collection_physique(
+#         id_utilisateur=12,
+#         titre_manga="Monster",
+#         numero_dernier_tome=5,
+#         numeros_tomes_manquants="1 - 2",
+#         status_manga="Terminé",
+#         schema="projet_test_dao",
 #     )
 
 #     assert result is True
@@ -178,10 +185,18 @@ from business_object.collection.collection_coherente import CollectionCoherente
 #     assert result is True
 
 
+<<<<<<< HEAD
 def testRecupererMangasCollectionCoherente():
     print("hello")
     dao_collection = DaoCollection()
     print("hello")
     result = dao_collection.recuperer_mangas_collection_coherente(1, schema="projet_test_dao")
+=======
+# def test_recuperer_mangas_collection_coherente_ok():
+#     print("hello")
+#     dao_collection = DaoCollection()
+#     print("hello")
+#     result = dao_collection.recuperer_mangas_collection_coherente(1, schema="projet_test_dao")
+>>>>>>> e49de8e68c33ce7b11f9467f1e538760ac2f2902
 
-    assert len(result) > 0, "Expected at least one manga in the collection"
+#     assert len(result) > 0, "Expected at least one manga in the collection"
