@@ -164,7 +164,7 @@ class DaoCollection(metaclass=Singleton):
                         WHERE cp.id_utilisateur = %s;
 
                         """,
-                        (id_utilisateur),
+                        (id_utilisateur,),
                     )
 
                     results = cursor.fetchall()

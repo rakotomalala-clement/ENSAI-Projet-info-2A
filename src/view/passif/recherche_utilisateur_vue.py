@@ -69,14 +69,14 @@ class RechercheUtilisateurVue(VueAbstraite):
 
             # Ajout de la possibilité d'accéder à la collection physique
             # de l'utilisateur s'il en possède une
-            # collection_physique = ServiceCollection().rechercher_collection_physique(
-            #     id_utilisateur, "projet_info_2a"
-            # )
+            collection_physique = ServiceCollection().rechercher_collection_physique(
+                id_utilisateur, "projet_info_2a"
+            )
 
-            # if collection_physique == []:
-            #     print("L'utilisateur n'a pas de collection physique, a prioiri c'est une erreur")
-            # else:
-            #     liste_nom_collections.append("Collection physique")
+            if collection_physique == []:
+                print("L'utilisateur n'a pas de collection physique, a prioiri c'est une erreur")
+            else:
+                liste_nom_collections.append("Collection physique")
 
             # Ajout de la possibilité de retourner au menu principal
             liste_nom_collections.append("Retour au menu principal")
@@ -91,16 +91,18 @@ class RechercheUtilisateurVue(VueAbstraite):
                     return AccueilConnecteVue().choisir_menu()
                 else:
                     return AccueilVue().choisir_menu()
+
             elif nom_collection_choisi == "Collection physique":
                 print("Collection physique de", nom_utilisateur_choisi, ":")
 
                 # for manga in collection_physique:
                 #     print(manga.titre)
 
-            # On a besoin de retrouver la collection dont le nom est nom_collection_choisi
-            collection_choisi = None
-            for collection in liste_collections:
-                if collection.titre == nom_collection_choisi:
-                    collection_choisi = collection
+            else:
+                # On a besoin de retrouver la collection dont le nom est nom_collection_choisi
+                collection_choisi = None
+                for collection in liste_collections:
+                    if collection.titre == nom_collection_choisi:
+                        collection_choisi = collection
 
-            return CollectionCoherenteVue(collection_choisi).choisir_menu()
+                return CollectionCoherenteVue(collection_choisi).choisir_menu()
