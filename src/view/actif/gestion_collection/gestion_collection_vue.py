@@ -48,37 +48,41 @@ class GestionCollectionVue(VueAbstraite):
                     .id_utilisateur
                 )
 
-                liste_collections = ServiceCollection().rechercher_collection_coherente_par_user(
+                liste_collections = ServiceCollection().lister_collections_coherentes(
                     id_utilisateur, "projet_info_2a"
                 )
-                collection_physique = ServiceCollection().rechercher_collection_physique_par_user(
-                    id_utilisateur, "projet_info_2a"
-                )
-                if collection_physique != []:
-                    liste_collections.append(collection_physique[0])
 
                 if liste_collections == []:
                     print("\nVous n'avez pas encore de collection.")
                     return GestionCollectionVue().choisir_menu()
+
                 liste_nom_collections = []
                 for collection in liste_collections:
                     liste_nom_collections.append(collection.titre)
+
+                # Ajout de la possibilité de revenir au menu
+                liste_nom_collections.append("Retour au menu")
 
                 nom_collection_choisi = inquirer.select(
                     message="Quelle collection souhaitez-vous modifier/supprimer?",
                     choices=liste_nom_collections,
                 ).execute()
 
-                from view.actif.gestion_collection.collection_utilisateur_vue import (
-                    CollectionUtilisateurVue,
-                )
+                if nom_collection_choisi == "Retour au menu":
+                    return GestionCollectionVue().choisir_menu()
 
-                collection_choisi = None
-                for collection in liste_collections:
-                    if collection.titre == nom_collection_choisi:
-                        collection_choisi = collection
+                else:
 
-                return CollectionUtilisateurVue(collection_choisi).choisir_menu()
+                    from view.actif.gestion_collection.collection_utilisateur_vue import (
+                        CollectionUtilisateurVue,
+                    )
+
+                    collection_choisi = None
+                    for collection in liste_collections:
+                        if collection.titre == nom_collection_choisi:
+                            collection_choisi = collection
+
+                    return CollectionUtilisateurVue(collection_choisi).choisir_menu()
 
             case "Retour au menu principal":
                 if Session().connecte:

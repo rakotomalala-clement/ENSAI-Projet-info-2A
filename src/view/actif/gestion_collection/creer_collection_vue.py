@@ -28,7 +28,7 @@ class CreerCollectionVue(VueAbstraite):
         utilisateur = ServiceUtilisateur().trouver_utilisateur_par_nom(Session().nom_utilisateur)
         ServiceCollection().creer_collection(
             id_utilisateur=utilisateur.id_utilisateur,
-            type_collection="Cohérente",
+            type_collection="Coherente",
             titre=nom_collection,
             description=description_collection,
             dernier_tome_acquis=None,

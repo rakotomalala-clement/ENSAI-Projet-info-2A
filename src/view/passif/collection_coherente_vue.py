@@ -27,23 +27,32 @@ class CollectionCoherenteVue(VueAbstraite):
         #     for avis in liste_avis:
         #         print("Note: ", avis.note, ", ", avis.avis)
 
-        if self.collection.type_collection == "Cohérente":
-            print(self.collection.description)
-            print("Mangas de la collection:")
+        print(self.collection.description)
+        print("Mangas de la collection:")
 
-            liste_mangas = ServiceCollection().lister_mangas_collection(
-                self.collection.id_collection, "projet_info_2a"
-            )
-            for manga in liste_mangas:
-                print(manga.titre)
+        liste_mangas = ServiceCollection().lister_mangas_collection(
+            self.collection.id_collection, "projet_info_2a"
+        )
+        for manga in liste_mangas:
+            print(manga.titre)
 
-        choix = inquirer.select(
-            message="Choississez une action à réaliser",
-            choices=[
-                "Gérer ses avis sur la collection",
-                "Retourner au menu de recherche d'utilisateur",
-            ],
-        ).execute()
+        from view.passif.connexion.session import Session
+
+        if Session().connecte:
+            choix = inquirer.select(
+                message="Choississez une action à réaliser",
+                choices=[
+                    "Gérer ses avis sur la collection",
+                    "Retourner au menu de recherche d'utilisateur",
+                ],
+            ).execute()
+        else:
+            choix = inquirer.select(
+                message="Choississez une action à réaliser",
+                choices=[
+                    "Retourner au menu de recherche d'utilisateur",
+                ],
+            ).execute()
 
         match choix:
             case "Gérer ses avis sur la collection":
