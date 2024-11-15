@@ -1,8 +1,9 @@
 from InquirerPy import inquirer
 from view.vue_abstraite import VueAbstraite
+from service.collection_service import ServiceCollection
 
 
-class CollectionVue(VueAbstraite):
+class CollectionCoherenteVue(VueAbstraite):
     "Vue de l' affichage d'une collection"
 
     def __init__(self, collection):
@@ -26,27 +27,33 @@ class CollectionVue(VueAbstraite):
         #     for avis in liste_avis:
         #         print("Note: ", avis.note, ", ", avis.avis)
 
-        if self.collection.type_collection == "Cohérente":
-            print(self.collection.description)
-            print("Mangas de ma collection:")
-            from collection_service import ServiceCollection
+        print(self.collection.description)
+        print("\nMangas de la collection:\n")
 
-            # liste_mangas = ServiceCollection().
-            # for manga in liste_mangas:
-            # print(manga.titre)
+        liste_mangas = ServiceCollection().lister_mangas_collection(
+            self.collection.id_collection, "projet_info_2a"
+        )
+        for manga in liste_mangas:
+            print(manga.titre)
+        print("\n")
 
+        from view.passif.connexion.session import Session
+
+        if Session().connecte:
+            choix = inquirer.select(
+                message="Choississez une action à réaliser",
+                choices=[
+                    "Gérer ses avis sur la collection",
+                    "Retourner au menu de recherche d'utilisateur",
+                ],
+            ).execute()
         else:
-            # On veut prendre une collection physique
-            # Dans cette collection physique,
-            a = 1
-
-        choix = inquirer.select(
-            message="Choississez une action à réaliser",
-            choices=[
-                "Gérer ses avis sur la collection",
-                "Retourner au menu de recherche d'utilisateur",
-            ],
-        ).execute()
+            choix = inquirer.select(
+                message="Choississez une action à réaliser",
+                choices=[
+                    "Retourner au menu de recherche d'utilisateur",
+                ],
+            ).execute()
 
         match choix:
             case "Gérer ses avis sur la collection":

@@ -37,7 +37,9 @@ class ServiceUtilisateur:
     def modifier(self, utilisateur) -> Utilisateur:
         """Modification d'un utilisateur"""
 
-        utilisateur.mdp = hash_password(utilisateur.mdp, utilisateur.nom_utilisateur)
+        utilisateur.mot_de_passe = hash_password(
+            utilisateur.mot_de_passe, utilisateur.nom_utilisateur
+        )
         return utilisateur if DaoCompte().modifier(utilisateur) else None
 
     @log

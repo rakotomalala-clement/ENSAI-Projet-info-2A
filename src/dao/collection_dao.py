@@ -108,7 +108,7 @@ class DaoCollection(metaclass=Singleton):
 
                     cursor.execute(
                         """
-                        SELECT id_manga FROM collection_coherente_mangas 
+                        SELECT id_manga FROM collection_coherente_mangas
                         WHERE id_collection = %s;
                         """,
                         (id_collection,),
@@ -123,7 +123,7 @@ class DaoCollection(metaclass=Singleton):
 
                             cursor.execute(
                                 """
-                                SELECT * FROM manga 
+                                SELECT * FROM manga
                                 WHERE id_manga = %s;
                                 """,
                                 (id_manga,),
@@ -327,7 +327,7 @@ class DaoCollection(metaclass=Singleton):
 
         query = """
         UPDATE collection_coherente
-        SET titre_collection = %(titre_collection)s, 
+        SET titre_collection = %(titre_collection)s,
             description_collection = %(description_collection)s
         WHERE id_collection = %(id_collection)s;
         """
@@ -364,6 +364,7 @@ class DaoCollection(metaclass=Singleton):
 
         # on modifie pas le titre du manga, sinon --> suppression du manga
         query = """
+
         UPDATE collection_physique_mangas
         SET 
             numero_dernier_tome = %(numero_dernier_tome)s,

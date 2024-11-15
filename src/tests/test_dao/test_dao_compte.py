@@ -9,13 +9,14 @@ from business_object.utilisateur import Utilisateur
 
 class TestDaoCompte(unittest.TestCase):
     def test_creer_utilisateur(self):
-        utilisateur = Utilisateur("test_user33", "mdptest32")
-        print("************")
+        utilisateur = Utilisateur("test_user85", "mdptest85")
         creation_user = DaoCompte().creer_utilisateur(utilisateur)
         assert creation_user
+        suppression = DaoCompte().supprimer_utilisateur(utilisateur.id_utilisateur)
+        assert suppression
 
     def test_trouver_utilisateur_par_id_true(self):
-        found_utilisateur = DaoCompte().trouver_utilisateur_par_id(12)
+        found_utilisateur = DaoCompte().trouver_utilisateur_par_id(16)
         assert found_utilisateur is not None
 
     def test_trouver_utilisateur_par_nom_true(self):
@@ -23,23 +24,23 @@ class TestDaoCompte(unittest.TestCase):
         assert found_utilisateur is not None
 
     def test_mettre_a_jour_utilisateur(self):
-        # Test updating a user
         updated_utilisateur = DaoCompte().mettre_a_jour_utilisateur(
-            37, "new_name15", "new_password15"
+            42, "new_name20", "new_password110"
         )
         assert updated_utilisateur
 
     def test_lister_tous(self):
         utilisateurs = DaoCompte().lister_tous()
-
-        # Assertions
-        assert len(utilisateurs) == 15
-        assert utilisateurs[0].nom_utilisateur == "test_user25"
+        assert len(utilisateurs) == 21
+        assert utilisateurs[0].nom_utilisateur == "test_user26"
 
     def test_supprimer_utilisateur(self):
-        # Test deleting a user
-        result = DaoCompte().supprimer_utilisateur(37)
+        utilisateur = DaoCompte().trouver_utilisateur_par_id(58)
+        assert utilisateur is not None
+        result = DaoCompte().supprimer_utilisateur(58)
         assert result is True
+        ajout = DaoCompte().creer_utilisateur(utilisateur)
+        assert ajout
 
 
 """def tearDown(self):

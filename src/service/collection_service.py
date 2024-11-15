@@ -23,7 +23,6 @@ class ServiceCollection:
         numeros_tomes_manquants,
         status,
         schema,
-        id_manga,
     ) -> bool:
         if type_collection == "Physique":
             collection = CollectionPhysique(
@@ -40,7 +39,7 @@ class ServiceCollection:
             logging.error("Type de collection inconnu.")
             return False
 
-        return self.dao_collection.creer(id_utilisateur, collection, schema, id_manga)
+        return self.dao_collection.creer(id_utilisateur, collection, schema)
 
     def lister_collections_coherentes(
         self, id_utilisateur: int, schema: str
@@ -116,7 +115,7 @@ class ServiceCollection:
         self, id_utilisateur: int, schema: str
     ) -> List[CollectionPhysique]:
 
-        return self.dao_collection.lister_collections_physiques(id_utilisateur, schema)
+        return self.dao_collection.rechercher_collection_physique(id_utilisateur, schema)
 
     def ajouter_mangas_collection_coherente(
         self, collection_id: int, liste_mangas: List[int], schema: str
@@ -143,7 +142,9 @@ class ServiceCollection:
     def supprimer_collection(self, id_collection, type_collection, schema: str) -> bool:
 
         if type_collection == "Coherente":
-            collection = CollectionCoherente(id_collection=id_collection)
+            collection = CollectionCoherente(
+                id_collection=id_collection, titre=None, description=None
+            )
         elif type_collection == "Physique":
             collection = CollectionPhysique(id_collection=id_collection)
         else:
