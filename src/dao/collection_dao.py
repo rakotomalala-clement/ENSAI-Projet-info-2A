@@ -251,7 +251,7 @@ class DaoCollection(metaclass=Singleton):
         numero_dernier_tome,
         numeros_tomes_manquants,
         status_manga,
-        schema
+        schema,
     ) -> bool:
 
         try:
@@ -387,7 +387,7 @@ class DaoCollection(metaclass=Singleton):
         query = """
 
         UPDATE collection_physique_mangas
-        SET 
+        SET
             numero_dernier_tome = %(numero_dernier_tome)s,
             numeros_tomes_manquants = %(numeros_tomes_manquants)s,
             status_manga = %(status_manga)s
