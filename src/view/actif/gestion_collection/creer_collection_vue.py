@@ -31,9 +31,6 @@ class CreerCollectionVue(VueAbstraite):
             type_collection="Coherente",
             titre=nom_collection,
             description=description_collection,
-            dernier_tome_acquis=None,
-            numeros_tomes_manquants=None,
-            status=None,
             schema="projet_info_2a",
         )
 

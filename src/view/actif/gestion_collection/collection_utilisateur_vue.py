@@ -36,7 +36,7 @@ class CollectionUtilisateurVue(VueAbstraite):
             "Supprimer un manga",
             "Modifier les informations sur la collection",
             "Supprimer la collection",
-            "Retour au menu",
+            "Revenir au menu principal",
         ]
 
         choix = inquirer.select(
@@ -90,6 +90,8 @@ class CollectionUtilisateurVue(VueAbstraite):
                     nouvelle_description,
                     "projet_info_2a",
                 )
+
+                # On veut recharcher notre collection une fois modifier
 
                 return CollectionUtilisateurVue(self.collection).choisir_menu()
 

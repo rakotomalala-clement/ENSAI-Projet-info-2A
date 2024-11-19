@@ -69,7 +69,10 @@ class GestionCollectionVue(VueAbstraite):
                 ).execute()
 
                 if nom_collection_choisi == "Retour au menu":
-                    return GestionCollectionVue().choisir_menu()
+                    if Session().connecte:
+                        return AccueilConnecteVue().choisir_menu()
+                    else:
+                        return AccueilVue().choisir_menu()
 
                 else:
 
