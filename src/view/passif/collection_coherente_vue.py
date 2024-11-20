@@ -1,6 +1,7 @@
 from InquirerPy import inquirer
 from view.vue_abstraite import VueAbstraite
 from service.collection_service import ServiceCollection
+from service.avis_service import ServiceAvis
 
 
 class CollectionCoherenteVue(VueAbstraite):
@@ -20,12 +21,12 @@ class CollectionCoherenteVue(VueAbstraite):
 
         print("\n" + "-" * 50 + "\nCollection:", self.collection.titre, "\n" + "-" * 50 + "\n")
 
-        # liste_avis = ServiceAvis().
-        # if liste_avis is None:
-        #     print("")
-        # else:
-        #     for avis in liste_avis:
-        #         print("Note: ", avis.note, ", ", avis.avis)
+        liste_avis = ServiceAvis().afficher_avis_user(self.collection.id_collection)
+        if liste_avis is None:
+            print("")
+        else:
+            for avis in liste_avis:
+                print("Note: ", avis.note, ", ", avis.avis)
 
         print(self.collection.description)
         print("\nMangas de la collection:\n")

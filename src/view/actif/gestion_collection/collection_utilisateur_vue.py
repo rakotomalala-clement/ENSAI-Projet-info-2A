@@ -4,7 +4,6 @@ from view.passif.connexion.session import Session
 from view.passif.accueil_vue import AccueilVue
 from view.actif.accueil_connecte_vue import AccueilConnecteVue
 from service.collection_service import ServiceCollection
-from service.avis_service import ServiceAvis
 
 
 class CollectionUtilisateurVue(VueAbstraite):
@@ -31,11 +30,6 @@ class CollectionUtilisateurVue(VueAbstraite):
         for manga in liste_manga:
             print(manga.titre)
         print("\n")
-
-        liste_avis = ServiceAvis().afficher_avis_user(self.collection.id_collection)
-        if liste_avis:
-            for avis in liste_avis:
-                print(avis.note, " : ", avis.avis)
 
         modif_collection = [
             "Ajouter manga",
