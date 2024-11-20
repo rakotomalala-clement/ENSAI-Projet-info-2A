@@ -40,8 +40,8 @@ class InscriptionVue(VueAbstraite):
         ServiceCollection().creer_collection(
             id_utilisateur=id_utilisateur,
             type_collection="Physique",
-            titre="Collection physique",
-            description=f"collection_physique de {nom_utilisateur}",
+            titre="Collection physique",  # ne sert à rien
+            description=f"collection_physique de {nom_utilisateur}",  # ne sert à rien
             schema="projet_info_2a",
         )
 

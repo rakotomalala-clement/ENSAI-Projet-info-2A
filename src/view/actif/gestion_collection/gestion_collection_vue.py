@@ -52,10 +52,6 @@ class GestionCollectionVue(VueAbstraite):
                     id_utilisateur, "projet_info_2a"
                 )
 
-                collection_physique = ServiceCollection().rechercher_collection_physique(
-                    id_utilisateur, "projet_info_2a"
-                )
-
                 # if liste_collections == []:
                 #     print("\nVous n'avez pas encore de collection.")
                 #     return GestionCollectionVue().choisir_menu()
@@ -80,7 +76,7 @@ class GestionCollectionVue(VueAbstraite):
                         PhysiqueUtilisateurVue,
                     )
 
-                    return PhysiqueUtilisateurVue(collection_physique).choisir_menu()
+                    return PhysiqueUtilisateurVue().choisir_menu()
 
                 if nom_collection_choisi == "Retour au menu":
                     if Session().connecte:
