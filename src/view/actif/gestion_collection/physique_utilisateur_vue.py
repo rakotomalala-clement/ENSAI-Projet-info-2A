@@ -5,6 +5,7 @@ from view.passif.accueil_vue import AccueilVue
 from view.actif.accueil_connecte_vue import AccueilConnecteVue
 from service.collection_service import ServiceCollection
 from service.manga_service import MangaService
+from service.avis_service import ServiceAvis
 
 
 class PhysiqueUtilisateurVue(VueAbstraite):
@@ -47,6 +48,15 @@ class PhysiqueUtilisateurVue(VueAbstraite):
                 print(manga.status_manga)
                 print("\n")
             print("\n")
+
+        id_collection = ServiceCollection().obtenir_id_collection_par_utilisateur(
+            id_utilisateur, "projet_info_2a"
+        )
+
+        liste_avis = ServiceAvis().afficher_avis_collection_physique(id_collection)
+        if liste_avis:
+            for avis in liste_avis:
+                print(avis.note, " : ", avis.avis)
 
         modif_collection = [
             "Ajouter manga",
