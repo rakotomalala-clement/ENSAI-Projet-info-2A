@@ -37,8 +37,6 @@ class InscriptionVue(VueAbstraite):
             ServiceUtilisateur().trouver_utilisateur_par_nom(nom_utilisateur).id_utilisateur
         )
 
-        print(id_utilisateur)
-
         ServiceCollection().creer_collection(
             id_utilisateur=id_utilisateur,
             type_collection="Physique",
