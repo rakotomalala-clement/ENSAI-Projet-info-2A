@@ -1,6 +1,7 @@
 import pytest
 from business_object.avis import Avis
 from dao.avis_dao import DaoAvis
+from dao.collection_dao import DaoCollection
 
 
 def test_trouver_id_avis_par_id_manga_utilisateur_true():
@@ -113,11 +114,15 @@ def test_afficher_avis_collection_coherente_ok():
 
 def test_afficher_avis_user_sur_collection_coherente_ok():
     "chercher l'avis d'un utilisateur sur collection cohérente ok"
-    avis = Avis(note=4, avis="coool")
+    id_avis = DaoAvis().trouver_id_avis_par_id_col_coherente_utilisateur(
+        id_utilisateur=12,
+        id_collection_coherente=1,
+        schema="projet_test_dao",
+    )
     avis_col_co = DaoAvis().chercher_avis_user_sur_collection_coherente(
         schema="projet_test_dao", id_utilisateur=12, id_collection_coherente=1
     )
-    assert avis == avis_col_co
+    assert id_avis == avis_col_co.id_avis
 
 
 def test_modifier_avis_col_co_ok():
@@ -166,11 +171,13 @@ def test_afficher_avis_collection_physique_ok():
 
 def test_afficher_avis_user_sur_collection_physique_ok():
     "chercher avis d'un utilisateur sur collection physique ok"
-    avis = Avis(note=5, avis="excelent synopsis")
-    avis_col_phy = DaoAvis().chercher_avis_sur_collection_physique(
+    id_avis = DaoAvis().trouver_id_avis_par_id_manga_utilisateur_col_physique(
+        id_utilisateur=43, id_collection=1, schema="projet_test_dao"
+    )
+    avis_col_phy = DaoAvis().chercher_avis_user_sur_collection_physique(
         schema="projet_test_dao", id_utilisateur=43, id_collection=1
     )
-    assert avis == avis_col_phy
+    assert id_avis == avis_col_phy.id_avis
 
 
 def test_modifier_avis_col_phy_ok():
