@@ -170,7 +170,9 @@ class ServiceCollection:
         schema: str,
     ) -> bool:
         id_manga = MangaDao().trouver_id_par_titre(schema, titre_manga)
-        id_collection = DaoCollection().obtenir_id_collection_par_utilisateur(id_utilisateur)
+        id_collection = DaoCollection().obtenir_id_collection_par_utilisateur(
+            id_utilisateur, schema
+        )
         manga_collection = MangaDansCollection(
             manga=titre_manga,
             dernier_tome_acquis=dernier_tome_acquis,
@@ -180,3 +182,6 @@ class ServiceCollection:
         return self.dao_collection.modifier_collection_physique(
             manga_collection, id_collection, id_manga, schema
         )
+
+    def obtenir_id_collection_par_utilisateur(self, id_utilisateur, schema):
+        return self.dao_collection.obtenir_id_collection_par_utilisateur(id_utilisateur, schema)

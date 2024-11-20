@@ -224,7 +224,7 @@ class DaoCollection(metaclass=Singleton):
             return False
 
     # méthode  utilisée dans la méthode : ajouter_manga_collection_physique
-    def obtenir_id_collection_par_utilisateur(id_utilisateur, schema):
+    def obtenir_id_collection_par_utilisateur(self, id_utilisateur, schema):
         try:
             with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:

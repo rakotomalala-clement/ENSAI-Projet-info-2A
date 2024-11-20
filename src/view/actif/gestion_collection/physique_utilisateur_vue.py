@@ -50,7 +50,7 @@ class PhysiqueUtilisateurVue(VueAbstraite):
         modif_collection = [
             "Ajouter manga",
             "Supprimer un manga",
-            "Modifier les informations sur la collection",
+            "Modifier les informations d'un manga",
             "Revenir au menu principal",
         ]
 
@@ -95,29 +95,37 @@ class PhysiqueUtilisateurVue(VueAbstraite):
                 return PhysiqueUtilisateurVue().choisir_menu()
 
             case "Supprimer un manga":
-                from service.manga_service import MangaService
 
-                liste_mangas_dans_collection = ServiceCollection().lister_mangas_collection(
-                    self.collection.id_collection, "projet_info_2a"
-                )
+                # id_collection = ServiceCollection().methode(id_utilisateur, "projet_info_2a")
 
-                if liste_mangas_dans_collection == []:
-                    print("Il n'y a actuellement aucun manga dans cette collection \n")
-                    return CollectionUtilisateurVue(self.collection).choisir_menu()
-
-                liste_nom_mangas_dans_collection = []
-                for manga in liste_mangas_dans_collection:
-                    liste_nom_mangas_dans_collection.append(manga.titre)
+                liste_nom_mangas_collection = []
+                for manga in collection_physique:
+                    liste_nom_mangas_collection.append(manga.titre_manga)
 
                 titre = inquirer.fuzzy(
                     message="Quel manga souhaitez-vous supprimer?",
-                    choices=liste_nom_mangas_dans_collection,
+                    choices=liste_nom_mangas_collection,
                 ).execute()
 
                 id_manga = MangaService().trouver_id_par_titre(titre)
 
-                ServiceCollection().supprimer_manga_col_coherente(
-                    self.collection.id_collection, id_manga, "projet_info_2a"
+                ServiceCollection().supprimer_manga_col_physique(
+                    id_collection, id_manga, "projet_info_2a"
+                )
+
+            case "Modifier les informations d'un manga":
+                nouveau_titre = inquirer.text(
+                    message="Quel est le nouveau titre de votre collection"
+                ).execute()
+                nouvelle_description = inquirer.text(
+                    message="Quelle est la nouvelle description de votre collection"
+                ).execute()
+
+                ServiceCollection().modifier_collection_coherente(
+                    self.collection.id_collection,
+                    nouveau_titre,
+                    nouvelle_description,
+                    "projet_info_2a",
                 )
 
                 # On veut recharger notre collection une fois modifier
@@ -135,45 +143,10 @@ class PhysiqueUtilisateurVue(VueAbstraite):
 
                 collection_modifie = None
                 for collection in liste_collections:
-                    if collection.titre == self.collection.titre:
+                    if collection.titre == nouveau_titre:
                         collection_modifie = collection
 
                 return CollectionUtilisateurVue(collection_modifie).choisir_menu()
-
-            # case "Modifier les informations sur la collection":
-            #     nouveau_titre = inquirer.text(
-            #         message="Quel est le nouveau titre de votre collection"
-            #     ).execute()
-            #     nouvelle_description = inquirer.text(
-            #         message="Quelle est la nouvelle description de votre collection"
-            #     ).execute()
-
-            #     ServiceCollection().modifier_collection_coherente(
-            #         self.collection.id_collection,
-            #         nouveau_titre,
-            #         nouvelle_description,
-            #         "projet_info_2a",
-            #     )
-
-            #     # On veut recharger notre collection une fois modifier
-            #     from service.Service_Utilisateur import ServiceUtilisateur
-
-            #     id_utilisateur = (
-            #         ServiceUtilisateur()
-            #         .trouver_utilisateur_par_nom(Session().nom_utilisateur)
-            #         .id_utilisateur
-            #     )
-
-            #     liste_collections = ServiceCollection().lister_collections_coherentes(
-            #         id_utilisateur, "projet_info_2a"
-            #     )
-
-            #     collection_modifie = None
-            #     for collection in liste_collections:
-            #         if collection.titre == nouveau_titre:
-            #             collection_modifie = collection
-
-            #     return CollectionUtilisateurVue(collection_modifie).choisir_menu()
 
             # case "Supprimer la collection":
 
