@@ -52,24 +52,37 @@ class GestionCollectionVue(VueAbstraite):
                     id_utilisateur, "projet_info_2a"
                 )
 
-                if liste_collections == []:
-                    print("\nVous n'avez pas encore de collection.")
-                    return GestionCollectionVue().choisir_menu()
+                # if liste_collections == []:
+                #     print("\nVous n'avez pas encore de collection.")
+                #     return GestionCollectionVue().choisir_menu()
 
                 liste_nom_collections = []
                 for collection in liste_collections:
                     liste_nom_collections.append(collection.titre)
 
+                # Ajout de la collection physique
+                liste_nom_collections.append("Collection Physique")
+
                 # Ajout de la possibilité de revenir au menu
                 liste_nom_collections.append("Retour au menu")
 
                 nom_collection_choisi = inquirer.select(
-                    message="Quelle collection souhaitez-vous modifier/supprimer?",
+                    message="Quelle collection souhaitez-vous modifier/supprimer? \n",
                     choices=liste_nom_collections,
                 ).execute()
 
+                if nom_collection_choisi == "Collection Physique":
+                    from view.actif.gestion_collection.physique_utilisateur_vue import (
+                        PhysiqueUtilisateurVue,
+                    )
+
+                    return PhysiqueUtilisateurVue().choisir_menu()
+
                 if nom_collection_choisi == "Retour au menu":
-                    return GestionCollectionVue().choisir_menu()
+                    if Session().connecte:
+                        return AccueilConnecteVue().choisir_menu()
+                    else:
+                        return AccueilVue().choisir_menu()
 
                 else:
 

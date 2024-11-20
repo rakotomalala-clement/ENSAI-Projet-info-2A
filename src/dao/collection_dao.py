@@ -171,7 +171,7 @@ class DaoCollection(metaclass=Singleton):
 
                 collection = [
                     MangaDansCollection(
-                        manga=result[1],
+                        titre_manga=result[1],
                         dernier_tome_acquis=result[2],
                         numeros_tomes_manquants=result[3],
                         status_manga=result[4],
@@ -224,7 +224,7 @@ class DaoCollection(metaclass=Singleton):
             return False
 
     # méthode  utilisée dans la méthode : ajouter_manga_collection_physique
-    def obtenir_id_collection_par_utilisateur(id_utilisateur, schema):
+    def obtenir_id_collection_par_utilisateur(self, id_utilisateur, schema):
         try:
             with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
@@ -256,7 +256,7 @@ class DaoCollection(metaclass=Singleton):
 
         try:
             # Étape 1: Récupérer l'id_collection correspondant à l'id_utilisateur
-            id_collection = DaoCollection.obtenir_id_collection_par_utilisateur(
+            id_collection = DaoCollection().obtenir_id_collection_par_utilisateur(
                 id_utilisateur, schema
             )
 

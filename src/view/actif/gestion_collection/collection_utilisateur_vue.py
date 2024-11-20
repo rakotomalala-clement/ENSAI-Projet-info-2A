@@ -36,7 +36,7 @@ class CollectionUtilisateurVue(VueAbstraite):
             "Supprimer un manga",
             "Modifier les informations sur la collection",
             "Supprimer la collection",
-            "Retour au menu",
+            "Revenir au menu principal",
         ]
 
         choix = inquirer.select(
@@ -66,15 +66,50 @@ class CollectionUtilisateurVue(VueAbstraite):
                 return CollectionUtilisateurVue(self.collection).choisir_menu()
 
             case "Supprimer un manga":
-                return 0
-                # liste_mangas = ServiceCollection().
-                # liste_nom_mangas = []
-                # for manga in liste_mangas:
-                #     liste_nom_mangas.append(manga.titre)
+                from service.manga_service import MangaService
 
-                # titre = inquirer.fuzzy(
-                #     message="Quel manga souhaitez-vous ajouter?", choices=liste_nom_mangas
-                # ).execute()
+                liste_mangas_dans_collection = ServiceCollection().lister_mangas_collection(
+                    self.collection.id_collection, "projet_info_2a"
+                )
+
+                if liste_mangas_dans_collection == []:
+                    print("Il n'y a actuellement aucun manga dans cette collection \n")
+                    return CollectionUtilisateurVue(self.collection).choisir_menu()
+
+                liste_nom_mangas_dans_collection = []
+                for manga in liste_mangas_dans_collection:
+                    liste_nom_mangas_dans_collection.append(manga.titre)
+
+                titre = inquirer.fuzzy(
+                    message="Quel manga souhaitez-vous supprimer?",
+                    choices=liste_nom_mangas_dans_collection,
+                ).execute()
+
+                id_manga = MangaService().trouver_id_par_titre(titre)
+
+                ServiceCollection().supprimer_manga_col_coherente(
+                    self.collection.id_collection, id_manga, "projet_info_2a"
+                )
+
+                # On veut recharger notre collection une fois modifier
+                from service.Service_Utilisateur import ServiceUtilisateur
+
+                id_utilisateur = (
+                    ServiceUtilisateur()
+                    .trouver_utilisateur_par_nom(Session().nom_utilisateur)
+                    .id_utilisateur
+                )
+
+                liste_collections = ServiceCollection().lister_collections_coherentes(
+                    id_utilisateur, "projet_info_2a"
+                )
+
+                collection_modifie = None
+                for collection in liste_collections:
+                    if collection.titre == self.collection.titre:
+                        collection_modifie = collection
+
+                return CollectionUtilisateurVue(collection_modifie).choisir_menu()
 
             case "Modifier les informations sur la collection":
                 nouveau_titre = inquirer.text(
@@ -91,7 +126,25 @@ class CollectionUtilisateurVue(VueAbstraite):
                     "projet_info_2a",
                 )
 
-                return CollectionUtilisateurVue(self.collection).choisir_menu()
+                # On veut recharger notre collection une fois modifier
+                from service.Service_Utilisateur import ServiceUtilisateur
+
+                id_utilisateur = (
+                    ServiceUtilisateur()
+                    .trouver_utilisateur_par_nom(Session().nom_utilisateur)
+                    .id_utilisateur
+                )
+
+                liste_collections = ServiceCollection().lister_collections_coherentes(
+                    id_utilisateur, "projet_info_2a"
+                )
+
+                collection_modifie = None
+                for collection in liste_collections:
+                    if collection.titre == nouveau_titre:
+                        collection_modifie = collection
+
+                return CollectionUtilisateurVue(collection_modifie).choisir_menu()
 
             case "Supprimer la collection":
 
