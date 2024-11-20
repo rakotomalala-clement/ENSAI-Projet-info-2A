@@ -174,7 +174,7 @@ class ServiceCollection:
             id_utilisateur, schema
         )
         manga_collection = MangaDansCollection(
-            manga=titre_manga,
+            titre_manga=titre_manga,
             dernier_tome_acquis=dernier_tome_acquis,
             numeros_tomes_manquants=numeros_tomes_manquants,
             status_manga=status_manga,

@@ -256,7 +256,7 @@ class DaoCollection(metaclass=Singleton):
 
         try:
             # Étape 1: Récupérer l'id_collection correspondant à l'id_utilisateur
-            id_collection = DaoCollection.obtenir_id_collection_par_utilisateur(
+            id_collection = DaoCollection().obtenir_id_collection_par_utilisateur(
                 id_utilisateur, schema
             )
 
