@@ -139,7 +139,7 @@ class PhysiqueUtilisateurVue(VueAbstraite):
 
                 choix = inquirer.select(
                     message="Que souhaitez vous faire?",
-                    choices=["Ajouter un tome", "Changer le statut de lecture"],
+                    choices=["Ajouter un tome", "Changer le statut de lecture", "Retour au menu"],
                 ).execute()
 
                 match choix:
@@ -187,6 +187,9 @@ class PhysiqueUtilisateurVue(VueAbstraite):
                             status_manga,
                             "projet_info_2a",
                         )
+
+                    case "Retour au menu":
+                        return PhysiqueUtilisateurVue().choisir_menu()
 
                 return PhysiqueUtilisateurVue().choisir_menu()
 

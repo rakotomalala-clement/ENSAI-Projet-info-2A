@@ -37,7 +37,7 @@ class RechercheUtilisateurVue(VueAbstraite):
         # Ajout de la possibilité de retourner au menu principal
         liste_nom_utilisateurs.append("Retour au menu principal")
 
-        nom_utilisateur_choisi = inquirer.select(
+        nom_utilisateur_choisi = inquirer.fuzzy(
             message="Veuillez choisir l'utilisateur dont vous souhaitez consulter les collections",
             choices=liste_nom_utilisateurs,
         ).execute()
@@ -61,22 +61,11 @@ class RechercheUtilisateurVue(VueAbstraite):
                 id_utilisateur, "projet_info_2a"
             )
 
-            liste_nom_collections = []
+            liste_nom_collections = ["Collection physique"]
 
             if not (liste_collections is None):
                 for collection in liste_collections:
                     liste_nom_collections.append(collection.titre)
-
-            # Ajout de la possibilité d'accéder à la collection physique
-            # de l'utilisateur s'il en possède une
-            collection_physique = ServiceCollection().rechercher_collection_physique(
-                id_utilisateur, "projet_info_2a"
-            )
-
-            if collection_physique == []:
-                print("L'utilisateur n'a pas de collection physique, a prioiri c'est une erreur")
-            else:
-                liste_nom_collections.append("Collection physique")
 
             # Ajout de la possibilité de retourner au menu principal
             liste_nom_collections.append("Retour au menu principal")
@@ -95,9 +84,35 @@ class RechercheUtilisateurVue(VueAbstraite):
             elif nom_collection_choisi == "Collection physique":
                 print("\nCollection physique de", nom_utilisateur_choisi, ":\n")
 
-                for manga in collection_physique:
-                    print(manga.manga)  # le deuxième manga (dans manga.manga) étant le titre
-                print("\n")
+                collection_physique = ServiceCollection().rechercher_collection_physique(
+                    id_utilisateur, "projet_info_2a"
+                )
+
+                # afficher les mangas de la collection
+                if collection_physique == "Aucun manga ajouté":
+                    print(
+                        "Aucun manga dans la collection physique de", nom_utilisateur_choisi, "\n"
+                    )
+                else:
+                    for manga in collection_physique:
+                        print(manga.titre_manga)
+                        print(manga.dernier_tome_acquis)
+                        print(manga.numeros_tomes_manquants)
+                        print(manga.status_manga)
+                        print("\n")
+                    print("\n")
+
+                # Affichage des avis sur cette collection
+                from service.avis_service import ServiceAvis
+
+                liste_avis = ServiceAvis().afficher_avis_collection_physique(
+                    self.collection.id_collection
+                )
+                if liste_avis is None:
+                    print("")
+                else:
+                    for avis in liste_avis:
+                        print("Note: ", avis.note, ", ", avis.avis)
 
                 if Session().connecte:
                     choix = inquirer.select(
@@ -112,13 +127,16 @@ class RechercheUtilisateurVue(VueAbstraite):
                         message="Choississez une action à réaliser",
                         choices=[
                             "Retourner au menu de recherche d'utilisateur",
+                            "Gérer ses avis sur la collection",
                         ],
                     ).execute()
 
                 match choix:
 
                     case "Gérer ses avis sur la collection":
-                        return 0
+                        from view.actif.avis.avis_physique_vue import AvisPhysiqueVue
+
+                        return AvisPhysiqueVue(nom_utilisateur_choisi).choisir_menu()
 
                     case "Retourner au menu de recherche d'utilisateur":
                         return RechercheUtilisateurVue().choisir_menu()

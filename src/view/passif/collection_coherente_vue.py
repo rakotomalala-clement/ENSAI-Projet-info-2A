@@ -21,7 +21,7 @@ class CollectionCoherenteVue(VueAbstraite):
 
         print("\n" + "-" * 50 + "\nCollection:", self.collection.titre, "\n" + "-" * 50 + "\n")
 
-        liste_avis = ServiceAvis().afficher_avis_user(self.collection.id_collection)
+        liste_avis = ServiceAvis().afficher_avis_collection_coherente(self.collection.id_collection)
         if liste_avis is None:
             print("")
         else:
@@ -58,7 +58,9 @@ class CollectionCoherenteVue(VueAbstraite):
 
         match choix:
             case "Gérer ses avis sur la collection":
-                return 0
+                from view.actif.avis.avis_coherent_vue import AvisCoherentVue
+
+                return AvisCoherentVue(self.collection).choisir_menu()
 
             case "Retourner au menu de recherche d'utilisateur":
                 from view.passif.recherche_utilisateur_vue import RechercheUtilisateurVue
