@@ -90,7 +90,7 @@ class ServiceAvis:
         )
 
         if len(avis_user_sur_col_co) > 0:
-            return avis_user_sur_col_co
+            return avis_user_sur_col_co[0]
         else:
             return None
 
@@ -105,7 +105,7 @@ class ServiceAvis:
         )
 
         if len(avis_user_sur_col_phy) > 0:
-            return avis_user_sur_col_phy
+            return avis_user_sur_col_phy[0]
         else:
             return None
 
