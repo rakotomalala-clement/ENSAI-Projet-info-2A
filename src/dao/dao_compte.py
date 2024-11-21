@@ -14,7 +14,11 @@ class DaoCompte(metaclass=Singleton):
 
     def creer_utilisateur(self, utilisateur: Utilisateur) -> bool:
         try:
-            with DBConnection("projet_info_2a").connection as connection:
+
+            if len(utilisateur.nom_utilisateur.encode("utf-8")) > 50:
+                print("Nom très long")
+                return False
+            with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "INSERT INTO utilisateur (nom_utilisateur, mdp)"
