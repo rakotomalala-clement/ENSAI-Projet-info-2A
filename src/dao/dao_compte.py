@@ -5,18 +5,40 @@ from utils.singleton import Singleton
 from dao.db_connection import DBConnection
 from utils.log_decorator import log
 import logging
-
+import re
 from dao.db_connection import DBConnection
 import os
 
 
 class DaoCompte(metaclass=Singleton):
 
+    def _valider_mot_de_passe(self, mot_de_passe: str) -> bool:
+        """Vérifie la validité du mot de passe selon des critères de sécurité."""
+        if len(mot_de_passe) < 8:
+            print("Le mot de passe doit contenir au moins 8 caractères.")
+            return False
+
+        if not re.search(r"[A-Z]", mot_de_passe):
+            print("Le mot de passe doit contenir au moins une majuscule.")
+            return False
+
+        if not re.search(r"\d", mot_de_passe):
+            print("Le mot de passe doit contenir au moins un chiffre.")
+            return False
+
+        if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", mot_de_passe):
+            print("Le mot de passe doit contenir au moins un caractère spécial.")
+            return False
+
+        return True
+
     def creer_utilisateur(self, utilisateur: Utilisateur) -> bool:
         try:
 
             if len(utilisateur.nom_utilisateur.encode("utf-8")) > 50:
                 print("Nom très long")
+                return False
+            if not self._valider_mot_de_passe(utilisateur.mdp):
                 return False
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
@@ -118,13 +140,6 @@ class DaoCompte(metaclass=Singleton):
                 cursor.execute(delete_query, {"id_utilisateur": id_utilisateur})
                 connection.commit()
         return True
-
-    @log
-    def fermer_connexion(self):
-        with DBConnection("projet_info_2a").connection as connection:
-            with connection.cursor() as cursor:
-                cursor.close()
-                connection.close()
 
     def lister_tous(self) -> list[Utilisateur]:
 
