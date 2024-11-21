@@ -27,7 +27,7 @@ class ServiceAvis:
             return (
                 nouveau_avis_collection
                 if DaoAvis().creer_avis_collection_coherente(
-                    id_utilisateur, id_collection, nouveau_avis_collection
+                    id_utilisateur, id_collection, nouveau_avis_collection, "projet_info_2a"
                 )
                 else None
             )
@@ -35,7 +35,7 @@ class ServiceAvis:
             return (
                 nouveau_avis_collection
                 if DaoAvis().creer_avis_collection_physique(
-                    id_utilisateur, id_collection, nouveau_avis_collection
+                    id_collection, id_utilisateur, nouveau_avis_collection, "projet_info_2a"
                 )
                 else None
             )

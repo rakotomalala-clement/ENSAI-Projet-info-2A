@@ -64,7 +64,7 @@ class AvisPhysiqueVue(VueAbstraite):
                         ).execute()
 
                     avis = inquirer.text(
-                        message="Veuillez entrer votre avis sur ce manga"
+                        message="Veuillez entrer votre avis sur cette collection"
                     ).execute()
 
                     ServiceAvis().ajouter_avis_collection(
@@ -93,7 +93,7 @@ class AvisPhysiqueVue(VueAbstraite):
                         ).execute()
 
                     nouvel_avis = inquirer.text(
-                        message="Veuillez entrer votre avis sur ce manga"
+                        message="Veuillez entrer votre avis sur cette collection"
                     ).execute()
 
                     ServiceAvis().modifier_collection_physique(
