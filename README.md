@@ -37,8 +37,4 @@ How to install it?
 
 ### Launch the Application
 
-You can now run the application, the web service, or the unit tests:
-
-- `python src/__main__.py` (then start by re-initializing the database)
-- `python src/app.py` (to be tested)
-- `pytest -v`
+You can now run the application by launching main.py or by writting "python src/main.py" in your console:
