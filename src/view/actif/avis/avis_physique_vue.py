@@ -108,7 +108,7 @@ class AvisPhysiqueVue(VueAbstraite):
                     print("Vous n'avez pas encore d'avis sur ce manga")
                     return AvisPhysiqueVue(self.id_utilisateur_collection).choisir_menu()
                 else:
-                    ServiceAvis().supprimer(avis.id_avis)
+                    ServiceAvis().supprimer_avis_collection_physique(avis.id_avis)
                     return AvisPhysiqueVue(self.id_utilisateur_collection).choisir_menu()
 
             case "Retourner au menu de recherche d'utilisateur":
