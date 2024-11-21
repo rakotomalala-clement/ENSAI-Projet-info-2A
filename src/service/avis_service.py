@@ -90,7 +90,7 @@ class ServiceAvis:
         )
 
         if len(avis_user_sur_col_co) > 0:
-            return avis_user_sur_col_co
+            return avis_user_sur_col_co[0]
         else:
             return None
 
@@ -105,7 +105,7 @@ class ServiceAvis:
         )
 
         if len(avis_user_sur_col_phy) > 0:
-            return avis_user_sur_col_phy
+            return avis_user_sur_col_phy[0]
         else:
             return None
 
@@ -164,11 +164,21 @@ class ServiceAvis:
         return DaoAvis().supprimer_avis("projet_info_2a", id_avis)
 
     @log
+    def supprimer_avis_collection_cohérente(self, id_avis):
+        return DaoAvis().supprimer_avis_col_coherente(
+            schema="projet_info_2a", id_avis_collection_coherente=id_avis
+        )
+
+    @log
+    def supprimer_avis_collection_physique(self, id_avis):
+        return DaoAvis().supprimer_avis_col_physique(
+            schema="projet_info_2a", id_avis_collection_physique=id_avis
+        )
+
+    @log
     def afficher_autre_avis(self, id_manga):
         """Afficher les avis laisser sous  un manga"""
-
-        avis_user_sur_manga = DaoAvis().chercher_avis_sur_manga("projet_test_dao", id_manga)
-
+        avis_user_sur_manga = DaoAvis().chercher_avis_sur_manga("projet_info_2a", id_manga)
         if len(avis_user_sur_manga) > 0:
             return avis_user_sur_manga
         else:

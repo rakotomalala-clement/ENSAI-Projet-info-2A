@@ -122,7 +122,7 @@ def test_afficher_avis_user_sur_collection_coherente_ok():
     avis_col_co = DaoAvis().chercher_avis_user_sur_collection_coherente(
         schema="projet_test_dao", id_utilisateur=12, id_collection_coherente=1
     )
-    assert id_avis == avis_col_co.id_avis
+    assert id_avis == avis_col_co[0].id_avis
 
 
 def test_modifier_avis_col_co_ok():
@@ -177,7 +177,7 @@ def test_afficher_avis_user_sur_collection_physique_ok():
     avis_col_phy = DaoAvis().chercher_avis_user_sur_collection_physique(
         schema="projet_test_dao", id_utilisateur=43, id_collection=1
     )
-    assert id_avis == avis_col_phy.id_avis
+    assert id_avis == avis_col_phy[0].id_avis
 
 
 def test_modifier_avis_col_phy_ok():

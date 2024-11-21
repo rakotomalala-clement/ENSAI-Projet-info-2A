@@ -1,7 +1,5 @@
 from InquirerPy import inquirer
 from view.vue_abstraite import VueAbstraite
-from view.passif.accueil_vue import AccueilVue
-from view.actif.accueil_connecte_vue import AccueilConnecteVue
 from view.passif.connexion.session import Session
 from service.avis_service import ServiceAvis
 from service.Service_Utilisateur import ServiceUtilisateur
@@ -27,12 +25,12 @@ class AvisCoherentVue(VueAbstraite):
         )
 
         choix = inquirer.select(
-            message="",
+            message="\n",
             choices=[
                 "Ajouter mon avis",
                 "Modifier mon avis",
                 "Supprimer mon avis",
-                "Retour au menu principal",
+                "Retourner au menu de recherche d'utilisateur",
             ],
         ).execute()
 
@@ -90,24 +88,20 @@ class AvisCoherentVue(VueAbstraite):
                 ).execute()
 
                 ServiceAvis().modifier_collection_cohérente(
-                    self.collection.id_collection, id_utilisateur, nouvel_avis, nouvelle_note
+                    self.collection.id_collection, id_utilisateur, nouvel_avis, int(nouvelle_note)
                 )
 
                 return AvisCoherentVue(self.collection).choisir_menu()
 
             case "Supprimer mon avis":
-                avis = ServiceAvis().afficher_avis_collection_coherente(
-                    self.collection.id_collection
-                )
                 if avis is None:
                     print("Vous n'avez pas encore d'avis sur cette collection")
                     return AvisCoherentVue(self.collection).choisir_menu()
 
-                ServiceAvis().supprimer(avis.id_avis)
+                ServiceAvis().supprimer_avis_collection_cohérente(avis.id_avis)
                 return AvisCoherentVue(self.collection).choisir_menu()
 
-            case "Retour au menu principal":
-                if Session().connecte:
-                    return AccueilConnecteVue().choisir_menu()
-                else:
-                    return AccueilVue().choisir_menu()
+            case "Retourner au menu de recherche d'utilisateur":
+                from view.passif.recherche_utilisateur_vue import RechercheUtilisateurVue
+
+                return RechercheUtilisateurVue().choisir_menu()
