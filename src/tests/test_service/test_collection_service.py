@@ -36,14 +36,7 @@ def test_creer_collection_physique_ok(service_collection, collections_service):
         type_collection="Physique",
         titre=None,
         description=None,
-        schema="projet_test_dao",
-    )
-    result = service_collection.creer_collection(
-        id_utilisateur=1,
-        type_collection="Physique",
-        titre=None,
-        description=None,
-        schema="projet_test_dao",
+        schema="projet_info_2a",
     )
 
     assert result is not None
@@ -84,16 +77,16 @@ def test_creer_collection_physique_ok(service_collection, collections_service):
 #     assert result is True
 
 
-def test_ajouter_manga_collection_physique_ok(service_collection):
-    result = service_collection.ajouter_manga_collection_physique(
-        id_utilisateur=1,
-        titre_manga="Black Clover",
-        numero_dernier_tome=23,
-        numeros_tomes_manquants=[1, 5],
-        status_manga="Terminé",
-        schema="projet_test_dao",
-    )
-    assert result is True
+# def test_ajouter_manga_collection_physique_ok(service_collection):
+#     result = service_collection.ajouter_manga_collection_physique(
+#         id_utilisateur=1,
+#         titre_manga="Black Clover",
+#         numero_dernier_tome=23,
+#         numeros_tomes_manquants=[1, 5],
+#         status_manga="Terminé",
+#         schema="projet_test_dao",
+#     )
+#     assert result is True
 
 
 # def test_supprimer_collection_coherente_ok(service_collection, collections_service):

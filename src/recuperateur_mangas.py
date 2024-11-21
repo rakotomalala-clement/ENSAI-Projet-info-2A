@@ -12,7 +12,8 @@ class RecuperateurManga:
 
         dotenv.load_dotenv()
 
-        page = 931
+        # 176371 mangas à récupérer
+        page = 2916
         while True:
             # Construction de l'URL pour chaque page de résultats
             url = f"{self.base_url}?page={page}"
