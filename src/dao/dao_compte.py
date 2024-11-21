@@ -34,12 +34,6 @@ class DaoCompte(metaclass=Singleton):
 
     def creer_utilisateur(self, utilisateur: Utilisateur) -> bool:
         try:
-
-            if len(utilisateur.nom_utilisateur.encode("utf-8")) > 50:
-                print("Nom très long")
-                return False
-            if not self._valider_mot_de_passe(utilisateur.mdp):
-                return False
             with DBConnection().connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(

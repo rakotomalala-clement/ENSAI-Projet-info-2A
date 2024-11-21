@@ -26,7 +26,21 @@ class InscriptionVue(VueAbstraite):
                 print("Ce nom d'utilisateur existe déjà")
                 return AccueilVue().choisir_menu()
 
-        mdp = inquirer.secret(message="Veuillez saisir un mot de passe").execute()
+        if len(nom_utilisateur.encode("utf-8")) > 50:
+            print("Nom trop long")
+            return AccueilVue().choisir_menu()
+
+        mdp = inquirer.secret(
+            message="Veuillez saisir un mot de passe selon les condition suivantes: \n"
+            + "Au moins 8 caractères \n"
+            + "Au moins une majuscule \n"
+            + "Au moins un chiffre \n"
+            + "Au moins un caractère spécial \n"
+        ).execute()
+
+        # Si le mot de passe n'est pas valide
+        if not ServiceUtilisateur()._valider_mot_de_passe(mdp):
+            return AccueilVue().choisir_menu()
 
         ServiceUtilisateur().sinscrire(nom_utilisateur, mdp)
 

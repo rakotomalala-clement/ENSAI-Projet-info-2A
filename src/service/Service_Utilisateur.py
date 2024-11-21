@@ -7,6 +7,10 @@ from utils.log_decorator import log
 class ServiceUtilisateur:
 
     @log
+    def _valider_mot_de_passe(self, mot_de_passe: str) -> bool:
+        return DaoCompte()._valider_mot_de_passe(mot_de_passe)
+
+    @log
     def sinscrire(self, nom_utilisateur: str, mot_de_passe=str) -> Utilisateur:
         utilisateur = DaoCompte().creer_utilisateur(
             Utilisateur(nom_utilisateur, hash_password(mot_de_passe, nom_utilisateur))
