@@ -1,8 +1,25 @@
-"""
 import pytest
 
 from service.avis_service import ServiceAvis
 
+
+def test_validation_avis_invalide_ok():
+    avis = "merde"
+    invalide = ServiceAvis().Validation_avis(avis=avis)
+    assert invalide is False
+
+
+def test_validation_avis_valide_ok():
+    avis = "cool"
+    invalide = ServiceAvis().Validation_avis(avis=avis)
+    assert invalide is True
+
+
+if __name__ == "__main__":
+
+    pytest.main([__file__])
+
+"""
 from dao.avis_dao import DaoAvis
 
 from business_object.avis import Avis
@@ -73,9 +90,6 @@ def test_ajouter_avis_collection_coherente():
     assert avis_collection_coherente.avis == avis_c
 
 
-if __name__ == "__main__":
-    import pytest
 
-    pytest.main([__file__])
 
 """

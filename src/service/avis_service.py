@@ -183,3 +183,49 @@ class ServiceAvis:
             return avis_user_sur_manga
         else:
             return None
+
+    @log
+    def trouver_auteur_avis_sur_manga(self, id_avis, id_manga):
+        username = DaoAvis().trouver_auteur_avis_sur_manga(
+            schema="projet_info_2a", id_avis=id_avis, id_manga=id_manga
+        )
+        return username
+
+    @log
+    def trouver_auteur_avis_sur_col_co(self, id_avis_collection_coherente, id_collection_coherente):
+        username = DaoAvis().trouver_auteur_avis_sur_col_co(
+            schema="projet_info_2a",
+            id_avis_collection_coherente=id_avis_collection_coherente,
+            id_collection_coherente=id_collection_coherente,
+        )
+        return username
+
+    @log
+    def trouver_auteur_avis_sur_col_phy(self, id_avis_collection_physique, id_collection):
+        username = DaoAvis().trouver_auteur_avis_sur_col_phy(
+            schema="projet_info_2a",
+            id_avis_collection_physique=id_avis_collection_physique,
+            id_collection=id_collection,
+        )
+        return username
+
+    @log
+    def Validation_avis(self, avis: str):
+        is_avis_valide = True
+
+        Liste_mot_invalide = [
+            "TA GUEULE",
+            "TOCARD",
+            "MERDIQUE",
+            "SALOPE",
+            "MERDE",
+            "CON",
+            "CONNARD",
+            "CONNASSE",
+            "PUTAIN",
+        ]
+
+        if avis.upper() in Liste_mot_invalide:
+            is_avis_valide = False
+
+        return is_avis_valide

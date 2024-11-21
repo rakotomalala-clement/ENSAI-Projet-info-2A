@@ -788,3 +788,77 @@ class DaoAvis(metaclass=Singleton):
             raise
 
         return res > 0
+
+    def trouver_auteur_avis_sur_manga(self, schema, id_avis, id_manga):
+
+        username = None
+
+        try:
+            with DBConnection(schema).connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT nom_utilisateur FROM utilisateur "
+                        "JOIN avis USING(id_utilisateur)"
+                        "WHERE id_avis= %(id_avis)s"
+                        " AND id_manga= %(id_manga)s",
+                        {"id_avis": id_avis, "id_manga": id_manga},
+                    )
+                    username = cursor.fetchone()
+
+        except Exception as e:
+            logging.info(e)
+            raise
+
+        return username["nom_utilisateur"]
+
+    def trouver_auteur_avis_sur_col_co(
+        self, schema, id_avis_collection_coherente, id_collection_coherente
+    ):
+
+        username = None
+
+        try:
+            with DBConnection(schema).connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT nom_utilisateur FROM utilisateur "
+                        "JOIN avis_collection_coherente_db USING(id_utilisateur)"
+                        "WHERE id_avis_collection_coherente= %(id_avis_collection_coherente)s"
+                        " AND id_collection_coherente= %(id_collection_coherente)s",
+                        {
+                            "id_avis_collection_coherente": id_avis_collection_coherente,
+                            "id_collection_coherente": id_collection_coherente,
+                        },
+                    )
+                    username = cursor.fetchone()
+
+        except Exception as e:
+            logging.info(e)
+            raise
+
+        return username["nom_utilisateur"]
+
+    def trouver_auteur_avis_sur_col_phy(self, schema, id_avis_collection_physique, id_collection):
+
+        username = None
+
+        try:
+            with DBConnection(schema).connection as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT nom_utilisateur FROM utilisateur "
+                        "JOIN avis_collection_physique_db USING(id_utilisateur)"
+                        "WHERE id_avis_collection_physique= %(id_avis_collection_physique)s"
+                        " AND id_collection= %(id_collection)s",
+                        {
+                            "id_avis_collection_physique": id_avis_collection_physique,
+                            "id_collection": id_collection,
+                        },
+                    )
+                    username = cursor.fetchone()
+
+        except Exception as e:
+            logging.info(e)
+            raise
+
+        return username["nom_utilisateur"]
