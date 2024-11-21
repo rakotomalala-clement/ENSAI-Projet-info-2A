@@ -1,6 +1,7 @@
 import pytest
 from business_object.avis import Avis
 from dao.avis_dao import DaoAvis
+from dao.collection_dao import DaoCollection
 
 
 def test_trouver_id_avis_par_id_manga_utilisateur_true():
@@ -111,6 +112,19 @@ def test_afficher_avis_collection_coherente_ok():
     assert nb_avis_col_co == len(avis_col_co)
 
 
+def test_afficher_avis_user_sur_collection_coherente_ok():
+    "chercher l'avis d'un utilisateur sur collection cohérente ok"
+    id_avis = DaoAvis().trouver_id_avis_par_id_col_coherente_utilisateur(
+        id_utilisateur=12,
+        id_collection_coherente=1,
+        schema="projet_test_dao",
+    )
+    avis_col_co = DaoAvis().chercher_avis_user_sur_collection_coherente(
+        schema="projet_test_dao", id_utilisateur=12, id_collection_coherente=1
+    )
+    assert id_avis == avis_col_co.id_avis
+
+
 def test_modifier_avis_col_co_ok():
     """Modification d'un avis d'un collection coherente existant."""
 
@@ -155,6 +169,17 @@ def test_afficher_avis_collection_physique_ok():
     assert nb_avis_col_phy == len(avis_col_phy)
 
 
+def test_afficher_avis_user_sur_collection_physique_ok():
+    "chercher avis d'un utilisateur sur collection physique ok"
+    id_avis = DaoAvis().trouver_id_avis_par_id_manga_utilisateur_col_physique(
+        id_utilisateur=43, id_collection=1, schema="projet_test_dao"
+    )
+    avis_col_phy = DaoAvis().chercher_avis_user_sur_collection_physique(
+        schema="projet_test_dao", id_utilisateur=43, id_collection=1
+    )
+    assert id_avis == avis_col_phy.id_avis
+
+
 def test_modifier_avis_col_phy_ok():
     """Modification d'un avis d'une collection physique existant."""
 
@@ -171,6 +196,8 @@ def test_modifier_avis_col_phy_ok():
         id_collection=1,
         id_utilisateur=43,
     )
+    # THEN
+    assert modification is True
 
 
 def test_modifier_avis_ok():
@@ -212,7 +239,7 @@ def test_supprimer_ok():
 
 
 def test_chercher_avis():
-    """Recherche des avis laissés par un utilisateur sur un manga."""
+    """Recherche de l'avis laissés par un utilisateur sur un manga."""
     avis = Avis(note=5, avis="test_", id_avis=2)
     avis_a_verifier = DaoAvis().chercher_avis("projet_test_dao", id_utilisateur=12, id_manga=4)
     assert [avis] == avis_a_verifier

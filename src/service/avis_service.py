@@ -58,7 +58,7 @@ class ServiceAvis:
         """Afficher les avis laisser sur une collection cohérente"""
 
         avis_user_sur_col_co = DaoAvis().chercher_avis_sur_collection_coherente(
-            "projet_info_2a", id_collection_coherente=id_collection
+            "projet_info_2a", id_collection
         )
 
         if len(avis_user_sur_col_co) > 0:
@@ -71,7 +71,37 @@ class ServiceAvis:
         """Afficher les avis laisser sur une collection cohérente"""
 
         avis_user_sur_col_phy = DaoAvis().chercher_avis_sur_collection_physique(
-            "projet_info_2a", id_collection_coherente=id_collection
+            "projet_info_2a", id_collection
+        )
+
+        if len(avis_user_sur_col_phy) > 0:
+            return avis_user_sur_col_phy
+        else:
+            return None
+
+    @log
+    def afficher_avis_user_sur_collection_coherente(self, id_utilisateur, id_collection):
+        """
+        Afficher avis d'un utilisateur laissé sur une collection cohérente
+        """
+
+        avis_user_sur_col_co = DaoAvis().chercher_avis_user_sur_collection_coherente(
+            "projet_info_2a", id_utilisateur=id_utilisateur, id_collection_coherente=id_collection
+        )
+
+        if len(avis_user_sur_col_co) > 0:
+            return avis_user_sur_col_co
+        else:
+            return None
+
+    @log
+    def afficher_avis_user_sur_collection_physique(self, id_utilisateur, id_collection):
+        """
+        Afficher avis d'un utilisateur laissé sur une collection physique
+        """
+
+        avis_user_sur_col_phy = DaoAvis().chercher_avis_user_sur_collection_physique(
+            "projet_info_2a", id_utilisateur=id_utilisateur, id_collection_coherente=id_collection
         )
 
         if len(avis_user_sur_col_phy) > 0:
