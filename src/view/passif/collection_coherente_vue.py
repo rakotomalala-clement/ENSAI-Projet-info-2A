@@ -21,13 +21,6 @@ class CollectionCoherenteVue(VueAbstraite):
 
         print("\n" + "-" * 50 + "\nCollection:", self.collection.titre, "\n" + "-" * 50 + "\n")
 
-        liste_avis = ServiceAvis().afficher_avis_collection_coherente(self.collection.id_collection)
-        if liste_avis is None:
-            print("")
-        else:
-            for avis in liste_avis:
-                print("Note: ", avis.note, ", ", avis.avis)
-
         print(self.collection.description)
         print("\nMangas de la collection:\n")
 
@@ -37,6 +30,14 @@ class CollectionCoherenteVue(VueAbstraite):
         for manga in liste_mangas:
             print(manga.titre)
         print("\n")
+
+        liste_avis = ServiceAvis().afficher_avis_collection_coherente(self.collection.id_collection)
+        if liste_avis is None:
+            print("")
+        else:
+            for avis in liste_avis:
+                print("Note: ", avis.note, ", ", avis.avis)
+            print("\n")
 
         from view.passif.connexion.session import Session
 

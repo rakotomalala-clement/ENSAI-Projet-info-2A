@@ -114,7 +114,8 @@ class RechercheUtilisateurVue(VueAbstraite):
                     print("")
                 else:
                     for avis in liste_avis:
-                        print("Note: ", avis.note, ", ", avis.avis, "\n")
+                        print("Note: ", avis.note, ", ", avis.avis)
+                    print("\n")
 
                 if Session().connecte:
                     choix = inquirer.select(

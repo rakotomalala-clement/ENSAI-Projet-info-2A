@@ -7,7 +7,7 @@ from service.avis_service import ServiceAvis
 from service.Service_Utilisateur import ServiceUtilisateur
 
 
-class AvisPhysiqueVue(VueAbstraite):
+class AvisCoherentVue(VueAbstraite):
     def __init__(self, collection):
         self.collection = collection
 
@@ -42,9 +42,12 @@ class AvisPhysiqueVue(VueAbstraite):
             .id_utilisateur
         )
 
+        avis = ServiceAvis().afficher_avis_user_sur_collection_coherente(
+            id_utilisateur, self.collection.id_collection
+        )
+
         match choix:
             case "Ajouter mon avis":
-                avis = ServiceAvis().afficher_avis_collection_physique(id_collection_physique)
 
                 if avis is None:
 
@@ -59,17 +62,17 @@ class AvisPhysiqueVue(VueAbstraite):
                         ).execute()
 
                     avis = inquirer.text(
-                        message="Veuillez entrer votre avis sur ce manga"
+                        message="Veuillez entrer votre avis sur cette collection"
                     ).execute()
 
                     ServiceAvis().ajouter_avis_collection(
-                        id_utilisateur, id_collection_physique, "Physique", avis, int(note)
+                        id_utilisateur, self.collection.id_collection, "Coherente", avis, int(note)
                     )
 
-                    return AvisPhysiqueVue(self.nom_utilisateur).choisir_menu()
+                    return AvisCoherentVue(self.collection).choisir_menu()
                 else:
-                    print("Vous avez déjà un avis sur ce manga")
-                    return AvisPhysiqueVue(self.nom_utilisateur).choisir_menu()
+                    print("Vous avez déjà un avis sur cette collection")
+                    return AvisCoherentVue(self.collection).choisir_menu()
 
             case "Modifier mon avis":
                 nouvelle_note = inquirer.text(
@@ -83,26 +86,25 @@ class AvisPhysiqueVue(VueAbstraite):
                     ).execute()
 
                 nouvel_avis = inquirer.text(
-                    message="Veuillez entrer votre avis sur ce manga"
+                    message="Veuillez entrer votre avis sur cette collection"
                 ).execute()
 
-                ServiceAvis().modifier_collection_physique(
-                    id_utilisateur,
-                    id_collection_physique,
-                    int(nouvelle_note),
-                    nouvel_avis,
+                ServiceAvis().modifier_collection_cohérente(
+                    self.collection.id_collection, id_utilisateur, nouvel_avis, nouvelle_note
                 )
 
-                return AvisPhysiqueVue(self.nom_utilisateur).choisir_menu()
+                return AvisCoherentVue(self.collection).choisir_menu()
 
             case "Supprimer mon avis":
-                avis = ServiceAvis().afficher_avis_collection_physique(id_collection_physique)
+                avis = ServiceAvis().afficher_avis_collection_coherente(
+                    self.collection.id_collection
+                )
                 if avis is None:
-                    print("Vous n'avez pas encore d'avis sur ce manga")
-                    return AvisPhysiqueVue(self.nom_utilisateur).choisir_menu()
+                    print("Vous n'avez pas encore d'avis sur cette collection")
+                    return AvisCoherentVue(self.collection).choisir_menu()
 
                 ServiceAvis().supprimer(avis.id_avis)
-                return AvisPhysiqueVue(self.nom_utilisateur).choisir_menu()
+                return AvisCoherentVue(self.collection).choisir_menu()
 
             case "Retour au menu principal":
                 if Session().connecte:
