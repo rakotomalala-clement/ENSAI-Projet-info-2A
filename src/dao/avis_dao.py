@@ -665,7 +665,7 @@ class DaoAvis(metaclass=Singleton):
             else []
         )
 
-        return liste_avis[0]
+        return liste_avis
 
     @log
     def chercher_avis_user_sur_collection_physique(self, schema, id_utilisateur, id_collection):
@@ -718,7 +718,7 @@ class DaoAvis(metaclass=Singleton):
             else []
         )
 
-        return liste_avis[0]
+        return liste_avis
 
     @log
     def supprimer_avis_col_coherente(self, id_avis_collection_coherente, schema):

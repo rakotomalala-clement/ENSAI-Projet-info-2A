@@ -105,9 +105,11 @@ class RechercheUtilisateurVue(VueAbstraite):
                 # Affichage des avis sur cette collection
                 from service.avis_service import ServiceAvis
 
-                liste_avis = ServiceAvis().afficher_avis_collection_physique(
-                    self.collection.id_collection
+                id_collection_choisi = ServiceCollection().obtenir_id_collection_par_utilisateur(
+                    id_utilisateur, "projet_info_2a"
                 )
+
+                liste_avis = ServiceAvis().afficher_avis_collection_physique(id_collection_choisi)
                 if liste_avis is None:
                     print("")
                 else:
@@ -125,10 +127,7 @@ class RechercheUtilisateurVue(VueAbstraite):
                 else:
                     choix = inquirer.select(
                         message="Choississez une action à réaliser",
-                        choices=[
-                            "Retourner au menu de recherche d'utilisateur",
-                            "Gérer ses avis sur la collection",
-                        ],
+                        choices=["Retourner au menu de recherche d'utilisateur"],
                     ).execute()
 
                 match choix:
@@ -136,7 +135,7 @@ class RechercheUtilisateurVue(VueAbstraite):
                     case "Gérer ses avis sur la collection":
                         from view.actif.avis.avis_physique_vue import AvisPhysiqueVue
 
-                        return AvisPhysiqueVue(nom_utilisateur_choisi).choisir_menu()
+                        return AvisPhysiqueVue(id_utilisateur).choisir_menu()
 
                     case "Retourner au menu de recherche d'utilisateur":
                         return RechercheUtilisateurVue().choisir_menu()

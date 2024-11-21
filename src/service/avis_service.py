@@ -101,7 +101,7 @@ class ServiceAvis:
         """
 
         avis_user_sur_col_phy = DaoAvis().chercher_avis_user_sur_collection_physique(
-            "projet_info_2a", id_utilisateur=id_utilisateur, id_collection_coherente=id_collection
+            "projet_info_2a", id_utilisateur=id_utilisateur, id_collection=id_collection
         )
 
         if len(avis_user_sur_col_phy) > 0:
