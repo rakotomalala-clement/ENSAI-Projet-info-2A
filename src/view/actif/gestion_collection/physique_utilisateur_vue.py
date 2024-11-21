@@ -85,7 +85,7 @@ class PhysiqueUtilisateurVue(VueAbstraite):
                 id_manga = MangaService().trouver_id_par_titre(titre)
 
                 ServiceCollection().ajouter_manga_collection_physique(
-                    id_utilisateur, titre, 0, 0, "en cours de lecture", "projet_info_2a"
+                    id_utilisateur, titre, 0, [0], "en cours de lecture", "projet_info_2a"
                 )
 
                 return PhysiqueUtilisateurVue().choisir_menu()
