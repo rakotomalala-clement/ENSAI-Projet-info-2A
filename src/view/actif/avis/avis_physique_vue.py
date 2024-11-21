@@ -95,8 +95,8 @@ class AvisPhysiqueVue(VueAbstraite):
                     ).execute()
 
                     ServiceAvis().modifier_collection_physique(
-                        id_utilisateur_perso,
                         id_collection_physique,
+                        id_utilisateur_perso,
                         nouvel_avis,
                         int(nouvelle_note),
                     )
