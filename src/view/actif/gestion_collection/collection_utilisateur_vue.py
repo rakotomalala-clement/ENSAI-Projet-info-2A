@@ -7,13 +7,13 @@ from service.collection_service import ServiceCollection
 
 
 class CollectionUtilisateurVue(VueAbstraite):
-    """Menu des modifications possibles sur une collection"""
+    """Menu des modifications possibles sur une collection cohérente"""
 
     def __init__(self, collection):
         self.collection = collection
 
     def choisir_menu(self):
-        """Modification ou suppression d'une collection
+        """Modification ou suppression d'une collection cohérente
 
         Return
         ------
@@ -22,6 +22,8 @@ class CollectionUtilisateurVue(VueAbstraite):
         """
 
         print("\n" + "-" * 50 + "\n", self.collection.titre, "\n" + "-" * 50 + "\n")
+
+        print(self.collection.description, "\n")
 
         # afficher les mangas de la collection
         liste_manga = ServiceCollection().lister_mangas_collection(
