@@ -44,7 +44,7 @@ class DaoCompte(metaclass=Singleton):
         SELECT id_utilisateur, nom_utilisateur, mdp FROM utilisateur WHERE id_utilisateur = %(id_utilisateur)s;
         """
         try:
-            with DBConnection().connection as connection:
+            with DBConnection("projet_info_2a").connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(select_query, {"id_utilisateur": id_utilisateur})
                     res = cursor.fetchone()
@@ -66,7 +66,7 @@ class DaoCompte(metaclass=Singleton):
         SELECT id_utilisateur, nom_utilisateur, mdp FROM utilisateur WHERE nom_utilisateur = %(nom_utilisateur)s;
         """
         try:
-            with DBConnection().connection as connection:
+            with DBConnection("projet_info_2a").connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(select_query, {"nom_utilisateur": nom_utilisateur})
                     res = cursor.fetchone()
@@ -92,7 +92,7 @@ class DaoCompte(metaclass=Singleton):
         WHERE id_utilisateur = %(id_utilisateur)s;
         """
         try:
-            with DBConnection().connection as connection:
+            with DBConnection("projet_info_2a").connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
                         update_query,
@@ -113,7 +113,7 @@ class DaoCompte(metaclass=Singleton):
         DELETE FROM utilisateur WHERE id_utilisateur = %(id_utilisateur)s;
         """
 
-        with DBConnection().connection as connection:
+        with DBConnection("projet_info_2a").connection as connection:
             with connection.cursor() as cursor:
                 cursor.execute(delete_query, {"id_utilisateur": id_utilisateur})
                 connection.commit()
@@ -121,7 +121,7 @@ class DaoCompte(metaclass=Singleton):
 
     @log
     def fermer_connexion(self):
-        with DBConnection().connection as connection:
+        with DBConnection("projet_info_2a").connection as connection:
             with connection.cursor() as cursor:
                 cursor.close()
                 connection.close()
@@ -129,7 +129,7 @@ class DaoCompte(metaclass=Singleton):
     def lister_tous(self) -> list[Utilisateur]:
 
         try:
-            with DBConnection().connection as connection:
+            with DBConnection("projet_info_2a").connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(
                         "SELECT *                              "

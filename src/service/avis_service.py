@@ -23,19 +23,19 @@ class ServiceAvis:
         """Création d'un avis sur une collection à partir de ses attributs"""
 
         nouveau_avis_collection = Avis(note, avis)
-        if "c" in type_collection:
+        if type_collection == "Coherente":
             return (
                 nouveau_avis_collection
                 if DaoAvis().creer_avis_collection_coherente(
-                    id_utilisateur, id_collection, nouveau_avis_collection
+                    id_utilisateur, id_collection, nouveau_avis_collection, "projet_info_2a"
                 )
                 else None
             )
-        elif "p" in type_collection:
+        elif type_collection == "Physique":
             return (
                 nouveau_avis_collection
                 if DaoAvis().creer_avis_collection_physique(
-                    id_utilisateur, id_collection, nouveau_avis_collection
+                    id_collection, id_utilisateur, nouveau_avis_collection, "projet_info_2a"
                 )
                 else None
             )
@@ -54,6 +54,62 @@ class ServiceAvis:
             return None
 
     @log
+    def afficher_avis_collection_coherente(self, id_collection):
+        """Afficher les avis laisser sur une collection cohérente"""
+
+        avis_user_sur_col_co = DaoAvis().chercher_avis_sur_collection_coherente(
+            "projet_info_2a", id_collection
+        )
+
+        if len(avis_user_sur_col_co) > 0:
+            return avis_user_sur_col_co
+        else:
+            return None
+
+    @log
+    def afficher_avis_collection_physique(self, id_collection):
+        """Afficher les avis laisser sur une collection cohérente"""
+
+        avis_user_sur_col_phy = DaoAvis().chercher_avis_sur_collection_physique(
+            "projet_info_2a", id_collection
+        )
+
+        if len(avis_user_sur_col_phy) > 0:
+            return avis_user_sur_col_phy
+        else:
+            return None
+
+    @log
+    def afficher_avis_user_sur_collection_coherente(self, id_utilisateur, id_collection):
+        """
+        Afficher avis d'un utilisateur laissé sur une collection cohérente
+        """
+
+        avis_user_sur_col_co = DaoAvis().chercher_avis_user_sur_collection_coherente(
+            "projet_info_2a", id_utilisateur=id_utilisateur, id_collection_coherente=id_collection
+        )
+
+        if len(avis_user_sur_col_co) > 0:
+            return avis_user_sur_col_co
+        else:
+            return None
+
+    @log
+    def afficher_avis_user_sur_collection_physique(self, id_utilisateur, id_collection):
+        """
+        Afficher avis d'un utilisateur laissé sur une collection physique
+        """
+
+        avis_user_sur_col_phy = DaoAvis().chercher_avis_user_sur_collection_physique(
+            "projet_info_2a", id_utilisateur=id_utilisateur, id_collection=id_collection
+        )
+
+        if len(avis_user_sur_col_phy) > 0:
+            return avis_user_sur_col_phy
+        else:
+            return None
+
+    @log
     def modifier(self, id_manga, id_utilisateur, avis_message, note) -> Avis:
         """Modification d'un avis"""
         avis = Avis(note, avis_message)
@@ -62,6 +118,42 @@ class ServiceAvis:
             avis
             if DaoAvis().modifier_avis(
                 schema="projet_info_2a", id_manga=id_manga, id_utilisateur=id_utilisateur, avis=avis
+            )
+            else None
+        )
+
+    @log
+    def modifier_collection_cohérente(
+        self, id_collection, id_utilisateur, avis_message, note
+    ) -> Avis:
+        """Modification d'un avis d'une collection coherente"""
+        avis = Avis(note, avis_message)
+
+        return (
+            avis
+            if DaoAvis().modifier_avis_collection_co(
+                schema="projet_info_2a",
+                id_collection=id_collection,
+                id_utilisateur=id_utilisateur,
+                avis=avis,
+            )
+            else None
+        )
+
+    @log
+    def modifier_collection_physique(
+        self, id_collection, id_utilisateur, avis_message, note
+    ) -> Avis:
+        """Modification d'un avis d'une collection physique"""
+        avis = Avis(note, avis_message)
+
+        return (
+            avis
+            if DaoAvis().modifier_avis_collection_phy(
+                schema="projet_info_2a",
+                id_collection=id_collection,
+                id_utilisateur=id_utilisateur,
+                avis=avis,
             )
             else None
         )

@@ -3,14 +3,13 @@ from view.vue_abstraite import VueAbstraite
 from view.passif.accueil_vue import AccueilVue
 from view.actif.accueil_connecte_vue import AccueilConnecteVue
 from view.passif.connexion.session import Session
-from view.passif.affichage_manga_vue import AffichageMangaVue
 from service.avis_service import ServiceAvis
 from service.Service_Utilisateur import ServiceUtilisateur
 
 
-class AvisMangaVue(VueAbstraite):
-    def __init__(self, manga):
-        self.manga = manga
+class AvisCoherentVue(VueAbstraite):
+    def __init__(self, collection):
+        self.collection = collection
 
     def choisir_menu(self):
         """Affichage des avis sur la collection
@@ -21,7 +20,11 @@ class AvisMangaVue(VueAbstraite):
             Retourne la view de l'acceuil
         """
 
-        print("\n" + "-" * 50 + "\nMon avis sur", self.manga.titre, "\n" + "-" * 50 + "\n")
+        print(
+            "\n" + "-" * 50 + "\nMon avis sur la collection",
+            self.collection.titre,
+            "\n" + "-" * 50 + "\n",
+        )
 
         choix = inquirer.select(
             message="",
@@ -39,11 +42,12 @@ class AvisMangaVue(VueAbstraite):
             .id_utilisateur
         )
 
-        id_manga = self.manga.id_manga
+        avis = ServiceAvis().afficher_avis_user_sur_collection_coherente(
+            id_utilisateur, self.collection.id_collection
+        )
 
         match choix:
             case "Ajouter mon avis":
-                avis = ServiceAvis().afficher_avis_user(id_utilisateur, id_manga)
 
                 if avis is None:
 
@@ -58,15 +62,17 @@ class AvisMangaVue(VueAbstraite):
                         ).execute()
 
                     avis = inquirer.text(
-                        message="Veuillez entrer votre avis sur ce manga"
+                        message="Veuillez entrer votre avis sur cette collection"
                     ).execute()
 
-                    ServiceAvis().ajouter_avis(id_utilisateur, id_manga, avis, int(note))
+                    ServiceAvis().ajouter_avis_collection(
+                        id_utilisateur, self.collection.id_collection, "Coherente", avis, int(note)
+                    )
 
-                    return AffichageMangaVue(self.manga.titre).choisir_menu()
+                    return AvisCoherentVue(self.collection).choisir_menu()
                 else:
-                    print("Vous avez déjà un avis sur ce manga")
-                    return AvisMangaVue(self.manga).choisir_menu()
+                    print("Vous avez déjà un avis sur cette collection")
+                    return AvisCoherentVue(self.collection).choisir_menu()
 
             case "Modifier mon avis":
                 nouvelle_note = inquirer.text(
@@ -80,21 +86,25 @@ class AvisMangaVue(VueAbstraite):
                     ).execute()
 
                 nouvel_avis = inquirer.text(
-                    message="Veuillez entrer votre avis sur ce manga"
+                    message="Veuillez entrer votre avis sur cette collection"
                 ).execute()
 
-                ServiceAvis().modifier(id_manga, id_utilisateur, nouvel_avis, int(nouvelle_note))
+                ServiceAvis().modifier_collection_cohérente(
+                    self.collection.id_collection, id_utilisateur, nouvel_avis, nouvelle_note
+                )
 
-                return AffichageMangaVue(self.manga.titre).choisir_menu()
+                return AvisCoherentVue(self.collection).choisir_menu()
 
             case "Supprimer mon avis":
-                avis = ServiceAvis().afficher_avis_user(id_utilisateur, id_manga)
+                avis = ServiceAvis().afficher_avis_collection_coherente(
+                    self.collection.id_collection
+                )
                 if avis is None:
-                    print("Vous n'avez pas encore d'avis sur ce manga")
-                    return AffichageMangaVue(self.manga.titre).choisir_menu()
+                    print("Vous n'avez pas encore d'avis sur cette collection")
+                    return AvisCoherentVue(self.collection).choisir_menu()
 
                 ServiceAvis().supprimer(avis.id_avis)
-                return AffichageMangaVue(self.manga.titre).choisir_menu()
+                return AvisCoherentVue(self.collection).choisir_menu()
 
             case "Retour au menu principal":
                 if Session().connecte:

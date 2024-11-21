@@ -40,13 +40,9 @@ class InscriptionVue(VueAbstraite):
         ServiceCollection().creer_collection(
             id_utilisateur=id_utilisateur,
             type_collection="Physique",
-            titre="Collection physique",
-            description=f"collection_physique de {nom_utilisateur}",
-            dernier_tome_acquis=0,
-            numeros_tomes_manquants="",
-            status="",
+            titre="Collection physique",  # ne sert à rien
+            description=f"collection_physique de {nom_utilisateur}",  # ne sert à rien
             schema="projet_info_2a",
-            id_manga=3,
         )
 
         return ConnexionVue().choisir_menu()

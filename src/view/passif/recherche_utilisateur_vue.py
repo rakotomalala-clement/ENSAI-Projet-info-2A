@@ -37,7 +37,7 @@ class RechercheUtilisateurVue(VueAbstraite):
         # Ajout de la possibilité de retourner au menu principal
         liste_nom_utilisateurs.append("Retour au menu principal")
 
-        nom_utilisateur_choisi = inquirer.select(
+        nom_utilisateur_choisi = inquirer.fuzzy(
             message="Veuillez choisir l'utilisateur dont vous souhaitez consulter les collections",
             choices=liste_nom_utilisateurs,
         ).execute()
@@ -61,38 +61,11 @@ class RechercheUtilisateurVue(VueAbstraite):
                 id_utilisateur, "projet_info_2a"
             )
 
-            # collection_physique = ServiceCollection().lister_collections_physiques(
-            #     id_utilisateur, "projet_info_2a"
-            # )
+            liste_nom_collections = ["Collection physique"]
 
-            # if collection_physique == []:
-            #     print("L'utilisateur n'a pas de collection physique, a rioiri c'est une erreur")
-            # else:
-            #     liste_collections.append(collection_physique[0])
-
-            # liste_collections = ServiceCollection().rechercher_collections_et_mangas_par_user(
-            #     id_utilisateur, "projet_info_2a"
-            # )
-            # collection_physique = ServiceCollection().rechercher_collection_physique_par_user(
-            #     id_utilisateur, "projet_info_2a"
-            # )
-            # if collection_physique != []:
-            #     liste_collections.append(collection_physique[0])
-
-            liste_nom_collections = []
-            for collection in liste_collections:
-                liste_nom_collections.append(collection.titre)
-
-            # Ajout de la possibilité d'accéder à la collection physique
-            # de l'utilisateur s'il en possède une
-            collection_physique = ServiceCollection().lister_collections_physiques(
-                id_utilisateur, "projet_info_2a"
-            )
-
-            if collection_physique == []:
-                print("L'utilisateur n'a pas de collection physique, a rioiri c'est une erreur")
-            else:
-                liste_nom_collections.append("Collection physique")
+            if not (liste_collections is None):
+                for collection in liste_collections:
+                    liste_nom_collections.append(collection.titre)
 
             # Ajout de la possibilité de retourner au menu principal
             liste_nom_collections.append("Retour au menu principal")
@@ -107,19 +80,72 @@ class RechercheUtilisateurVue(VueAbstraite):
                     return AccueilConnecteVue().choisir_menu()
                 else:
                     return AccueilVue().choisir_menu()
+
             elif nom_collection_choisi == "Collection physique":
-                print("Collection physique de", nom_utilisateur_choisi, ":")
+                print("\nCollection physique de", nom_utilisateur_choisi, ":\n")
 
-                liste_mangas = ServiceCollection().lister_mangas_collection(
-                    self.collection.id_collection, "projet_info_2a"
+                collection_physique = ServiceCollection().rechercher_collection_physique(
+                    id_utilisateur, "projet_info_2a"
                 )
-                for manga in liste_mangas:
-                    print(manga.titre)
 
-            # On a besoin de retrouver la collection dont le nom est nom_collection_choisi
-            collection_choisi = None
-            for collection in liste_collections:
-                if collection.titre == nom_collection_choisi:
-                    collection_choisi = collection
+                # afficher les mangas de la collection
+                if collection_physique == "Aucun manga ajouté":
+                    print(
+                        "Aucun manga dans la collection physique de", nom_utilisateur_choisi, "\n"
+                    )
+                else:
+                    for manga in collection_physique:
+                        print(manga.titre_manga)
+                        print(manga.dernier_tome_acquis)
+                        print(manga.numeros_tomes_manquants)
+                        print(manga.status_manga)
+                        print("\n")
+                    print("\n")
 
-            return CollectionCoherenteVue(collection_choisi).choisir_menu()
+                # Affichage des avis sur cette collection
+                from service.avis_service import ServiceAvis
+
+                id_collection_choisi = ServiceCollection().obtenir_id_collection_par_utilisateur(
+                    id_utilisateur, "projet_info_2a"
+                )
+
+                liste_avis = ServiceAvis().afficher_avis_collection_physique(id_collection_choisi)
+                if liste_avis is None:
+                    print("")
+                else:
+                    for avis in liste_avis:
+                        print("Note: ", avis.note, ", ", avis.avis)
+                    print("\n")
+
+                if Session().connecte:
+                    choix = inquirer.select(
+                        message="Choississez une action à réaliser",
+                        choices=[
+                            "Gérer ses avis sur la collection",
+                            "Retourner au menu de recherche d'utilisateur",
+                        ],
+                    ).execute()
+                else:
+                    choix = inquirer.select(
+                        message="Choississez une action à réaliser",
+                        choices=["Retourner au menu de recherche d'utilisateur"],
+                    ).execute()
+
+                match choix:
+
+                    case "Gérer ses avis sur la collection":
+                        from view.actif.avis.avis_physique_vue import AvisPhysiqueVue
+
+                        return AvisPhysiqueVue(id_utilisateur).choisir_menu()
+
+                    case "Retourner au menu de recherche d'utilisateur":
+                        return RechercheUtilisateurVue().choisir_menu()
+
+            else:
+                # On a besoin de retrouver la collection dont le nom est nom_collection_choisi
+                collection_choisi = None
+                for collection in liste_collections:
+                    if collection.titre == nom_collection_choisi:
+                        collection_choisi = collection
+
+                return CollectionCoherenteVue(collection_choisi).choisir_menu()

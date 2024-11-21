@@ -4,6 +4,8 @@ import logging
 from dao.collection_dao import DaoCollection
 from business_object.collection.collection_physique import CollectionPhysique
 from business_object.collection.collection_coherente import CollectionCoherente
+from business_object.collection.mangas_dans_collection import MangaDansCollection
+from dao.manga_dao import MangaDao
 
 
 class ServiceCollection:
@@ -17,19 +19,10 @@ class ServiceCollection:
         type_collection,
         titre,
         description,
-        dernier_tome_acquis,
-        numeros_tomes_manquants,
-        status,
         schema,
-        id_manga,
-    ) -> bool:
+    ) -> int:
         if type_collection == "Physique":
-            collection = CollectionPhysique(
-                titre,
-                dernier_tome_acquis,
-                numeros_tomes_manquants,
-                status,
-            )
+            collection = CollectionPhysique()
 
         elif type_collection == "Coherente":
             collection = CollectionCoherente(titre=titre, description=description)
@@ -38,7 +31,8 @@ class ServiceCollection:
             logging.error("Type de collection inconnu.")
             return False
 
-        return self.dao_collection.creer(id_utilisateur, collection, schema, id_manga)
+        self.dao_collection.creer(id_utilisateur, collection, schema)
+        return collection.id_collection
 
     def lister_collections_coherentes(
         self, id_utilisateur: int, schema: str
@@ -84,18 +78,15 @@ class ServiceCollection:
 
         """
         try:
-            # on récupère toutes les collections cohérentes de l'utilisateur
             collections = self.dao_collection.lister_collections_coherentes(id_utilisateur, schema)
 
             result_dict = {}
 
-            # on récupère les mangas associés à chaque collection cohérente
             for collection in collections:
                 mangas = self.dao_collection.lister_mangas_collection(
                     collection.id_collection, schema
                 )
 
-                # on ajoute la collection et sa liste de mangas dans le dictionnaire avec l'id de la collection COMME CLE
                 result_dict[collection.id_collection] = [collection, mangas]
 
             return result_dict
@@ -124,30 +115,42 @@ class ServiceCollection:
             collection_id, liste_mangas, schema
         )
 
-    def ajouter_mangas_collection_physique(
+    # l'ajout d'un manga qui existe déjà dans la collection génère un retour False
+    def ajouter_manga_collection_physique(
         self,
         id_utilisateur,
         titre_manga,
         numero_dernier_tome,
         numeros_tomes_manquants,
         status_manga,
+        schema,
     ):
-        return self.dao_collection.ajouter_mangas_collection_physique(
-            id_utilisateur, titre_manga, numero_dernier_tome, numeros_tomes_manquants, status_manga
+        return self.dao_collection.ajouter_manga_collection_physique(
+            id_utilisateur,
+            titre_manga,
+            numero_dernier_tome,
+            numeros_tomes_manquants,
+            status_manga,
+            schema,
         )
 
     @log
     def supprimer_collection(self, id_collection, type_collection, schema: str) -> bool:
 
         if type_collection == "Coherente":
-            collection = CollectionCoherente(id_collection=id_collection)
+            collection = CollectionCoherente(
+                id_collection=id_collection, titre=None, description=None
+            )
         elif type_collection == "Physique":
             collection = CollectionPhysique(id_collection=id_collection)
-        else:
-            logging.error("Type de collection inconnu pour la suppression.")
-            return False
 
         return self.dao_collection.supprimer(collection, schema)
+
+    def supprimer_manga_col_physique(self, id_collection, id_manga, schema) -> bool:
+        return self.dao_collection.supprimer_manga_col_physique(id_collection, id_manga, schema)
+
+    def supprimer_manga_col_coherente(self, id_collection, id_manga, schema) -> bool:
+        return self.dao_collection.supprimer_manga_col_coherente(id_collection, id_manga, schema)
 
     def modifier_collection_coherente(
         self, id_collection: int, titre: str, description: str, schema: str
@@ -159,18 +162,26 @@ class ServiceCollection:
 
     def modifier_collection_physique(
         self,
-        id_collection: int,
-        titre: str,
+        id_utilisateur: int,
+        titre_manga: str,
         dernier_tome_acquis: int,
         numeros_tomes_manquants: str,
-        status_collection: str,
+        status_manga: str,
         schema: str,
     ) -> bool:
-        collection = CollectionPhysique(
-            id_collection=id_collection,
-            titre=titre,
+        id_manga = MangaDao().trouver_id_par_titre(schema, titre_manga)
+        id_collection = DaoCollection().obtenir_id_collection_par_utilisateur(
+            id_utilisateur, schema
+        )
+        manga_collection = MangaDansCollection(
+            titre_manga=titre_manga,
             dernier_tome_acquis=dernier_tome_acquis,
             numeros_tomes_manquants=numeros_tomes_manquants,
-            status_collection=status_collection,
+            status_manga=status_manga,
         )
-        return self.dao_collection.modifier_collection_physique(collection, schema)
+        return self.dao_collection.modifier_collection_physique(
+            manga_collection, id_collection, id_manga, schema
+        )
+
+    def obtenir_id_collection_par_utilisateur(self, id_utilisateur, schema):
+        return self.dao_collection.obtenir_id_collection_par_utilisateur(id_utilisateur, schema)

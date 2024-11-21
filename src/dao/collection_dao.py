@@ -2,11 +2,8 @@ import logging
 from typing import List
 from utils.singleton import Singleton
 from utils.log_decorator import log
-
 from dao.db_connection import DBConnection
-
-
-from business_object.collection.collection_physique import CollectionPhysique
+import psycopg2.extras
 from business_object.collection.collection_coherente import CollectionCoherente
 from business_object.manga import Manga
 from business_object.collection.mangas_dans_collection import MangaDansCollection
@@ -108,7 +105,7 @@ class DaoCollection(metaclass=Singleton):
 
                     cursor.execute(
                         """
-                        SELECT id_manga FROM collection_coherente_mangas 
+                        SELECT id_manga FROM collection_coherente_mangas
                         WHERE id_collection = %s;
                         """,
                         (id_collection,),
@@ -123,14 +120,13 @@ class DaoCollection(metaclass=Singleton):
 
                             cursor.execute(
                                 """
-                                SELECT * FROM manga 
+                                SELECT * FROM manga
                                 WHERE id_manga = %s;
                                 """,
                                 (id_manga,),
                             )
                             manga_details = cursor.fetchone()
 
-                            # Si des détails sont trouvés, créer un objet Manga et l'ajouter à la liste
                             if manga_details:
                                 manga = Manga(
                                     id_manga=manga_details["id_manga"],
@@ -153,9 +149,10 @@ class DaoCollection(metaclass=Singleton):
     def rechercher_collection_physique(
         self, id_utilisateur: int, schema
     ) -> List[MangaDansCollection]:
+        """Retourne une liste des mangas que l'utilisateur possède physiquement"""
         try:
             with DBConnection(schema).connection as connection:
-                with connection.cursor() as cursor:
+                with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                     cursor.execute(
                         """
                         SELECT cpm.id_manga, cpm.titre_manga, cpm.numero_dernier_tome, cpm.numeros_tomes_manquants,cpm.status_manga
@@ -164,17 +161,20 @@ class DaoCollection(metaclass=Singleton):
                         WHERE cp.id_utilisateur = %s;
 
                         """,
-                        (id_utilisateur),
+                        (id_utilisateur,),
                     )
 
                     results = cursor.fetchall()
 
+                if not results:
+                    return "Aucun manga ajouté"
+
                 collection = [
                     MangaDansCollection(
-                        id_manga=result["id_manga"],
-                        dernier_tome_acquis=result["numero_dernier_tome"],
-                        numeros_tomes_manquants=result["numeros_tomes_manquants"],
-                        status_manga=result["status_manga"],
+                        titre_manga=result[1],
+                        dernier_tome_acquis=result[2],
+                        numeros_tomes_manquants=result[3],
+                        status_manga=result[4],
                     )
                     for result in results
                 ]
@@ -224,7 +224,7 @@ class DaoCollection(metaclass=Singleton):
             return False
 
     # méthode  utilisée dans la méthode : ajouter_manga_collection_physique
-    def obtenir_id_collection_par_utilisateur(id_utilisateur, schema):
+    def obtenir_id_collection_par_utilisateur(self, id_utilisateur, schema):
         try:
             with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
@@ -237,8 +237,7 @@ class DaoCollection(metaclass=Singleton):
                         (id_utilisateur,),
                     )
                     result = cursor.fetchone()
-                    print("******************")
-                    print(result)
+
                     return result["id_collection"] if result else None
         except Exception as e:
             logging.error(f"Erreur lors de la récupération de l'ID de collection : {e}")
@@ -257,7 +256,7 @@ class DaoCollection(metaclass=Singleton):
 
         try:
             # Étape 1: Récupérer l'id_collection correspondant à l'id_utilisateur
-            id_collection = DaoCollection.obtenir_id_collection_par_utilisateur(
+            id_collection = DaoCollection().obtenir_id_collection_par_utilisateur(
                 id_utilisateur, schema
             )
 
@@ -319,11 +318,38 @@ class DaoCollection(metaclass=Singleton):
             return False
 
     @log
-    def modifier_collection_coherente(self, collection: CollectionCoherente, schema: str) -> bool:
+    def supprimer_manga_col_physique(self, id_collection, id_manga, schema) -> bool:
+        try:
+            with DBConnection(schema).connection as connection:
+                with connection.cursor() as cursor:
+                    query = "DELETE FROM collection_physique_mangas WHERE id_collection = %s AND id_manga = %s"
 
+                    cursor.execute(query, (id_collection, id_manga))
+
+                    return cursor.rowcount > 0
+        except Exception as e:
+            logging.error(f"Erreur lors de la suppression de la collection : {e}")
+            return False
+
+    @log
+    def supprimer_manga_col_coherente(self, id_collection, id_manga, schema) -> bool:
+        try:
+            with DBConnection(schema).connection as connection:
+                with connection.cursor() as cursor:
+                    query = "DELETE FROM collection_coherente_mangas WHERE id_collection = %s AND id_manga = %s"
+
+                    cursor.execute(query, (id_collection, id_manga))
+
+                    return cursor.rowcount > 0
+        except Exception as e:
+            logging.error(f"Erreur lors de la suppression de la collection : {e}")
+            return False
+
+    @log
+    def modifier_collection_coherente(self, collection: CollectionCoherente, schema: str) -> bool:
         query = """
         UPDATE collection_coherente
-        SET titre_collection = %(titre_collection)s, 
+        SET titre_collection = %(titre_collection)s,
             description_collection = %(description_collection)s
         WHERE id_collection = %(id_collection)s;
         """
@@ -338,10 +364,9 @@ class DaoCollection(metaclass=Singleton):
             with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(query, params)
-                    res = cursor.fetchone()
 
-                    if res:
-
+                    # Vérifiez combien de lignes ont été affectées
+                    if cursor.rowcount > 0:
                         return True
                     else:
                         logging.warning(
@@ -354,41 +379,43 @@ class DaoCollection(metaclass=Singleton):
             return False
 
     @log
-    def modifier_collection_physique(self, collection: CollectionPhysique, schema: str) -> bool:
+    def modifier_collection_physique(
+        self, manga: MangaDansCollection, id_collection, id_manga, schema: str
+    ) -> bool:
 
+        # on modifie pas le titre du manga, sinon --> suppression du manga
         query = """
-        UPDATE collection_physique
-        SET titre_collection = %(titre_collection)s, 
+
+        UPDATE collection_physique_mangas
+        SET
             numero_dernier_tome = %(numero_dernier_tome)s,
             numeros_tomes_manquants = %(numeros_tomes_manquants)s,
-            status_collection = %(status_collection)s
-            
-        WHERE id_collection = %(id_collection)s;
-        """
+            status_manga = %(status_manga)s
+        WHERE id_manga = %(id_manga)s AND id_collection = %(id_collection)s;
+    """
 
         params = {
-            "id_collection": collection.id_collection,
-            "titre_collection": collection.titre,
-            "numero_dernier_tome": collection.dernier_tome_acquis,
-            "numeros_tomes_manquants": collection.numeros_tomes_manquants,
-            "status_collection": collection.status_collection,
+            "id_manga": id_manga,
+            "numero_dernier_tome": manga.dernier_tome_acquis,
+            "numeros_tomes_manquants": manga.numeros_tomes_manquants,
+            "status_manga": manga.status_manga,
+            "id_collection": id_collection,
         }
 
         try:
             with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
                     cursor.execute(query, params)
-                    res = cursor.fetchone()
 
-                    if res:
-
+                    # Vérifiez combien de lignes ont été affectées
+                    if cursor.rowcount > 0:
                         return True
                     else:
                         logging.warning(
-                            f"Aucune collection trouvée avec l'id {collection.id_collection}."
+                            f"Aucun manga trouvé avec l'id {id_manga} dans la collection {id_collection}."
                         )
                         return False
 
         except Exception as e:
-            logging.error(f"Erreur lors de la modification de la collection physique : {e}")
+            logging.error(f"Erreur lors de la mise à jour du manga : {e}")
             return False

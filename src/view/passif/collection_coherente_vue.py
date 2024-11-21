@@ -1,6 +1,7 @@
 from InquirerPy import inquirer
 from view.vue_abstraite import VueAbstraite
 from service.collection_service import ServiceCollection
+from service.avis_service import ServiceAvis
 
 
 class CollectionCoherenteVue(VueAbstraite):
@@ -20,41 +21,47 @@ class CollectionCoherenteVue(VueAbstraite):
 
         print("\n" + "-" * 50 + "\nCollection:", self.collection.titre, "\n" + "-" * 50 + "\n")
 
-        # liste_avis = ServiceAvis().
-        # if liste_avis is None:
-        #     print("")
-        # else:
-        #     for avis in liste_avis:
-        #         print("Note: ", avis.note, ", ", avis.avis)
+        print(self.collection.description)
+        print("\nMangas de la collection:\n")
 
-        if self.collection.type_collection == "Cohérente":
-            print(self.collection.description)
-            print("Mangas de la collection:")
+        liste_mangas = ServiceCollection().lister_mangas_collection(
+            self.collection.id_collection, "projet_info_2a"
+        )
+        for manga in liste_mangas:
+            print(manga.titre)
+        print("\n")
 
-            liste_mangas = ServiceCollection().lister_mangas_collection(
-                self.collection.id_collection, "projet_info_2a"
-            )
-            for manga in liste_mangas:
-                print(manga.titre)
-
+        liste_avis = ServiceAvis().afficher_avis_collection_coherente(self.collection.id_collection)
+        if liste_avis is None:
+            print("")
         else:
-            print("Collection physique:")
+            for avis in liste_avis:
+                print("Note: ", avis.note, ", ", avis.avis)
+            print("\n")
 
-            liste_mangas_physique = ServiceCollection().lister_collections_physiques()
-            for manga in liste_mangas_physique:
-                print(manga.titre)
+        from view.passif.connexion.session import Session
 
-        choix = inquirer.select(
-            message="Choississez une action à réaliser",
-            choices=[
-                "Gérer ses avis sur la collection",
-                "Retourner au menu de recherche d'utilisateur",
-            ],
-        ).execute()
+        if Session().connecte:
+            choix = inquirer.select(
+                message="Choississez une action à réaliser",
+                choices=[
+                    "Gérer ses avis sur la collection",
+                    "Retourner au menu de recherche d'utilisateur",
+                ],
+            ).execute()
+        else:
+            choix = inquirer.select(
+                message="Choississez une action à réaliser",
+                choices=[
+                    "Retourner au menu de recherche d'utilisateur",
+                ],
+            ).execute()
 
         match choix:
             case "Gérer ses avis sur la collection":
-                return 0
+                from view.actif.avis.avis_coherent_vue import AvisCoherentVue
+
+                return AvisCoherentVue(self.collection).choisir_menu()
 
             case "Retourner au menu de recherche d'utilisateur":
                 from view.passif.recherche_utilisateur_vue import RechercheUtilisateurVue
