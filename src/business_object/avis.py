@@ -30,6 +30,7 @@ class Avis:
         self.id_avis = id_avis
 
     def __eq__(self, other):
+        """Permet de vérifier l'égalité entre deux avis"""
         if isinstance(other, Avis):
             return (
                 self.id_avis == other.id_avis

@@ -15,7 +15,31 @@ class DaoAvis(metaclass=Singleton):
     def trouver_id_avis_par_id_manga_utilisateur(
         self, schema: str, id_manga: int, id_utilisateur: int
     ) -> int:
-        """Trouver l'identifiant d'un avis grâce aux id manga et utilisateur."""
+        """
+        Trouver l'identifiant d'un avis grâce aux id manga et utilisateur.
+
+        Parameters:
+        -----------
+        schema: str
+            nom du schema que l'on souhaite modifier, schema= "projet_test_dao"
+            pour modifier la base de données prévue pour les test, et
+            schema= "projet_info_2a" pour modifier la base de données de
+            l'application.
+
+        id_manga: int
+            identifiant du manga sur lequel se trouve l'avis dont on souhaite
+            trouver l'identifiant.
+
+        id_utilisateur: int
+            identifiant de l'utilisateur ayant écrit l'avis dont on souhaite
+            trouver l'identifiant.
+
+        Returns:
+        --------
+        id_avis: int
+            identifiant de l'avis souhaité.
+        """
+
         try:
             with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
@@ -39,7 +63,32 @@ class DaoAvis(metaclass=Singleton):
     def trouver_id_avis_par_id_manga_utilisateur_col_physique(
         self, schema: str, id_collection: int, id_utilisateur: int
     ) -> int:
-        """Trouver l'identifiant d'un avis grâce aux id manga et utilisateur."""
+        """
+        Trouver l'identifiant d'un avis sur une collection physique
+        grâce à l'identifiant de la collection et de utilisateur.
+
+        Parameters:
+        -----------
+        schema: str
+            nom du schema que l'on souhaite modifier, schema= "projet_test_dao"
+            pour modifier la base de données prévue pour les test, et
+            schema= "projet_info_2a" pour modifier la base de données de
+            l'application.
+
+        id_collection: int
+            identifiant de la collection physique sur laquelle se trouve
+            l'avis dont on souhaite trouver l'identifiant.
+
+        id_utilisateur: int
+            identifiant de l'utilisateur ayant écrit l'avis dont on souhaite
+            trouver l'identifiant.
+
+        Returns:
+        --------
+        id_avis: int
+            identifiant de l'avis souhaité.
+        """
+
         try:
             with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
@@ -68,7 +117,32 @@ class DaoAvis(metaclass=Singleton):
     def trouver_id_avis_par_id_col_coherente_utilisateur(
         self, schema: str, id_collection_coherente: int, id_utilisateur: int
     ) -> int:
-        """Trouver l'identifiant d'un avis grâce aux id manga et utilisateur."""
+        """
+        Trouver l'identifiant d'un avis sur une collection cohérente
+        grâce à l'identifiant de la collection et de utilisateur.
+
+        Parameters:
+        -----------
+        schema: str
+            nom du schema que l'on souhaite modifier, schema= "projet_test_dao"
+            pour modifier la base de données prévue pour les test, et
+            schema= "projet_info_2a" pour modifier la base de données de
+            l'application.
+
+        id_collection: int
+            identifiant de la collection cohérente sur laquelle se trouve
+            l'avis dont on souhaite trouver l'identifiant.
+
+        id_utilisateur: int
+            identifiant de l'utilisateur ayant écrit l'avis dont on souhaite
+            trouver l'identifiant.
+
+        Returns:
+        --------
+        id_avis: int
+            identifiant de l'avis souhaité.
+        """
+
         try:
             with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
@@ -104,10 +178,17 @@ class DaoAvis(metaclass=Singleton):
             Identifiant de l'utilisateur qui souhaite créer un avis.
 
         id_manga: int
-            Identifiant du manga sur lequel l'utilisateur souhaite laisser un avis.
+            Identifiant du manga sur lequel l'utilisateur souhaite laisser un
+            avis.
 
         avis: Avis
             Objet contenant le texte de l'avis et la note.
+
+        schema: str
+            nom du schema que l'on souhaite modifier, schema= "projet_test_dao"
+            pour modifier la base de données prévue pour les test, et
+            schema= "projet_info_2a" pour modifier la base de données de
+            l'application.
 
         Returns:
         --------
@@ -130,10 +211,8 @@ class DaoAvis(metaclass=Singleton):
                         """,
                         (id_utilisateur, id_manga, avis.avis, avis.note),
                     )
-                    # Récupérer l'ID de l'avis inséré
                     id_avis = cursor.fetchone()
 
-                    # Si un ID a été retourné, l'avis a été créé avec succès
                     if id_avis:
                         avis.id_avis = id_avis["id_avis"]
                         return True
@@ -154,11 +233,20 @@ class DaoAvis(metaclass=Singleton):
         -----------
         id_utilisateur: int
             identifiant de l'utilisateur pour lequel on souhaite créer
-            un avis
+            un avis.
 
-        id_collection: int
+        id_collection_coherente: int
             identifiant de la collection sur laquelle l'utilisateur souhaite
-            laisser un avis
+            laisser un avis.
+
+        avis_collection_coherente: Avis
+            Objet contenant le texte et la note de l'avis.
+
+        schema: str
+            nom du schema que l'on souhaite modifier, schema= "projet_test_dao"
+            pour modifier la base de données prévue pour les test, et
+            schema= "projet_info_2a" pour modifier la base de données de
+            l'application.
 
         Returns:
         --------
@@ -183,10 +271,8 @@ class DaoAvis(metaclass=Singleton):
                             "note": avis_collection_coherente.note,
                         },
                     )
-                    # Récupérer l'ID de l'avis inséré
                     id_avis = cursor.fetchone()
 
-                    # Si un ID a été retourné, l'avis a été créé avec succès
                     if id_avis:
                         avis_collection_coherente.id_avis = id_avis["id_avis_collection_coherente"]
                         return True
@@ -211,7 +297,16 @@ class DaoAvis(metaclass=Singleton):
 
         id_collection: int
             identifiant de la collection sur laquelle l'utilisateur souhaite
-            laisser un avis
+            laisser un avis.
+
+        avis_collection_physique: Avis
+            Objet contentant le texte et la note de l'avis.
+
+        schema: str
+            nom du schema que l'on souhaite modifier, schema= "projet_test_dao"
+            pour modifier la base de données prévue pour les test, et
+            schema= "projet_info_2a" pour modifier la base de données de
+            l'application.
 
         Returns:
         --------
@@ -258,6 +353,12 @@ class DaoAvis(metaclass=Singleton):
 
         Parameters:
         -----------
+        schema: str
+            nom du schema que l'on souhaite modifier, schema= "projet_test_dao"
+            pour modifier la base de données prévue pour les test, et
+            schema= "projet_info_2a" pour modifier la base de données de
+            l'application.
+
         id_utilisateur: int
             identifiant de l'utilisateur dont on souhaite chercher les avis
             sur un manga
@@ -308,11 +409,14 @@ class DaoAvis(metaclass=Singleton):
 
         Parameters:
         -----------
-        id_utilisateur: int
-            Identifiant de l'utilisateur.
+        schema: str
+            nom du schema que l'on souhaite modifier, schema= "projet_test_dao"
+            pour modifier la base de données prévue pour les test, et
+            schema= "projet_info_2a" pour modifier la base de données de
+            l'application.
 
-        id_manga: int
-            Identifiant du manga dont l'avis sera supprimé.
+        id_avis:
+            identifiant de l'avis que l'on souhaite supprimé.
 
         Returns:
         --------
@@ -324,7 +428,7 @@ class DaoAvis(metaclass=Singleton):
 
         try:
             with DBConnection(schema).connection as connection:
-                with connection.cursor() as cursor:  # Fix: Use 'with connection.cursor()'
+                with connection.cursor() as cursor:
                     cursor.execute(
                         "DELETE FROM avis WHERE id_avis= %(id_avis)s;",
                         {"id_avis": id_avis},
@@ -344,13 +448,27 @@ class DaoAvis(metaclass=Singleton):
 
         Parameters
         ----------
+        schema: str
+            nom du schema que l'on souhaite modifier, schema= "projet_test_dao"
+            pour modifier la base de données prévue pour les test, et
+            schema= "projet_info_2a" pour modifier la base de données de
+            l'application.
+
+        id_manga: int
+            identifiant du manga sur lequel ce trouve l'avis que l'on souhaite
+            modifier.
+
+        id_utilisateur: int
+            identifiant de l'utilisateur qui souhaite modifier son avis.
+
         avis : Avis
             Avis modifié que l'on souhaite mettre à jour dans la base de données.
 
         Returns
         -------
         bool
-            Retourne True si la mise à jour a été effectuée avec succès, sinon False.
+            Retourne True si la mise à jour a été effectuée avec succès, sinon
+            False.
         """
         id_avis = self.trouver_id_avis_par_id_manga_utilisateur(schema, id_manga, id_utilisateur)
         res = None
@@ -387,13 +505,28 @@ class DaoAvis(metaclass=Singleton):
 
         Parameters
         ----------
+        schema: str
+            nom du schema que l'on souhaite modifier, schema= "projet_test_dao"
+            pour modifier la base de données prévue pour les test, et
+            schema= "projet_info_2a" pour modifier la base de données de
+            l'application.
+
+        id_collection: int
+            identifiant de la collection cohérente sur laquelle se trouve
+            l'avis que l'on souhaite modifier.
+
+        id_utilisateur: int
+            identifiant de l'utilisateur qui souhaite modifier son avis.
+
         avis : Avis
-            Avis modifié que l'on souhaite mettre à jour dans la base de données.
+            Avis modifié que l'on souhaite mettre à jour dans la base de
+            données.
 
         Returns
         -------
         bool
-            Retourne True si la mise à jour a été effectuée avec succès, sinon False.
+            Retourne True si la mise à jour a été effectuée avec succès,
+            sinon False.
         """
         id_avis_collection_coherente = self.trouver_id_avis_par_id_col_coherente_utilisateur(
             schema=schema, id_collection_coherente=id_collection, id_utilisateur=id_utilisateur
@@ -432,6 +565,19 @@ class DaoAvis(metaclass=Singleton):
 
         Parameters
         ----------
+        schema: str
+            nom du schema que l'on souhaite modifier, schema= "projet_test_dao"
+            pour modifier la base de données prévue pour les test, et
+            schema= "projet_info_2a" pour modifier la base de données de
+            l'application.
+
+        id_collection: int
+            identifiant de la collection physique sur laquelle se trouve
+            l'avis que l'on souhaite modifier.
+
+        id_utilisateur: int
+            identifiant de l'utilisateur qui souhaite modifier son avis.
+
         avis : Avis
             Avis modifié que l'on souhaite mettre à jour dans la base de données.
 
@@ -475,7 +621,11 @@ class DaoAvis(metaclass=Singleton):
         Parameters
         ----------
         schema: str
-            Nom du schéma de la base de données.
+            nom du schema que l'on souhaite modifier, schema= "projet_test_dao"
+            pour modifier la base de données prévue pour les test, et
+            schema= "projet_info_2a" pour modifier la base de données de
+            l'application.
+
         id_manga: int
             Identifiant du manga pour lequel on souhaite récolter les avis.
 
@@ -501,7 +651,6 @@ class DaoAvis(metaclass=Singleton):
             logging.error(f"Erreur lors de la recherche d'avis sur le manga {id_manga} : {e}")
             raise
 
-        # Transforme les résultats en une liste d'objets Avis
         liste_avis = (
             [Avis(id_avis=row["id_avis"], avis=row["avis"], note=row["note"]) for row in res]
             if res
@@ -518,9 +667,14 @@ class DaoAvis(metaclass=Singleton):
         Parameters
         ----------
         schema: str
-            Nom du schéma de la base de données.
-        id_collection: int
-            Identifiant du manga pour lequel on souhaite récolter les avis.
+            nom du schema que l'on souhaite modifier, schema= "projet_test_dao"
+            pour modifier la base de données prévue pour les test, et
+            schema= "projet_info_2a" pour modifier la base de données de
+            l'application.
+
+        id_collection_coherente: int
+            Identifiant de la collection coherente pour laquelle
+            on souhaite récolter les avis.
 
         Returns
         -------
@@ -542,12 +696,9 @@ class DaoAvis(metaclass=Singleton):
                     res = cursor.fetchall()
 
         except Exception as e:
-            logging.error(
-                f"Erreur lors de la recherche d'avis sur la collection {id_collection_coherente} : {e}"
-            )
+            logging.error(f"Erreur sur collection {id_collection_coherente} : {e}")
             raise
 
-        # Transforme les résultats en une liste d'objets Avis
         liste_avis = (
             [
                 Avis(
@@ -569,9 +720,14 @@ class DaoAvis(metaclass=Singleton):
         Parameters
         ----------
         schema: str
-            Nom du schéma de la base de données.
+            nom du schema que l'on souhaite modifier, schema= "projet_test_dao"
+            pour modifier la base de données prévue pour les test, et
+            schema= "projet_info_2a" pour modifier la base de données de
+            l'application.
+
         id_collection: int
-            Identifiant du manga pour lequel on souhaite récolter les avis.
+            Identifiant de la collection pour laquelle on souhaite récolter
+            les avis.
 
         Returns
         -------
@@ -597,7 +753,6 @@ class DaoAvis(metaclass=Singleton):
             )
             raise
 
-        # Transforme les résultats en une liste d'objets Avis
         liste_avis = (
             [
                 Avis(id_avis=row["id_avis_collection_physique"], avis=row["avis"], note=row["note"])
@@ -619,16 +774,22 @@ class DaoAvis(metaclass=Singleton):
         Parameters
         ----------
         schema: str
-            Nom du schéma de la base de données.
+            nom du schema que l'on souhaite modifier, schema= "projet_test_dao"
+            pour modifier la base de données prévue pour les test, et
+            schema= "projet_info_2a" pour modifier la base de données de
+            l'application.
+
         id_utilisateur: int
             id de l'utilisateur dont on veut afficher l'avis.
-        id_collection: int
-            Identifiant de la collection pour laquel on souhaite récolter les avis.
+
+        id_collection_coherente: int
+            Identifiant de la collection pour laquel on souhaite récolter
+            l'avis de l'utilisateur.
 
         Returns
         -------
-        Avis
-            avis trouvés.
+        Liste[Avis]
+            liste contenant l'avis trouvés.
         """
         try:
             with DBConnection(schema).connection as connection:
@@ -649,9 +810,7 @@ class DaoAvis(metaclass=Singleton):
                     res = cursor.fetchall()
 
         except Exception as e:
-            logging.error(
-                f"Erreur lors de la recherche de l'avis de l'utilisateur {id_utilisateur} sur la collection {id_collection_coherente} : {e}"
-            )
+            logging.error(f"Erreur  {id_utilisateur} col {id_collection_coherente} : {e}")
             raise
 
         liste_avis = (
@@ -675,18 +834,22 @@ class DaoAvis(metaclass=Singleton):
         Parameters
         ----------
         schema: str
-            Nom du schéma de la base de données.
+            nom du schema que l'on souhaite modifier, schema= "projet_test_dao"
+            pour modifier la base de données prévue pour les test, et
+            schema= "projet_info_2a" pour modifier la base de données de
+            l'application.
 
         id_utilisateur: str
             id de l'utilisateur dont ont souhaite trouver l'avis
 
         id_collection: int
-            Identifiant du manga pour lequel on souhaite récolter les avis.
+            Identifiant de la collection physique pour laquelle on souhaite
+            récolter l'avis de l'utilisateur.
 
         Returns
         -------
-        Avis
-            avis trouvé.
+        Liste[Avis]
+            liste contenant l'avis trouvé.
         """
         try:
             with DBConnection(schema).connection as connection:
@@ -708,7 +871,6 @@ class DaoAvis(metaclass=Singleton):
             )
             raise
 
-        # Transforme les résultats en une liste d'objets Avis
         liste_avis = (
             [
                 Avis(id_avis=row["id_avis_collection_physique"], avis=row["avis"], note=row["note"])
@@ -727,12 +889,20 @@ class DaoAvis(metaclass=Singleton):
         Parameters:
         -----------
 
-        id_avis: int
+        id_avis_collection_coherente: int
             identifiant de l'avis que l'on souhaite supprimer de la base de
             données
 
+        schema: str
+            nom du schema que l'on souhaite modifier, schema= "projet_test_dao"
+            pour modifier la base de données prévue pour les test, et
+            schema= "projet_info_2a" pour modifier la base de données de
+            l'application.
+
         Returns:
         --------
+        Bool:
+            Return True si la suppression à bien été effectué.
 
         """
 
@@ -761,12 +931,20 @@ class DaoAvis(metaclass=Singleton):
         Parameters:
         -----------
 
-        id_avis: int
+        id_avis_collection_physique: int
             identifiant de l'avis que l'on souhaite supprimer de la base de
             données
 
+        schema: str
+            nom du schema que l'on souhaite modifier, schema= "projet_test_dao"
+            pour modifier la base de données prévue pour les test, et
+            schema= "projet_info_2a" pour modifier la base de données de
+            l'application.
+
         Returns:
         --------
+        Bool:
+            Return True si la suppression à bien été effectué.
 
         """
 
@@ -790,6 +968,28 @@ class DaoAvis(metaclass=Singleton):
         return res > 0
 
     def trouver_auteur_avis_sur_manga(self, schema, id_avis, id_manga):
+        """
+        Permet de trouver le nom d'utilisateur de celui qui à écrit l'avis
+
+        Parameters:
+        -----------
+        schema: str
+            nom du schema que l'on souhaite modifier, schema= "projet_test_dao"
+            pour modifier la base de données prévue pour les test, et
+            schema= "projet_info_2a" pour modifier la base de données de
+            l'application.
+
+        id_avis: int
+            identifiant de l'avis dont on souhaite connaitre l'auteur.
+
+        id_manga: int
+            identifiant du manga sur lequel se trouve l'avis.
+
+        Returns:
+        --------
+        username: str
+            nom d'utilisateur de l'auteur de l'avis
+        """
 
         username = None
 
@@ -814,7 +1014,28 @@ class DaoAvis(metaclass=Singleton):
     def trouver_auteur_avis_sur_col_co(
         self, schema, id_avis_collection_coherente, id_collection_coherente
     ):
+        """
+        Permet de trouver le nom d'utilisateur de celui qui à écrit l'avis
 
+        Parameters:
+        -----------
+        schema: str
+            nom du schema que l'on souhaite modifier, schema= "projet_test_dao"
+            pour modifier la base de données prévue pour les test, et
+            schema= "projet_info_2a" pour modifier la base de données de
+            l'application.
+
+        id_avis_collection_coherente: int
+            identifiant de l'avis dont on souhaite connaitre l'auteur.
+
+        id_collection_coherente: int
+            identifiant de la collection sur laquelle se trouve l'avis.
+
+        Returns:
+        --------
+        username: str
+            nom d'utilisateur de l'auteur de l'avis
+        """
         username = None
 
         try:
@@ -839,6 +1060,28 @@ class DaoAvis(metaclass=Singleton):
         return username["nom_utilisateur"]
 
     def trouver_auteur_avis_sur_col_phy(self, schema, id_avis_collection_physique, id_collection):
+        """
+        Permet de trouver le nom d'utilisateur de celui qui à écrit l'avis
+
+        Parameters:
+        -----------
+        schema: str
+            nom du schema que l'on souhaite modifier, schema= "projet_test_dao"
+            pour modifier la base de données prévue pour les test, et
+            schema= "projet_info_2a" pour modifier la base de données de
+            l'application.
+
+        id_avis_collection_physique: int
+            identifiant de l'avis dont on souhaite connaitre l'auteur.
+
+        id_collection: int
+            identifiant de la collection sur laquelle se trouve l'avis.
+
+        Returns:
+        --------
+        username: str
+            nom d'utilisateur de l'auteur de l'avis
+        """
 
         username = None
 

@@ -1,7 +1,6 @@
 import pytest
 from business_object.avis import Avis
 from dao.avis_dao import DaoAvis
-from dao.collection_dao import DaoCollection
 
 
 def test_trouver_id_avis_par_id_manga_utilisateur_true():

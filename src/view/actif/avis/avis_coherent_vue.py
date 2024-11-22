@@ -92,10 +92,10 @@ class AvisCoherentVue(VueAbstraite):
                     message="Veuillez entrer votre avis sur cette collection"
                 ).execute()
 
-                while not ServiceAvis().Validation_avis(avis):
-                    avis = inquirer.text(
+                while not ServiceAvis().Validation_avis(nouvel_avis):
+                    nouvel_avis = inquirer.text(
                         message="Votre avis est grossier veuillez en entrer un de convenable."
-                    )
+                    ).execute()
 
                 ServiceAvis().modifier_collection_cohérente(
                     self.collection.id_collection, id_utilisateur, nouvel_avis, int(nouvelle_note)
