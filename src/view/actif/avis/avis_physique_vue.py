@@ -65,6 +65,11 @@ class AvisPhysiqueVue(VueAbstraite):
                         message="Veuillez entrer votre avis sur cette collection"
                     ).execute()
 
+                    while not ServiceAvis().Validation_avis(avis):
+                        avis = inquirer.text(
+                            message="Votre avis est grossier veuillez en entrer un de convenable."
+                        )
+
                     ServiceAvis().ajouter_avis_collection(
                         id_utilisateur_perso, id_collection_physique, "Physique", avis, int(note)
                     )
@@ -93,6 +98,11 @@ class AvisPhysiqueVue(VueAbstraite):
                     nouvel_avis = inquirer.text(
                         message="Veuillez entrer votre avis sur cette collection"
                     ).execute()
+
+                    while not ServiceAvis().Validation_avis(avis):
+                        avis = inquirer.text(
+                            message="Votre avis est grossier veuillez en entrer un de convenable."
+                        )
 
                     ServiceAvis().modifier_collection_physique(
                         id_collection_physique,

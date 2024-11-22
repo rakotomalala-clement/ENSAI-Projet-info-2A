@@ -63,6 +63,11 @@ class AvisCoherentVue(VueAbstraite):
                         message="Veuillez entrer votre avis sur cette collection"
                     ).execute()
 
+                    while not ServiceAvis().Validation_avis(avis):
+                        avis = inquirer.text(
+                            message="Votre avis est grossier veuillez en entrer un de convenable."
+                        )
+
                     ServiceAvis().ajouter_avis_collection(
                         id_utilisateur, self.collection.id_collection, "Coherente", avis, int(note)
                     )
@@ -86,6 +91,11 @@ class AvisCoherentVue(VueAbstraite):
                 nouvel_avis = inquirer.text(
                     message="Veuillez entrer votre avis sur cette collection"
                 ).execute()
+
+                while not ServiceAvis().Validation_avis(avis):
+                    avis = inquirer.text(
+                        message="Votre avis est grossier veuillez en entrer un de convenable."
+                    )
 
                 ServiceAvis().modifier_collection_cohérente(
                     self.collection.id_collection, id_utilisateur, nouvel_avis, int(nouvelle_note)
