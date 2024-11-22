@@ -1,3 +1,6 @@
+"""Classe représentant les mangas liés aux collections physiques des utilisateurs"""
+
+
 class MangaDansCollection:
     def __init__(self, titre_manga, dernier_tome_acquis, numeros_tomes_manquants, status_manga):
         self.titre_manga = titre_manga

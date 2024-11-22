@@ -42,7 +42,7 @@ class ResetDatabase(metaclass=Singleton):
                     logging.info(e)
                     raise
 
-            # Restoration la valeur initiale de la variable d'environnement
+            # Restoration de la valeur initiale de la variable d'environnement
             os.environ["POSTGRES_SCHEMA"] = original_schema
 
             return True

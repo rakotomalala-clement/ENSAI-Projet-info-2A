@@ -6,6 +6,7 @@ from business_object.collection.collection_physique import CollectionPhysique
 from business_object.collection.collection_coherente import CollectionCoherente
 from business_object.collection.mangas_dans_collection import MangaDansCollection
 from dao.manga_dao import MangaDao
+from typing import Optional
 
 
 class ServiceCollection:
@@ -20,7 +21,7 @@ class ServiceCollection:
         titre,
         description,
         schema,
-    ) -> int:
+    ) -> Optional[int]:
         if type_collection == "Physique":
             collection = CollectionPhysique()
 
@@ -29,10 +30,13 @@ class ServiceCollection:
 
         else:
             logging.error("Type de collection inconnu.")
-            return False
+            return None
 
-        self.dao_collection.creer(id_utilisateur, collection, schema)
-        return collection.id_collection
+        if self.dao_collection.creer(id_utilisateur, collection, schema) is True:
+
+            return collection.id_collection
+        else:
+            return None
 
     def lister_collections_coherentes(
         self, id_utilisateur: int, schema: str

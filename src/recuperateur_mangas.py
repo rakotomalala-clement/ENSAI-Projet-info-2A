@@ -13,7 +13,7 @@ class RecuperateurManga:
         dotenv.load_dotenv()
 
         # 176371 mangas à récupérer
-        page = 2916
+        page = 1
         while True:
             # Construction de l'URL pour chaque page de résultats
             url = f"{self.base_url}?page={page}"
@@ -44,7 +44,7 @@ class RecuperateurManga:
                         genre.get("name") or "information non renseignée" for genre in genres
                     )
 
-                    # Status
+                    # Traduction des Status en Français
                     status = manga.get("status")
                     if status == "Publishing":
                         status = "en cours de publication"

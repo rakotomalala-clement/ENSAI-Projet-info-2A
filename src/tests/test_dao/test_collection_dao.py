@@ -3,6 +3,7 @@ from dao.collection_dao import DaoCollection
 from dao.manga_dao import MangaDao
 from business_object.collection.collection_physique import CollectionPhysique
 from business_object.collection.collection_coherente import CollectionCoherente
+from utils.log_decorator import log
 
 
 # Fixture pour initialiser les collections utilisées dans les tests
@@ -19,6 +20,7 @@ def collections():
     return collection1, collection2, collection3
 
 
+@log
 def test_creer_collection_physique_ok(collections):
     """Test de la création d'une collection physique."""
 
@@ -196,7 +198,8 @@ def test_supprimer_collection_coherente_ok(collections):
 
 
 def test_modifier_collection_physique(collections):
-    """Test de la modification d'une collection physique (numeros tomes manquants d'un manga de la collection)."""
+    """Test de la modification d'une collection physique
+    (numeros tomes manquants d'un manga de la collection)."""
     dao_collection = DaoCollection()
     dao_manga = MangaDao()
     _, _, collection = collections

@@ -31,7 +31,8 @@ class DaoCollection(metaclass=Singleton):
         elif collection.type_collection == "Coherente":
 
             query = """
-                INSERT INTO collection_coherente (id_utilisateur, titre_collection, description_collection)
+                INSERT INTO collection_coherente (id_utilisateur, titre_collection,
+                description_collection)
                 VALUES (%(id_utilisateur)s, %(titre_collection)s, %(description_collection)s)
                 RETURNING id_collection;
             """
@@ -54,7 +55,6 @@ class DaoCollection(metaclass=Singleton):
                     res = cursor.fetchone()
 
                     if res:
-                        # Utilisation éventuelle de l'id_collection
                         collection.id_collection = res["id_collection"]
                         created = True
 
@@ -73,7 +73,8 @@ class DaoCollection(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     cursor.execute(
                         """
-                        SELECT id_collection, id_utilisateur, titre_collection, description_collection
+                        SELECT id_collection, id_utilisateur, titre_collection,
+                        description_collection
                         FROM collection_coherente
                         WHERE id_utilisateur = %s;
                         """,
@@ -155,7 +156,8 @@ class DaoCollection(metaclass=Singleton):
                 with connection.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
                     cursor.execute(
                         """
-                        SELECT cpm.id_manga, cpm.titre_manga, cpm.numero_dernier_tome, cpm.numeros_tomes_manquants,cpm.status_manga
+                        SELECT cpm.id_manga, cpm.titre_manga, cpm.numero_dernier_tome,
+                        cpm.numeros_tomes_manquants,cpm.status_manga
                         FROM collection_physique cp
                         JOIN collection_physique_mangas cpm ON cp.id_collection = cpm.id_collection
                         WHERE cp.id_utilisateur = %s;
@@ -225,6 +227,8 @@ class DaoCollection(metaclass=Singleton):
 
     # méthode  utilisée dans la méthode : ajouter_manga_collection_physique
     def obtenir_id_collection_par_utilisateur(self, id_utilisateur, schema):
+        """récupération de l'id de la collection physique de l'utilisateur identifié par
+        id_utilisateur"""
         try:
             with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
@@ -271,7 +275,8 @@ class DaoCollection(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     cursor.execute(
                         """
-                        INSERT INTO collection_physique_mangas (id_collection,id_manga, titre_manga, numero_dernier_tome, numeros_tomes_manquants, status_manga)
+                        INSERT INTO collection_physique_mangas (id_collection,id_manga, titre_manga,
+                        numero_dernier_tome, numeros_tomes_manquants, status_manga)
                         VALUES (%s, %s, %s, %s, %s, %s) RETURNING id_collection_physique_mangas;
                         """,
                         (
@@ -319,6 +324,7 @@ class DaoCollection(metaclass=Singleton):
 
     @log
     def supprimer_manga_col_physique(self, id_collection, id_manga, schema) -> bool:
+        """suppression d'un manga de la collection physique identifiée par id_collection"""
         try:
             with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
@@ -333,6 +339,7 @@ class DaoCollection(metaclass=Singleton):
 
     @log
     def supprimer_manga_col_coherente(self, id_collection, id_manga, schema) -> bool:
+        """suppression d'un manga de la collection cohérente identifiée par id_collection"""
         try:
             with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
@@ -365,7 +372,6 @@ class DaoCollection(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     cursor.execute(query, params)
 
-                    # Vérifiez combien de lignes ont été affectées
                     if cursor.rowcount > 0:
                         return True
                     else:
@@ -383,7 +389,8 @@ class DaoCollection(metaclass=Singleton):
         self, manga: MangaDansCollection, id_collection, id_manga, schema: str
     ) -> bool:
 
-        # on modifie pas le titre du manga, sinon --> suppression du manga
+        # on ne modifie pas le titre du manga, sinon, il faut supprimer le manga de la collection
+        # et ajouter un autre avec le nouveau titre
         query = """
 
         UPDATE collection_physique_mangas
@@ -407,7 +414,6 @@ class DaoCollection(metaclass=Singleton):
                 with connection.cursor() as cursor:
                     cursor.execute(query, params)
 
-                    # Vérifiez combien de lignes ont été affectées
                     if cursor.rowcount > 0:
                         return True
                     else:
