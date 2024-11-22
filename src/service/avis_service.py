@@ -210,7 +210,7 @@ class ServiceAvis:
         return username
 
     @log
-    def Validation_avis(self, avis: str):
+    def Validation_avis(self, message_avis: str):
         is_avis_valide = True
 
         Liste_mot_invalide = [
@@ -225,7 +225,7 @@ class ServiceAvis:
             "PUTAIN",
         ]
 
-        if avis.upper() in Liste_mot_invalide:
+        if message_avis.upper() in Liste_mot_invalide:
             is_avis_valide = False
 
         return is_avis_valide

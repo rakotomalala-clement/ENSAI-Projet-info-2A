@@ -68,7 +68,7 @@ class AvisPhysiqueVue(VueAbstraite):
                     while not ServiceAvis().Validation_avis(avis):
                         avis = inquirer.text(
                             message="Votre avis est grossier veuillez en entrer un de convenable."
-                        )
+                        ).execute()
 
                     ServiceAvis().ajouter_avis_collection(
                         id_utilisateur_perso, id_collection_physique, "Physique", avis, int(note)

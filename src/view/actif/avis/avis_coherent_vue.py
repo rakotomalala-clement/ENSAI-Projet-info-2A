@@ -66,7 +66,7 @@ class AvisCoherentVue(VueAbstraite):
                     while not ServiceAvis().Validation_avis(avis):
                         avis = inquirer.text(
                             message="Votre avis est grossier veuillez en entrer un de convenable."
-                        )
+                        ).execute()
 
                     ServiceAvis().ajouter_avis_collection(
                         id_utilisateur, self.collection.id_collection, "Coherente", avis, int(note)

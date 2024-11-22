@@ -5,13 +5,13 @@ from service.avis_service import ServiceAvis
 
 def test_validation_avis_invalide_ok():
     avis = "merde"
-    invalide = ServiceAvis().Validation_avis(avis=avis)
+    invalide = ServiceAvis().Validation_avis(message_avis=avis)
     assert invalide is False
 
 
 def test_validation_avis_valide_ok():
     avis = "cool"
-    invalide = ServiceAvis().Validation_avis(avis=avis)
+    invalide = ServiceAvis().Validation_avis(message_avis=avis)
     assert invalide is True
 
 

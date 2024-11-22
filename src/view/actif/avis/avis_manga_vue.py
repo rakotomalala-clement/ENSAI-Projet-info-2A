@@ -64,7 +64,7 @@ class AvisMangaVue(VueAbstraite):
                     while not ServiceAvis().Validation_avis(avis):
                         avis = inquirer.text(
                             message="Votre avis est grossier veuillez en entrer un de convenable."
-                        )
+                        ).execute()
 
                     ServiceAvis().ajouter_avis(id_utilisateur, id_manga, avis, int(note))
 
