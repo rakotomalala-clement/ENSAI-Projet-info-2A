@@ -61,6 +61,11 @@ class AvisMangaVue(VueAbstraite):
                         message="Veuillez entrer votre avis sur ce manga"
                     ).execute()
 
+                    while not ServiceAvis().Validation_avis(avis):
+                        avis = inquirer.text(
+                            message="Votre avis est grossier veuillez en entrer un de convenable."
+                        ).execute()
+
                     ServiceAvis().ajouter_avis(id_utilisateur, id_manga, avis, int(note))
 
                     return AffichageMangaVue(self.manga.titre).choisir_menu()
@@ -82,6 +87,11 @@ class AvisMangaVue(VueAbstraite):
                 nouvel_avis = inquirer.text(
                     message="Veuillez entrer votre avis sur ce manga"
                 ).execute()
+
+                while not ServiceAvis().Validation_avis(avis):
+                    avis = inquirer.text(
+                        message="Votre avis est grossier veuillez en entrer un de convenable."
+                    )
 
                 ServiceAvis().modifier(id_manga, id_utilisateur, nouvel_avis, int(nouvelle_note))
 

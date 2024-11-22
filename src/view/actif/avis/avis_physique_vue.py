@@ -1,7 +1,5 @@
 from InquirerPy import inquirer
 from view.vue_abstraite import VueAbstraite
-from view.passif.accueil_vue import AccueilVue
-from view.actif.accueil_connecte_vue import AccueilConnecteVue
 from view.passif.connexion.session import Session
 from service.avis_service import ServiceAvis
 from service.Service_Utilisateur import ServiceUtilisateur
@@ -21,12 +19,12 @@ class AvisPhysiqueVue(VueAbstraite):
         """
 
         choix = inquirer.select(
-            message="",
+            message="\n",
             choices=[
                 "Ajouter mon avis",
                 "Modifier mon avis",
                 "Supprimer mon avis",
-                "Retour au menu principal",
+                "Retourner au menu de recherche d'utilisateur",
             ],
         ).execute()
 
@@ -67,6 +65,11 @@ class AvisPhysiqueVue(VueAbstraite):
                         message="Veuillez entrer votre avis sur cette collection"
                     ).execute()
 
+                    while not ServiceAvis().Validation_avis(avis):
+                        avis = inquirer.text(
+                            message="Votre avis est grossier veuillez en entrer un de convenable."
+                        ).execute()
+
                     ServiceAvis().ajouter_avis_collection(
                         id_utilisateur_perso, id_collection_physique, "Physique", avis, int(note)
                     )
@@ -96,11 +99,16 @@ class AvisPhysiqueVue(VueAbstraite):
                         message="Veuillez entrer votre avis sur cette collection"
                     ).execute()
 
+                    while not ServiceAvis().Validation_avis(avis):
+                        avis = inquirer.text(
+                            message="Votre avis est grossier veuillez en entrer un de convenable."
+                        )
+
                     ServiceAvis().modifier_collection_physique(
-                        id_utilisateur_perso,
                         id_collection_physique,
-                        int(nouvelle_note),
+                        id_utilisateur_perso,
                         nouvel_avis,
+                        int(nouvelle_note),
                     )
 
                     return AvisPhysiqueVue(self.id_utilisateur_collection).choisir_menu()
@@ -110,11 +118,10 @@ class AvisPhysiqueVue(VueAbstraite):
                     print("Vous n'avez pas encore d'avis sur ce manga")
                     return AvisPhysiqueVue(self.id_utilisateur_collection).choisir_menu()
                 else:
-                    ServiceAvis().supprimer(avis.id_avis)
+                    ServiceAvis().supprimer_avis_collection_physique(avis.id_avis)
                     return AvisPhysiqueVue(self.id_utilisateur_collection).choisir_menu()
 
-            case "Retour au menu principal":
-                if Session().connecte:
-                    return AccueilConnecteVue().choisir_menu()
-                else:
-                    return AccueilVue().choisir_menu()
+            case "Retourner au menu de recherche d'utilisateur":
+                from view.passif.recherche_utilisateur_vue import RechercheUtilisateurVue
+
+                return RechercheUtilisateurVue().choisir_menu()

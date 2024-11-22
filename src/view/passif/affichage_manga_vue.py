@@ -54,7 +54,10 @@ class AffichageMangaVue(VueAbstraite):
             print("")
         else:
             for avis in liste_avis:
-                print("Note: ", avis.note, ", ", avis.avis)
+                nom_utilisateur_avis = ServiceAvis().trouver_auteur_avis_sur_manga(
+                    avis.id_avis, id_manga
+                )
+                print(nom_utilisateur_avis, ": Note: ", avis.note, ", ", avis.avis)
 
         if Session().connecte:
             possibilites = ["Gérer son avis sur ce manga", "Revenir au menu principal", "Quitter"]

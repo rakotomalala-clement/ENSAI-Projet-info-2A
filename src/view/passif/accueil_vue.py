@@ -32,22 +32,22 @@ class AccueilVue(VueAbstraite):
                 pass
 
             case "Se connecter":
-                from connexion.connexion_vue import ConnexionVue
+                from view.passif.connexion.connexion_vue import ConnexionVue
 
                 return ConnexionVue().choisir_menu()
 
             case "Créer un compte":
-                from connexion.inscription_vue import InscriptionVue
+                from view.passif.connexion.inscription_vue import InscriptionVue
 
                 return InscriptionVue().choisir_menu()
 
             case "Rechercher manga":
-                from recherche_manga_vue import RechercheMangaVue
+                from view.passif.recherche_manga_vue import RechercheMangaVue
 
                 return RechercheMangaVue().choisir_menu()
 
             case "Rechercher utilisateur":
-                from recherche_utilisateur_vue import RechercheUtilisateurVue
+                from view.passif.recherche_utilisateur_vue import RechercheUtilisateurVue
 
                 return RechercheUtilisateurVue().choisir_menu()
 

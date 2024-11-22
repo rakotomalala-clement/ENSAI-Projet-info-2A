@@ -88,6 +88,19 @@ def test_creer_avis_ok():
     assert creation_ok
 
 
+def test_trouver_auteur_avis_sur_manga_ok():
+    """trouver nom d'utilisateur de l'auteur d'un avis ok"""
+    nom = "Lilian"
+    nom_ok = DaoAvis().trouver_auteur_avis_sur_manga(
+        schema="projet_test_dao",
+        id_avis=DaoAvis().trouver_id_avis_par_id_manga_utilisateur(
+            schema="projet_test_dao", id_manga=1, id_utilisateur=12
+        ),
+        id_manga=1,
+    )
+    assert nom == nom_ok
+
+
 def test_creer_avis_col_coherente_ok():
     """Création d'avis sur collection cohérente."""
     # GIVEN
@@ -101,6 +114,19 @@ def test_creer_avis_col_coherente_ok():
     )
     # THEN
     assert creation
+
+
+def test_trouver_auteur_avis_sur_col_co_ok():
+    """trouver nom d'utilisateur de l'auteur d'une colection cohérente ok"""
+    nom = "Lilian"
+    nom_ok = DaoAvis().trouver_auteur_avis_sur_col_co(
+        schema="projet_test_dao",
+        id_avis_collection_coherente=DaoAvis().trouver_id_avis_par_id_col_coherente_utilisateur(
+            schema="projet_test_dao", id_collection_coherente=1, id_utilisateur=12
+        ),
+        id_collection_coherente=1,
+    )
+    assert nom == nom_ok
 
 
 def test_afficher_avis_collection_coherente_ok():
@@ -122,7 +148,7 @@ def test_afficher_avis_user_sur_collection_coherente_ok():
     avis_col_co = DaoAvis().chercher_avis_user_sur_collection_coherente(
         schema="projet_test_dao", id_utilisateur=12, id_collection_coherente=1
     )
-    assert id_avis == avis_col_co.id_avis
+    assert id_avis == avis_col_co[0].id_avis
 
 
 def test_modifier_avis_col_co_ok():
@@ -160,6 +186,19 @@ def test_creer_avis_col_physique_ok():
     assert creation_ok
 
 
+def test_trouver_auteur_avis_sur_col_phy_ok():
+    """trouver nom d'utilisateur de l'auteur d'une colection cohérente ok"""
+    nom = "Lilian"
+    nom_ok = DaoAvis().trouver_auteur_avis_sur_col_phy(
+        schema="projet_test_dao",
+        id_avis_collection_physique=DaoAvis().trouver_id_avis_par_id_manga_utilisateur_col_physique(
+            schema="projet_test_dao", id_collection=1, id_utilisateur=12
+        ),
+        id_collection=1,
+    )
+    assert nom == nom_ok
+
+
 def test_afficher_avis_collection_physique_ok():
     "chercher avis sur collection physique ok"
     nb_avis_col_phy = 2
@@ -177,7 +216,7 @@ def test_afficher_avis_user_sur_collection_physique_ok():
     avis_col_phy = DaoAvis().chercher_avis_user_sur_collection_physique(
         schema="projet_test_dao", id_utilisateur=43, id_collection=1
     )
-    assert id_avis == avis_col_phy.id_avis
+    assert id_avis == avis_col_phy[0].id_avis
 
 
 def test_modifier_avis_col_phy_ok():

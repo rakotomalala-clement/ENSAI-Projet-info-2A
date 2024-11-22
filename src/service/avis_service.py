@@ -90,7 +90,7 @@ class ServiceAvis:
         )
 
         if len(avis_user_sur_col_co) > 0:
-            return avis_user_sur_col_co
+            return avis_user_sur_col_co[0]
         else:
             return None
 
@@ -105,7 +105,7 @@ class ServiceAvis:
         )
 
         if len(avis_user_sur_col_phy) > 0:
-            return avis_user_sur_col_phy
+            return avis_user_sur_col_phy[0]
         else:
             return None
 
@@ -164,12 +164,68 @@ class ServiceAvis:
         return DaoAvis().supprimer_avis("projet_info_2a", id_avis)
 
     @log
+    def supprimer_avis_collection_cohérente(self, id_avis):
+        return DaoAvis().supprimer_avis_col_coherente(
+            schema="projet_info_2a", id_avis_collection_coherente=id_avis
+        )
+
+    @log
+    def supprimer_avis_collection_physique(self, id_avis):
+        return DaoAvis().supprimer_avis_col_physique(
+            schema="projet_info_2a", id_avis_collection_physique=id_avis
+        )
+
+    @log
     def afficher_autre_avis(self, id_manga):
         """Afficher les avis laisser sous  un manga"""
-
-        avis_user_sur_manga = DaoAvis().chercher_avis_sur_manga("projet_test_dao", id_manga)
-
+        avis_user_sur_manga = DaoAvis().chercher_avis_sur_manga("projet_info_2a", id_manga)
         if len(avis_user_sur_manga) > 0:
             return avis_user_sur_manga
         else:
             return None
+
+    @log
+    def trouver_auteur_avis_sur_manga(self, id_avis, id_manga):
+        username = DaoAvis().trouver_auteur_avis_sur_manga(
+            schema="projet_info_2a", id_avis=id_avis, id_manga=id_manga
+        )
+        return username
+
+    @log
+    def trouver_auteur_avis_sur_col_co(self, id_avis_collection_coherente, id_collection_coherente):
+        username = DaoAvis().trouver_auteur_avis_sur_col_co(
+            schema="projet_info_2a",
+            id_avis_collection_coherente=id_avis_collection_coherente,
+            id_collection_coherente=id_collection_coherente,
+        )
+        return username
+
+    @log
+    def trouver_auteur_avis_sur_col_phy(self, id_avis_collection_physique, id_collection):
+        username = DaoAvis().trouver_auteur_avis_sur_col_phy(
+            schema="projet_info_2a",
+            id_avis_collection_physique=id_avis_collection_physique,
+            id_collection=id_collection,
+        )
+        return username
+
+    @log
+    def Validation_avis(self, message_avis: str):
+        is_avis_valide = True
+
+        Liste_mot_invalide = [
+            "TA GUEULE",
+            "TOCARD",
+            "MERDIQUE",
+            "SALOPE",
+            "MERDE",
+            "CON",
+            "CONNARD",
+            "CONNASSE",
+            "PUTAIN",
+        ]
+
+        if message_avis.upper() in Liste_mot_invalide:
+            is_avis_valide = False
+
+        return is_avis_valide

@@ -42,10 +42,10 @@ class PhysiqueUtilisateurVue(VueAbstraite):
             print("Aucun manga ajouté \n")
         else:
             for manga in collection_physique:
-                print(manga.titre_manga)
-                print(manga.dernier_tome_acquis)
-                print(manga.numeros_tomes_manquants)
-                print(manga.status_manga)
+                print("Manga: ", manga.titre_manga)
+                print("Numéro dernier tome acquis: ", manga.dernier_tome_acquis)
+                print("Liste des tomes qui manquent: ", manga.numeros_tomes_manquants)
+                print("État de lecture: ", manga.status_manga)
                 print("\n")
             print("\n")
 
@@ -85,7 +85,7 @@ class PhysiqueUtilisateurVue(VueAbstraite):
                 id_manga = MangaService().trouver_id_par_titre(titre)
 
                 ServiceCollection().ajouter_manga_collection_physique(
-                    id_utilisateur, titre, 0, 0, "en cours de lecture", "projet_info_2a"
+                    id_utilisateur, titre, 0, [], "en cours de lecture", "projet_info_2a"
                 )
 
                 return PhysiqueUtilisateurVue().choisir_menu()
@@ -153,15 +153,37 @@ class PhysiqueUtilisateurVue(VueAbstraite):
                             print("Vous avez saisi autre chose que ce qui a été demandé.")
                             return PhysiqueUtilisateurVue().choisir_menu()
 
+                        if tome < 0:
+                            print("Il n'existe pas de tomes qui ait pour numero un entier négatif")
+                            return PhysiqueUtilisateurVue().choisir_menu()
+
                         if tome <= manga_choisi.dernier_tome_acquis:
                             numero_dernier_tome = manga_choisi.dernier_tome_acquis
-                            numero_tomes_manquants = manga_choisi.numeros_tomes_manquants
+                            if tome in manga_choisi.numeros_tomes_manquants:
+                                numero_tomes_manquants = manga_choisi.numeros_tomes_manquants
+                                numero_tomes_manquants.remove(tome)
+                            else:
+                                print("\n Ce tome est déjà dans votre collection")
+                                return PhysiqueUtilisateurVue().choisir_menu()
+
                         else:
                             numero_dernier_tome = tome
 
                             numero_tomes_manquants = manga_choisi.numeros_tomes_manquants
-                            for num_tome in range(tome, manga_choisi.dernier_tome_acquis, -1):
-                                numero_tomes_manquants.append(num_tome)
+
+                            # Si c'est la première fois qu'on ajoute un tome,
+                            # on a besoin de ce changement
+                            dernier_tome = 0
+                            if manga_choisi.dernier_tome_acquis == 0:
+                                dernier_tome = 1
+                            else:
+                                dernier_tome = manga_choisi.dernier_tome_acquis
+
+                            # on ne rajoute pas le dernier tome car il n'est pas manquant,
+                            # on vient de le mettre donc pas de tome+1
+                            for num_tome in range(dernier_tome, tome):
+                                if num_tome not in manga_choisi.numeros_tomes_manquants:
+                                    numero_tomes_manquants.append(num_tome)
 
                         ServiceCollection().modifier_collection_physique(
                             id_utilisateur,
