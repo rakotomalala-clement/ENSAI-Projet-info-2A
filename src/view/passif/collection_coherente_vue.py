@@ -36,7 +36,10 @@ class CollectionCoherenteVue(VueAbstraite):
             print("")
         else:
             for avis in liste_avis:
-                print("Note: ", avis.note, ", ", avis.avis)
+                nom_utilisateur_avis = ServiceAvis().trouver_auteur_avis_sur_col_co(
+                    avis.id_avis, self.collection.id_collection
+                )
+                print(nom_utilisateur_avis, ": Note: ", avis.note, ", ", avis.avis)
             print("\n")
 
         from view.passif.connexion.session import Session

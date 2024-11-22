@@ -105,6 +105,7 @@ class RechercheUtilisateurVue(VueAbstraite):
                 # Affichage des avis sur cette collection
                 from service.avis_service import ServiceAvis
 
+                # id de la collection physique de l'utilisateur
                 id_collection_choisi = ServiceCollection().obtenir_id_collection_par_utilisateur(
                     id_utilisateur, "projet_info_2a"
                 )
@@ -114,7 +115,10 @@ class RechercheUtilisateurVue(VueAbstraite):
                     print("")
                 else:
                     for avis in liste_avis:
-                        print("Note: ", avis.note, ", ", avis.avis)
+                        nom_utilisateur_avis = ServiceAvis().trouver_auteur_avis_sur_col_phy(
+                            avis.id_avis, id_collection_choisi
+                        )
+                        print(nom_utilisateur_avis, ": Note: ", avis.note, ", ", avis.avis)
                     print("\n")
 
                 if Session().connecte:
