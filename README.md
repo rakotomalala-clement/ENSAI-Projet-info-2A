@@ -38,4 +38,4 @@ How to install it?
 ### Launch the Application
 
 
-You can now run the application by launching main.py or by writting "python src/main.py" in your console:
+You can now run the application by launching src/main.py or by writting "python src/main.py" in your console:
