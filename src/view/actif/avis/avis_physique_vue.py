@@ -100,7 +100,7 @@ class AvisPhysiqueVue(VueAbstraite):
                         ).execute()
 
                         try:
-                            nouvelle_note = int(note)
+                            nouvelle_note = int(nouvelle_note)
 
                             if 1 <= nouvelle_note <= 5:
                                 valeur_correcte = True
