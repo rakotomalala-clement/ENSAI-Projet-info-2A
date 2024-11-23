@@ -9,8 +9,3 @@ INSERT INTO utilisateur(nom_utilisateur, mdp) VALUES
 ('nom2', 'mdp2'),
 ('nom3', 'mdp3'),
 ('nom4', 'mdp4');
-
-
-
-
-
