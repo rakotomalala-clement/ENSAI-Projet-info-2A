@@ -61,7 +61,7 @@ CREATE TABLE collection_physique_mangas(
     id_collection_physique_mangas SERIAL PRIMARY KEY,
     id_collection INTEGER NOT NULL,
     id_manga INTEGER NOT NULL,
-    titre_manga VARCHAR(300) UNIQUE NOT NULL,
+    titre_manga VARCHAR(300)  NOT NULL,
     numero_dernier_tome  INTEGER,
     numeros_tomes_manquants INTEGER[],
     status_manga VARCHAR(50),
