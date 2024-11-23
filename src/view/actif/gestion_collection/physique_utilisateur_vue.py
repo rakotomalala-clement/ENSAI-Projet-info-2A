@@ -22,7 +22,9 @@ class PhysiqueUtilisateurVue(VueAbstraite):
 
         print("\n" + "-" * 50 + "\n", "Ma collection physique", "\n" + "-" * 50 + "\n")
 
-        print("La suppression de votre collection physique n'est pas possible \n")
+        print(
+            "La suppression de votre collection physique n'est pas une fonctionnalité disponible \n"
+        )
 
         # Ici la collection physique est une liste de mangas
 

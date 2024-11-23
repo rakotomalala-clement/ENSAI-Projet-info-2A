@@ -47,15 +47,22 @@ class AvisMangaVue(VueAbstraite):
 
                 if avis is None:
 
-                    note = inquirer.text(
-                        message="Veuillez rentrer une note entre 1 et 5",
-                    ).execute()
+                    valeur_correcte = False
 
-                    while not (int(note) in [1, 2, 3, 4, 5]):
-                        print(note, "n'est pas un entier entre 1 et 5")
+                    while not valeur_correcte:
                         note = inquirer.text(
                             message="Veuillez rentrer une note entre 1 et 5",
                         ).execute()
+
+                        try:
+                            note = int(note)
+
+                            if 1 <= note <= 5:
+                                valeur_correcte = True
+                            else:
+                                print("Erreur : La note doit être un nombre entre 1 et 5")
+                        except ValueError:
+                            print("Erreur : Veuillez entrer un nombre valide")
 
                     avis = inquirer.text(
                         message="Veuillez entrer votre avis sur ce manga"
@@ -74,15 +81,22 @@ class AvisMangaVue(VueAbstraite):
                     return AvisMangaVue(self.manga).choisir_menu()
 
             case "Modifier mon avis":
-                nouvelle_note = inquirer.text(
-                    message="Veuillez rentrer une note entre 1 et 5",
-                ).execute()
+                valeur_correcte = False
 
-                while not (int(nouvelle_note) in [1, 2, 3, 4, 5]):
-                    print(nouvelle_note, "n'est pas un entier entre 1 et 5")
+                while not valeur_correcte:
                     nouvelle_note = inquirer.text(
                         message="Veuillez rentrer une note entre 1 et 5",
                     ).execute()
+
+                    try:
+                        nouvelle_note = int(note)
+
+                        if 1 <= nouvelle_note <= 5:
+                            valeur_correcte = True
+                        else:
+                            print("Erreur : La note doit être un nombre entre 1 et 5")
+                    except ValueError:
+                        print("Erreur : Veuillez entrer un nombre valide")
 
                 nouvel_avis = inquirer.text(
                     message="Veuillez entrer votre avis sur ce manga"
