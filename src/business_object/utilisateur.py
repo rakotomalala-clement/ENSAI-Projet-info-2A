@@ -1,6 +1,7 @@
 class Utilisateur:
 
     def __init__(self, nom_utilisateur: str, mdp: str, id_utilisateur=None):
+        """Classe représentant un utilisateur avec un nom, un mot de passe et un identifiant optionnel."""
         self.nom_utilisateur = nom_utilisateur
         self.mdp = mdp
         self.id_utilisateur = id_utilisateur
