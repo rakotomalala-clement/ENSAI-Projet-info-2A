@@ -1,222 +1,127 @@
 from InquirerPy import inquirer
 from view.vue_abstraite import VueAbstraite
 from view.passif.connexion.session import Session
-from view.passif.accueil_vue import AccueilVue
-from view.actif.accueil_connecte_vue import AccueilConnecteVue
-from service.collection_service import ServiceCollection
-from service.manga_service import MangaService
 from service.avis_service import ServiceAvis
+from service.Service_Utilisateur import ServiceUtilisateur
 
 
-class PhysiqueUtilisateurVue(VueAbstraite):
-    """Menu des modifications possibles sur une collection"""
+class AvisPhysiqueVue(VueAbstraite):
+    def __init__(self, id_utilisateur_collection):
+        self.id_utilisateur_collection = id_utilisateur_collection
 
     def choisir_menu(self):
-        """Modification d'une collection physique
+        """Affichage des avis sur la collection physique
 
         Return
         ------
         view
-            Retourne la vue choisie par l'utilisateur dans le terminal
+            Retourne la view de l'acceuil
         """
 
-        print("\n" + "-" * 50 + "\n", "Ma collection physique", "\n" + "-" * 50 + "\n")
+        choix = inquirer.select(
+            message="\n",
+            choices=[
+                "Ajouter mon avis",
+                "Modifier mon avis",
+                "Supprimer mon avis",
+                "Retourner au menu de recherche d'utilisateur",
+            ],
+        ).execute()
 
-        print("La suppression de votre collection physique n'est pas possible \n")
+        # l'id_utilisateur du propriétaire de la collection
+        from service.collection_service import ServiceCollection
 
-        # Ici la collection physique est une liste de mangas
-
-        from service.Service_Utilisateur import ServiceUtilisateur
-
-        id_utilisateur = (
+        # id_utilisateur de la personne qui est en train de gérer ses avis
+        id_utilisateur_perso = (
             ServiceUtilisateur()
             .trouver_utilisateur_par_nom(Session().nom_utilisateur)
             .id_utilisateur
         )
-        collection_physique = ServiceCollection().rechercher_collection_physique(
-            id_utilisateur, "projet_info_2a"
+
+        id_collection_physique = ServiceCollection().obtenir_id_collection_par_utilisateur(
+            self.id_utilisateur_collection, "projet_info_2a"
         )
 
-        # afficher les mangas de la collection
-        if collection_physique == "Aucun manga ajouté":
-            print("Aucun manga ajouté \n")
-        else:
-            for manga in collection_physique:
-                print("Manga: ", manga.titre_manga)
-                print("Numéro dernier tome acquis: ", manga.dernier_tome_acquis)
-                print("Liste des tomes qui manquent: ", manga.numeros_tomes_manquants)
-                print("État de lecture: ", manga.status_manga)
-                print("\n")
-            print("\n")
-
-        id_collection = ServiceCollection().obtenir_id_collection_par_utilisateur(
-            id_utilisateur, "projet_info_2a"
+        avis = ServiceAvis().afficher_avis_user_sur_collection_physique(
+            id_utilisateur_perso, id_collection_physique
         )
-
-        liste_avis = ServiceAvis().afficher_avis_collection_physique(id_collection)
-        if liste_avis:
-            for avis in liste_avis:
-                print(avis.note, " : ", avis.avis)
-
-        modif_collection = [
-            "Ajouter manga",
-            "Supprimer un manga",
-            "Modifier les informations d'un manga",
-            "Revenir au menu principal",
-        ]
-
-        choix = inquirer.select(
-            message="Quelles modifications souhaitez-vous apporter sur votre colection?\n",
-            choices=modif_collection,
-        ).execute()
 
         match choix:
-            case "Ajouter manga":
+            case "Ajouter mon avis":
 
-                liste_mangas = MangaService().lister_mangas()
-                liste_nom_mangas = []
-                for manga in liste_mangas:
-                    liste_nom_mangas.append(manga.titre)
+                if avis is None:
 
-                titre = inquirer.fuzzy(
-                    message="Quel manga souhaitez-vous ajouter?\n", choices=liste_nom_mangas
-                ).execute()
+                    note = inquirer.text(
+                        message="Veuillez rentrer une note entre 1 et 5",
+                    ).execute()
 
-                id_manga = MangaService().trouver_id_par_titre(titre)
-
-                ServiceCollection().ajouter_manga_collection_physique(
-                    id_utilisateur, titre, 0, [], "en cours de lecture", "projet_info_2a"
-                )
-
-                return PhysiqueUtilisateurVue().choisir_menu()
-
-            case "Supprimer un manga":
-
-                id_collection = ServiceCollection().obtenir_id_collection_par_utilisateur(
-                    id_utilisateur, "projet_info_2a"
-                )
-
-                if collection_physique == "Aucun manga ajouté":
-                    print("Vous n'avez pas encore ajouter de manga.")
-                    return PhysiqueUtilisateurVue().choisir_menu()
-
-                liste_nom_mangas_collection = []
-                for manga in collection_physique:
-                    liste_nom_mangas_collection.append(manga.titre_manga)
-
-                titre = inquirer.fuzzy(
-                    message="Quel manga souhaitez-vous supprimer?",
-                    choices=liste_nom_mangas_collection,
-                ).execute()
-
-                id_manga = MangaService().trouver_id_par_titre(titre)
-
-                ServiceCollection().supprimer_manga_col_physique(
-                    id_collection, id_manga, "projet_info_2a"
-                )
-
-                return PhysiqueUtilisateurVue().choisir_menu()
-
-            case "Modifier les informations d'un manga":
-
-                if collection_physique == "Aucun manga ajouté":
-                    print("Vous n'avez pas encore ajouter de manga.")
-                    return PhysiqueUtilisateurVue().choisir_menu()
-
-                liste_nom_mangas_collection = []
-                for manga in collection_physique:
-                    liste_nom_mangas_collection.append(manga.titre_manga)
-
-                titre_choisi = inquirer.fuzzy(
-                    message="Quel est le manga dont vous souhaitez modifier les informations?",
-                    choices=liste_nom_mangas_collection,
-                ).execute()
-
-                manga_choisi = None
-                for manga in collection_physique:
-                    if manga.titre_manga == titre_choisi:
-                        manga_choisi = manga
-
-                choix = inquirer.select(
-                    message="Que souhaitez vous faire?",
-                    choices=["Ajouter un tome", "Changer le statut de lecture", "Retour au menu"],
-                ).execute()
-
-                match choix:
-
-                    case "Ajouter un tome":
-
-                        tome = inquirer.text(message="Quel tome souhaitez vous ajouter?").execute()
-                        try:
-                            tome = int(tome)
-                        except ValueError:
-                            print("Vous avez saisi autre chose que ce qui a été demandé.")
-                            return PhysiqueUtilisateurVue().choisir_menu()
-
-                        if tome < 0:
-                            print("Il n'existe pas de tomes qui ait pour numero un entier négatif")
-                            return PhysiqueUtilisateurVue().choisir_menu()
-
-                        if tome <= manga_choisi.dernier_tome_acquis:
-                            numero_dernier_tome = manga_choisi.dernier_tome_acquis
-                            if tome in manga_choisi.numeros_tomes_manquants:
-                                numero_tomes_manquants = manga_choisi.numeros_tomes_manquants
-                                numero_tomes_manquants.remove(tome)
-                            else:
-                                print("\n Ce tome est déjà dans votre collection")
-                                return PhysiqueUtilisateurVue().choisir_menu()
-
-                        else:
-                            numero_dernier_tome = tome
-
-                            numero_tomes_manquants = manga_choisi.numeros_tomes_manquants
-
-                            # Si c'est la première fois qu'on ajoute un tome,
-                            # on a besoin de ce changement
-                            dernier_tome = 0
-                            if manga_choisi.dernier_tome_acquis == 0:
-                                dernier_tome = 1
-                            else:
-                                dernier_tome = manga_choisi.dernier_tome_acquis
-
-                            # on ne rajoute pas le dernier tome car il n'est pas manquant,
-                            # on vient de le mettre donc pas de tome+1
-                            for num_tome in range(dernier_tome, tome):
-                                if num_tome not in manga_choisi.numeros_tomes_manquants:
-                                    numero_tomes_manquants.append(num_tome)
-
-                        ServiceCollection().modifier_collection_physique(
-                            id_utilisateur,
-                            manga_choisi.titre_manga,
-                            numero_dernier_tome,
-                            numero_tomes_manquants,
-                            manga_choisi.status_manga,
-                            "projet_info_2a",
-                        )
-
-                        return PhysiqueUtilisateurVue().choisir_menu()
-
-                    case "Changer le statut de lecture":
-                        status_manga = inquirer.text(
-                            message="Quel est le nouveau statut de la série?"
+                    while not (int(note) in [1, 2, 3, 4, 5]):
+                        print(note, "n'est pas un entier entre 1 et 5")
+                        note = inquirer.text(
+                            message="Veuillez rentrer une note entre 1 et 5",
                         ).execute()
 
-                        ServiceCollection().modifier_collection_physique(
-                            id_utilisateur,
-                            manga_choisi.titre_manga,
-                            manga_choisi.dernier_tome_acquis,
-                            manga_choisi.numeros_tomes_manquants,
-                            status_manga,
-                            "projet_info_2a",
-                        )
+                    avis = inquirer.text(
+                        message="Veuillez entrer votre avis sur cette collection"
+                    ).execute()
 
-                    case "Retour au menu":
-                        return PhysiqueUtilisateurVue().choisir_menu()
+                    while not ServiceAvis().Validation_avis(avis):
+                        avis = inquirer.text(
+                            message="Votre avis est grossier veuillez en entrer un de convenable."
+                        ).execute()
 
-                return PhysiqueUtilisateurVue().choisir_menu()
+                    ServiceAvis().ajouter_avis_collection(
+                        id_utilisateur_perso, id_collection_physique, "Physique", avis, int(note)
+                    )
 
-            case "Revenir au menu principal":
-                if Session().connecte:
-                    return AccueilConnecteVue().choisir_menu()
+                    return AvisPhysiqueVue(self.id_utilisateur_collection).choisir_menu()
                 else:
-                    return AccueilVue().choisir_menu()
+                    print("Vous avez déjà un avis sur cette collection")
+                    return AvisPhysiqueVue(self.id_utilisateur_collection).choisir_menu()
+
+            case "Modifier mon avis":
+
+                if avis is None:
+                    print("Vous n'avez pas encore d'avis sur cette collection")
+                    return AvisPhysiqueVue(self.id_utilisateur_collection).choisir_menu()
+                else:
+                    nouvelle_note = inquirer.text(
+                        message="Veuillez rentrer une note entre 1 et 5",
+                    ).execute()
+
+                    while not (int(nouvelle_note) in [1, 2, 3, 4, 5]):
+                        print(nouvelle_note, "n'est pas un entier entre 1 et 5")
+                        nouvelle_note = inquirer.text(
+                            message="Veuillez rentrer une note entre 1 et 5",
+                        ).execute()
+
+                    nouvel_avis = inquirer.text(
+                        message="Veuillez entrer votre avis sur cette collection"
+                    ).execute()
+
+                    while not ServiceAvis().Validation_avis(nouvel_avis):
+                        nouvel_avis = inquirer.text(
+                            message="Votre avis est grossier veuillez en entrer un de convenable."
+                        ).execute()
+
+                    ServiceAvis().modifier_collection_physique(
+                        id_collection_physique,
+                        id_utilisateur_perso,
+                        nouvel_avis,
+                        int(nouvelle_note),
+                    )
+
+                    return AvisPhysiqueVue(self.id_utilisateur_collection).choisir_menu()
+
+            case "Supprimer mon avis":
+                if avis is None:
+                    print("Vous n'avez pas encore d'avis sur ce manga")
+                    return AvisPhysiqueVue(self.id_utilisateur_collection).choisir_menu()
+                else:
+                    ServiceAvis().supprimer_avis_collection_physique(avis.id_avis)
+                    return AvisPhysiqueVue(self.id_utilisateur_collection).choisir_menu()
+
+            case "Retourner au menu de recherche d'utilisateur":
+                from view.passif.recherche_utilisateur_vue import RechercheUtilisateurVue
+
+                return RechercheUtilisateurVue().choisir_menu()
