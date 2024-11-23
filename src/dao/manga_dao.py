@@ -100,7 +100,6 @@ class MangaDao(metaclass=Singleton):
         try:
             with DBConnection(schema).connection as connection:
                 with connection.cursor() as cursor:
-                    # Vérifie d'abord si le manga existe déjà
                     cursor.execute(
                         """
                         SELECT 1 FROM manga WHERE titre = %(titre)s;
@@ -108,9 +107,7 @@ class MangaDao(metaclass=Singleton):
                         {"titre": manga.titre},
                     )
 
-                    if (
-                        cursor.fetchone() is None
-                    ):  # Si aucune ligne n'est retournée, le manga n'existe pas
+                    if cursor.fetchone() is None:
                         cursor.execute(
                             """
                             INSERT INTO manga (titre, auteurs, genres, status_manga, chapitres)
@@ -125,9 +122,9 @@ class MangaDao(metaclass=Singleton):
                                 "chapitres": manga.nombre_chapitres,
                             },
                         )
-                        return cursor.rowcount > 0  # Vérifie si une ligne a été insérée
+                        return cursor.rowcount > 0
                     else:
-                        return False  # Le manga existe déjà
+                        return False
         except Exception as e:
             logging.exception("An error occurred while adding a manga:")
             raise e

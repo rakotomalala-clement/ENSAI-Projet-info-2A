@@ -5,7 +5,7 @@ from business_object.manga import Manga
 
 def test_trouver_par_titre_true():
     """Recherche par son titre un manga existant"""
-    titre_manga = "titre1"
+    titre_manga = "Hunter x Hunter"
     manga = MangaDao().trouver_par_titre("projet_test_dao", titre_manga)
     assert manga is not None, f"Le manga avec le titre '{titre_manga}' devrait exister."
 
@@ -19,10 +19,10 @@ def test_trouver_par_titre_false():
 
 def test_trouver_id_par_titre_true():
     """Recherche par son titre l'id d'un manga existant"""
-    titre_manga = "titre1"
+    titre_manga = "manga2"
     id_manga = MangaDao().trouver_id_par_titre("projet_test_dao", titre_manga)
     assert (
-        id_manga == 1
+        id_manga == 3
     ), f"L'id du manga avec le titre '{titre_manga}' devrait exister et être égale à 1."
 
 
@@ -63,11 +63,11 @@ def test_ajouter_manga_true():
 
 def test_supprimer_manga_ok():
     """Suppression de Manga réussie"""
-    manga = MangaDao().trouver_par_titre("projet_test_dao", "titre3")
-    assert manga is not None, "Le manga 'titre3' devrait exister avant la suppression."
+    manga = MangaDao().trouver_par_titre("projet_test_dao", "Hunter x Hunter")
+    assert manga is not None, "Le manga 'Hunter x Hunter' devrait exister avant la suppression."
 
     suppression = MangaDao().supprimer_manga("projet_test_dao", manga)
-    assert suppression, "La suppression du manga 'titre3' devrait réussir."
+    assert suppression, "La suppression du manga 'Hunter x Hunter' devrait réussir."
 
     # Nettoyage : ajout du manga supprimé pour éviter de polluer la base de données.
     ajout = MangaDao().ajouter_manga("projet_test_dao", manga)
