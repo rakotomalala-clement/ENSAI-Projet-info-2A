@@ -36,7 +36,6 @@ How to install it?
 - [ ] Click once on *ENSAI-Projet-info-2A* and select `Select Folder`
 
 ### Launch the Application
-# If you want a better understanding on how files are linked in view
-# please go check 
+
 
 You can now run the application by launching main.py or by writting "python src/main.py" in your console:
